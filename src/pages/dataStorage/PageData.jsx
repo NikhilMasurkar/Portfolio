@@ -79,12 +79,11 @@ const projects = [
       "A comprehensive admin dashboard for e-commerce platforms with analytics, order management, and inventory tracking.",
     image:
       "https://images.pexels.com/photos/38568/apple-imac-ipad-workplace-38568.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    technologies: ["React", "Material UI", "Chart.js", "Redux"],
-    demoUrl: "https://example.com/demo1",
-    githubUrl: "https://github.com/example/project1",
+    technologies: ["React", "Material UI", "Chart.js", "antdesign"],
+    demoUrl: "https://admin-e-commerce-dashboard.netlify.app/",
+    githubUrl: "https://github.com/NikhilMasurkar/E-commerce-Dashboard",
     category: "react",
   },
-
   {
     id: 3,
     title: "Social Media Platform",
