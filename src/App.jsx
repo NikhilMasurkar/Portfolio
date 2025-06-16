@@ -14,7 +14,7 @@ import createCache from "@emotion/cache";
 const Home = lazy(() => import("./pages/Home"));
 const Resume = lazy(() => import("./pages/Resume"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
-const Contact = lazy(() => import("./pages/contact"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 const muiCache = createCache({
   key: "mui",
