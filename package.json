@@ -1,0 +1,52 @@
+{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@emotion/css": "^11.13.5",
+    "@emotion/react": "^11.14.0 ",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.14.0",
+    "@mdi/js": "^7.4.47",
+    "@mdi/react": "^1.6.1",
+    "@mui/icons-material": "^7.1.1",
+    "@mui/lab": "^7.0.0-beta.13",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
+    "@netlify/vite-plugin": "^2.2.2",
+    "aos": "^2.3.4",
+    "lucide-react": "^0.513.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.6.2",
+    "sass": "^1.89.1",
+    "tss-react": "^4.9.18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@tailwindcss/postcss": "^4.1.8",
+    "@tailwindcss/vite": "^4.1.8",
+    "@types/aos": "^3.0.7",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.5.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1",
+    "vite": "^6.3.5"
+  }
+}
