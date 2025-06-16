@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -21,7 +21,6 @@
     "@mui/lab": "^7.0.0-beta.13",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
-    "@netlify/vite-plugin": "^2.2.2",
     "aos": "^2.3.4",
     "lucide-react": "^0.513.0",
     "react": "^19.1.0",
