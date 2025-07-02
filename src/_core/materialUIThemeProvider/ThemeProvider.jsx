@@ -105,25 +105,9 @@ const createAppTheme = (isDarkMode) => {
 
 export default function AppThemeProvider(props) {
   const { children } = props;
-  const [isDarkMode, setIsDarkMode] = useState(() => isNightTime());
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
 
-  // Check time every minute and update theme accordingly
-  useEffect(() => {
-    const checkTime = () => {
-      const shouldBeDark = isNightTime();
-      if (shouldBeDark !== isDarkMode) {
-        setIsDarkMode(shouldBeDark);
-      }
-    };
-
-    // Check immediately
-    checkTime();
-
-    // Set up interval to check every minute
-    const interval = setInterval(checkTime, 60000); // 60000ms = 1 minute
-
-    return () => clearInterval(interval);
-  }, [isDarkMode]);
+  // Remove automatic time-based switching for manual control
 
   // Manual toggle function (optional - for user control)
   const toggleTheme = () => {
@@ -153,7 +137,7 @@ export default function AppThemeProvider(props) {
     setLightMode,
     setDarkMode,
     setAutoMode,
-    isAutoMode: isDarkMode === isNightTime(),
+    isAutoMode: false, // Manual control mode
   };
 
   return (

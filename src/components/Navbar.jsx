@@ -14,6 +14,8 @@ import {
   Box,
   Avatar,
   Divider,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -25,9 +27,12 @@ import {
   LinkedIn,
   Close,
   PhoneAndroid,
+  DarkMode,
+  LightMode,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { ContactNumber } from "../_core/APP/Global/contactConstant";
+import { useThemeMode } from "../_core/materialUIThemeProvider/ThemeProvider";
 
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: "none",
@@ -43,6 +48,7 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { isDarkMode, toggleTheme, setDarkMode, setLightMode } = useThemeMode();
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -143,6 +149,47 @@ const Navbar = () => {
                 color="primary"
               >
                 <LinkedIn />
+              </IconButton>
+            </Box>
+          </Box>
+
+          <Divider />
+
+          {/* Theme Toggle Section */}
+          <Box sx={{ p: 2 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isDarkMode}
+                  onChange={toggleTheme}
+                  color="primary"
+                />
+              }
+              label={
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  {isDarkMode ? <DarkMode /> : <LightMode />}
+                  <Typography variant="body2">
+                    {isDarkMode ? "Dark Mode" : "Light Mode"}
+                  </Typography>
+                </Box>
+              }
+            />
+            <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
+              <IconButton
+                size="small"
+                onClick={setLightMode}
+                color={!isDarkMode ? "primary" : "default"}
+                title="Light Mode"
+              >
+                <LightMode fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={setDarkMode}
+                color={isDarkMode ? "primary" : "default"}
+                title="Dark Mode"
+              >
+                <DarkMode fontSize="small" />
               </IconButton>
             </Box>
           </Box>
