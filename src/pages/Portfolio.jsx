@@ -157,6 +157,12 @@ const Portfolio = () => {
                     GitHub
                   </Button>
                 )}
+
+                {!project.demoUrl && !project.githubUrl && (
+                  <Typography variant="body2" color="text.secondary">
+                    Coming Soon....
+                  </Typography>
+                )}
               </CardActions>
             </Card>
           </Grid>

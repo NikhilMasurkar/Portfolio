@@ -6,17 +6,17 @@ const experienceData = [
     company: "Indigolearn Edu Tech Pvt Ltd, Hyderabad",
     duration: "22 Sept 2022 - Present",
     points: [
-      "Developed and maintained performant, cross-platform mobile apps using React Native, ensuring responsive UIs across Android and iOS.",
-      "Collaborated with backend teams to integrate RESTful APIs and enable smooth data flow throughout the app.",
-      "Optimized rendering, reduced load times, and improved memory usage to enhance overall app performance.",
-      "Built reusable UI components and implemented adaptive designs for consistent user experience on various devices.",
-      "Guided junior developers on architecture, best practices, and debugging through code reviews and mentorship.",
-      "Led planning, estimations, and contributed to technical discussions for new features and enhancements.",
-      "Utilized React Navigation, Redux, Axios, and AsyncStorage for scalable state management, routing, and storage solutions.",
-      "Implemented Firebase features, push notifications, and AppCenter OTA updates to improve app engagement and release flexibility.",
-      "Integrated VdoCipher SDK for secure, DRM-enabled video streaming within the app.",
-      "Maintained up-to-date dependencies and ensured compatibility with the latest OS versions.",
-      "Managed stable and versioned release cycles with thorough pre-launch testing and QA practices.",
+      "Led end-to-end frontend development and maintenance for 1FIN by IndigoLearn across the admin panel, user-facing website, and mobile apps (Android & iOS) using React and React Native, ensuring consistent UI/UX across platforms.",
+      "Built responsive and interactive interfaces using React, Material UI, and tss-react, significantly improving user engagement and accessibility.",
+      "Implemented scalable state management with Redux and seamless routing with React Router.",
+      "Collaborated closely with backend and design teams to plan and deliver new features, optimize performance, and streamline the development process.",
+      "Integrated secure authentication using Firebase and Google OAuth, along with DRM-protected video streaming via the VdoCipher SDK.",
+      "Utilized Chart.js to build dynamic dashboards and visualize key learning and user activity metrics.",
+      "Refactored and upgraded legacy frontend codebases to follow modern, modular architectures and best practices.",
+      "Managed stable release cycles by maintaining dependencies, resolving conflicts, and conducting thorough QA testing.",
+      "Designed and deployed the ForumUI — a responsive web-based forum for real-time discussion and user-generated content using React and Material UI.",
+      "Integrated AI-powered tools into the development workflow (e.g., Copilot, ChatGPT, AI-assisted testing), increasing productivity and code delivery efficiency by approximately 25–30%.",
+      "Participated actively in sprint planning, technical discussions, and code reviews, while mentoring junior developers on React architecture and debugging practices.",
     ],
   },
 ];
@@ -62,7 +62,31 @@ const skillsData = [
 const projects = [
   {
     id: 1,
-    title: "React Forum App",
+    title: "Website for 1FIN by IndigoLearn",
+    description:
+      "A modern, responsive educational website built with React and Material UI for 1FIN by IndigoLearn. Showcases courses for CA, CMA & ACCA with smooth navigation and real-time interaction features.",
+    image:
+      "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/portfolio/indigolearn-web_page.png",
+    technologies: [
+      "React",
+      "Redux",
+      "React Router",
+      "Axios",
+      "Firebase",
+      "VdoCipher",
+      "Material UI",
+      "tss-react",
+      "chart.js",
+      "react-oauth/google",
+    ],
+    demoUrl: "https://indigolearn.com",
+    githubUrl: "",
+    category: "react",
+  },
+
+  {
+    id: 2,
+    title: "Forum Landing Page (ForumUI)",
     description:
       "A responsive web-based forum built with React, allowing users to create posts, join discussions, and interact on various topics in real-time.",
     image:
@@ -73,8 +97,8 @@ const projects = [
     category: "react",
   },
   {
-    id: 2,
-    title: "E-Commerce Dashboard",
+    id: 3,
+    title: "E-Commerce Dashboard (Admin Panel)",
     description:
       "A comprehensive admin dashboard for e-commerce platforms with analytics, order management, and inventory tracking.",
     image:
@@ -85,63 +109,83 @@ const projects = [
     category: "react",
   },
   {
-    id: 3,
-    title: "Social Media Platform",
+    id: 4,
+    title: "Medical Professional Website (Dr Sarah Mitchell)",
     description:
-      "A responsive web application with features like user authentication, post creation, comments, and real-time notifications.",
-    image:
-      "https://images.pexels.com/photos/607812/pexels-photo-607812.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "A modern website for a medical professional, built with React and Material UI, featuring a clean design, service pages, and blog integration.",
+    image: "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/dr_image.png",
     technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
-    demoUrl: "https://example.com/demo3",
-    githubUrl: "https://github.com/example/project3",
+    demoUrl: "https://dr-sarah-mitchell.netlify.app/",
+    githubUrl: "https://github.com/NikhilMasurkar/Dr-Sarah-Mitchell",
     category: "react",
   },
   {
-    id: 4,
+    id: 5,
+    title: "App for 1FIN by Indigolearn",
+    description:
+      "1FIN by IndigoLearn is a leading learning app for CA, CMA, and ACCA aspirants, offering expert-led video courses and practice tools Trusted by 1,00,000+ users, it’s your go-to app for exam success in finance and accounting.",
+    image:
+      "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/indigolearn-min.png",
+    technologies: [
+      "React Native",
+      "Firebase",
+      "Redux",
+      "VdoCipher",
+      "Payment Gateway(Razorpay)",
+      "gifted-charts",
+    ],
+    demoUrl:
+      "https://play.google.com/store/apps/details?id=com.indigolearn.fin1",
+    githubUrl: "",
+    category: "reactNative",
+  },
+  {
+    id: 6,
+    title: "Nirva (Fitness Tracker App)",
+    description:
+      "A mobile application that helps users track their workouts, set fitness goals, and monitor progress over time. This app is built with React Native and Expo, and uses Firebase for authentication and data storage.",
+    image:
+      "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/Nirva+(Application)/Nirva_Login_page.png",
+    technologies: ["React Native", "Firebase", "Redux", "Expo"],
+    demoUrl: "",
+    githubUrl: "https://github.com/NikhilMasurkar/Nirva",
+    category: "reactNative",
+  },
+
+  {
+    id: 7,
     title: "Food Delivery App",
     description:
       "A mobile app for food ordering with restaurant listings, menu browsing, cart management, and order tracking.",
     image:
       "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     technologies: ["React Native", "Redux", "Google Maps API", "Stripe"],
-    demoUrl: "https://example.com/demo4",
-    githubUrl: "https://github.com/example/project4",
+    demoUrl: "",
+    githubUrl: "",
     category: "reactNative",
   },
   {
-    id: 5,
+    id: 8,
     title: "Task Management System",
     description:
       "A project management tool with task assignment, progress tracking, and team collaboration features.",
     image:
       "https://images.pexels.com/photos/7376/startup-photos.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     technologies: ["React", "TypeScript", "Material UI", "Firebase"],
-    demoUrl: "https://example.com/demo5",
-    githubUrl: "https://github.com/example/project5",
+    demoUrl: "",
+    githubUrl: "",
     category: "react",
   },
   {
-    id: 6,
+    id: 9,
     title: "Travel Companion App",
     description:
       "A mobile application for travelers with features like trip planning, itinerary management, and location-based recommendations.",
     image:
       "https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     technologies: ["React Native", "Expo", "Google Places API", "AsyncStorage"],
-    demoUrl: "https://example.com/demo6",
-    githubUrl: "https://github.com/example/project6",
-    category: "reactNative",
-  },
-  {
-    id: 7,
-    title: "Fitness Tracker App",
-    description:
-      "A mobile application that helps users track their workouts, set fitness goals, and monitor progress over time.",
-    image:
-      "https://images.pexels.com/photos/4482900/pexels-photo-4482900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    technologies: ["React Native", "Firebase", "Redux", "Expo"],
-    demoUrl: "https://example.com/demo2",
-    githubUrl: "https://github.com/example/project2",
+    demoUrl: "",
+    githubUrl: "",
     category: "reactNative",
   },
 ];
