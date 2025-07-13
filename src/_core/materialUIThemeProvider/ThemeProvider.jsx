@@ -1,10 +1,8 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
 
-// Create a context for theme mode
 const ThemeModeContext = createContext();
 
-// Custom hook to use theme mode
 export const useThemeMode = () => {
   const context = useContext(ThemeModeContext);
   if (!context) {
@@ -32,10 +30,10 @@ const createAppTheme = (isDarkMode) => {
     palette: {
       mode: isDarkMode ? "dark" : "light",
       primary: {
-        main: "#D4AF37", // gold - same for both modes
+        main: "#D4AF37",
       },
       secondary: {
-        main: isDarkMode ? "#BB86FC" : "#1E1E1F", // purple for dark, dark gray for light
+        main: isDarkMode ? "#BB86FC" : "#1E1E1F",
       },
       background: {
         default: isDarkMode ? "#121212" : "#ffffff",
@@ -45,7 +43,6 @@ const createAppTheme = (isDarkMode) => {
         primary: isDarkMode ? "#FFFFFF" : "#1E1E1F",
         secondary: isDarkMode ? "#B3B3B3" : "#555555",
       },
-      // Additional colors for better dark mode support
       divider: isDarkMode ? "#333333" : "#E0E0E0",
       action: {
         hover: isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.04)",
@@ -106,9 +103,11 @@ const createAppTheme = (isDarkMode) => {
 export default function AppThemeProvider(props) {
   const { children } = props;
   const [isDarkMode, setIsDarkMode] = useState(() => isNightTime());
+  const [isManualMode, setIsManualMode] = useState(false);
 
-  // Check time every minute and update theme accordingly
   useEffect(() => {
+    if (isManualMode) return;
+
     const checkTime = () => {
       const shouldBeDark = isNightTime();
       if (shouldBeDark !== isDarkMode) {
@@ -116,32 +115,30 @@ export default function AppThemeProvider(props) {
       }
     };
 
-    // Check immediately
     checkTime();
 
-    // Set up interval to check every minute
-    const interval = setInterval(checkTime, 60000); // 60000ms = 1 minute
+    const interval = setInterval(checkTime, 60000);
 
     return () => clearInterval(interval);
-  }, [isDarkMode]);
+  }, [isDarkMode, isManualMode]);
 
-  // Manual toggle function (optional - for user control)
   const toggleTheme = () => {
+    setIsManualMode(true);
     setIsDarkMode((prev) => !prev);
   };
 
-  // Force light mode
   const setLightMode = () => {
+    setIsManualMode(true);
     setIsDarkMode(false);
   };
 
-  // Force dark mode
   const setDarkMode = () => {
+    setIsManualMode(true);
     setIsDarkMode(true);
   };
 
-  // Reset to auto (time-based)
   const setAutoMode = () => {
+    setIsManualMode(false);
     setIsDarkMode(isNightTime());
   };
 
@@ -153,7 +150,7 @@ export default function AppThemeProvider(props) {
     setLightMode,
     setDarkMode,
     setAutoMode,
-    isAutoMode: isDarkMode === isNightTime(),
+    isAutoMode: !isManualMode,
   };
 
   return (

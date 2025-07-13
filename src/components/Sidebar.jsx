@@ -12,6 +12,7 @@ import {
   Typography,
   Divider,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import {
   Home,
@@ -21,9 +22,12 @@ import {
   GitHub,
   LinkedIn,
   PhoneAndroid,
+  DarkMode,
+  LightMode,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { ContactNumber } from "../_core/APP/Global/contactConstant";
+import { useThemeMode } from "../_core/materialUIThemeProvider/ThemeProvider";
 
 const drawerWidth = 280;
 
@@ -41,6 +45,8 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
 }));
 
 const Sidebar = () => {
+  const { isDarkMode, toggleTheme } = useThemeMode();
+
   const menuItems = [
     { text: "Home", icon: <Home />, path: "/" },
     { text: "Resume", icon: <Description />, path: "/resume" },
@@ -89,34 +95,60 @@ const Sidebar = () => {
           React/React Native Developer
         </Typography>
 
-        <Box sx={{ display: "flex", mt: 1 }}>
-          <IconButton
-            href={ContactNumber.dailLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Phone"
-          >
-            <PhoneAndroid />
-          </IconButton>
+        <Box sx={{ display: "flex", mt: 1, gap: 1, alignItems: "center" }}>
+          <Tooltip title="Call me">
+            <IconButton
+              href={ContactNumber.dailLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Phone"
+              size="medium"
+            >
+              <PhoneAndroid />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton
-            href="https://github.com/nikhilmasurkar"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <GitHub />
-          </IconButton>
+          <Tooltip title="Visit my GitHub">
+            <IconButton
+              href="https://github.com/nikhilmasurkar"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              size="medium"
+            >
+              <GitHub />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton
-            href="https://www.linkedin.com/in/nikhil-masurkar"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            color="primary"
+          <Tooltip title="Connect on LinkedIn">
+            <IconButton
+              href="https://www.linkedin.com/in/nikhil-masurkar"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              size="medium"
+            >
+              <LinkedIn />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
-            <LinkedIn />
-          </IconButton>
+            <IconButton
+              onClick={toggleTheme}
+              size="medium"
+              sx={{
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.action.hover,
+                  transform: "scale(1.05)",
+                },
+                transition: "all 0.2s ease-in-out",
+              }}
+            >
+              {isDarkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
 
