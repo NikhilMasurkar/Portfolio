@@ -114,7 +114,7 @@ const projects = [
     description:
       "A modern website for a medical professional, built with React and Material UI, featuring a clean design, service pages, and blog integration.",
     image: "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/dr_image.png",
-    technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
+    technologies: ["React", "Material UI",],
     demoUrl: "https://dr-sarah-mitchell.netlify.app/",
     githubUrl: "https://github.com/NikhilMasurkar/Dr-Sarah-Mitchell",
     category: "react",
