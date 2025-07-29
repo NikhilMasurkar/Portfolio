@@ -13,7 +13,7 @@ export const useThemeMode = () => {
 
 const isNightTime = () => {
   const currentHour = new Date().getHours();
-  return currentHour >= 14 || currentHour < 6;
+  return currentHour >= 18 || currentHour < 6;
 };
 
 const createAppTheme = (isDarkMode) => {
