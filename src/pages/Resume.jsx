@@ -21,7 +21,7 @@ import WorkExperienceCard from "./subComponents/WorkExperienceSection";
 import EducationCard from "./subComponents/EducationCard";
 import { downloadFileFromUrl } from "../_core/APP/Global/utils";
 const RESUME_URL =
-  "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/Nikhil_Masurkar_React_2.5%2Byears.pdf";
+  "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/Nikhil_Masurkar_react_native_3years.pdf";
 
 const Resume = () => {
   const theme = useTheme();
@@ -30,7 +30,7 @@ const Resume = () => {
   const handleDownloadResume = () => {
     downloadFileFromUrl(
       RESUME_URL,
-      "Nikhil_Masurkar_react_native_2.5+years.pdf",
+      "Nikhil_Masurkar_react_native_3years.pdf",
       setLoading
     );
   };

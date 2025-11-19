@@ -121,6 +121,17 @@ const projects = [
   },
   {
     id: 5,
+    title: "The Sky Events (Event Management Compony)",
+    description:
+      "A modern website for a Events professional, built with React,TypeScript,tailwind css and Material UI, featuring a clean design, service pages.",
+    image: "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/theSkyEvents.png",
+    technologies: ["React", "TypeScript","tailwind-CSS","Material UI",],
+    demoUrl: "https://theskyevents.netlify.app/",
+    githubUrl: "https://github.com/NikhilMasurkar/theSkyEvents",
+    category: "react",
+  },
+  {
+    id: 6,
     title: "App for 1FIN by Indigolearn",
     description:
       "1FIN by IndigoLearn is a leading learning app for CA, CMA, and ACCA aspirants, offering expert-led video courses and practice tools Trusted by 1,00,000+ users, it’s your go-to app for exam success in finance and accounting.",
@@ -140,7 +151,7 @@ const projects = [
     category: "reactNative",
   },
   {
-    id: 6,
+    id: 7,
     title: "Nirva (Fitness Tracker App)",
     description:
       "A mobile application that helps users track their workouts, set fitness goals, and monitor progress over time. This app is built with React Native and Expo, and uses Firebase for authentication and data storage.",
@@ -153,7 +164,7 @@ const projects = [
   },
 
   {
-    id: 7,
+    id: 8,
     title: "Food Delivery App",
     description:
       "A mobile app for food ordering with restaurant listings, menu browsing, cart management, and order tracking.",
@@ -165,7 +176,7 @@ const projects = [
     category: "reactNative",
   },
   {
-    id: 8,
+    id: 9,
     title: "Task Management System",
     description:
       "A project management tool with task assignment, progress tracking, and team collaboration features.",
@@ -177,7 +188,7 @@ const projects = [
     category: "react",
   },
   {
-    id: 9,
+    id: 10,
     title: "Travel Companion App",
     description:
       "A mobile application for travelers with features like trip planning, itinerary management, and location-based recommendations.",
