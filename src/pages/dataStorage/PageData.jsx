@@ -61,6 +61,27 @@ const skillsData = [
 
 const projects = [
   {
+    id: 11, 
+    title: "BudgetIQ",
+    description:
+      "A sleek, responsive personal finance and budget intelligence dashboard. Connects securely to Google Sheets as a database using Google OAuth 2.0, providing interactive financial trends (Chart.js), custom Excel (.xlsx) parsing/generation (ExcelJS), and dynamic multi-select bulk copy features.",
+    image:
+      "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/portfolio/Screenshot+2026-05-25+at+11.50.57%E2%80%AFAM.png",
+    technologies: [
+      "React",
+      "Vite",
+      "Google Sheets API",
+      "Google OAuth 2.0",
+      "Chart.js",
+      "ExcelJS",
+      "Vanilla CSS",
+      "Netlify",
+    ],
+    demoUrl: "https://budgetiqnik.netlify.app",
+    githubUrl: "https://github.com/NikhilMasurkar/Budget-Intelligence-Dashboard",
+    category: "react",
+  },
+  {
     id: 1,
     title: "Website for 1FIN by IndigoLearn",
     description:
