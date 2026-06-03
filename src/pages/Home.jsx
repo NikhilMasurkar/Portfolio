@@ -57,7 +57,7 @@ const Home = () => {
           paragraph
           sx={{ mb: 4, maxWidth: { md: "80%" } }}
         >
-          I'm a passionate React/React Native Developer with 2+ years of
+          I'm a passionate React/React Native Developer with 3.5+ years of
           experience building modern web and mobile applications. I enjoy
           solving real-world problems with elegant UI and clean code.
         </Typography>
