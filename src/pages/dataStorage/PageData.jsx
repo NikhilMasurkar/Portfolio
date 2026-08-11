@@ -115,7 +115,27 @@ const skillsData = [
 
 const projects = [
   {
-    id: 11, 
+    id: 12,
+    title: "Avinash College of Commerce (ACC)",
+    description:
+      "A full rebuild of the Avinash College of Commerce (ACC) WordPress site as a server-side rendered React 19 application — 36 routes covering Intermediate, Degree, Professional (CA, CMA, ACCA, CMA-USA) and Competitive Exam courses, campus branches, placements and a blog. Custom Express SSR with Emotion cache extraction and head-tag hoisting, build-time sitemap and blog module generation, JSON-LD schema and redirect handling for SEO.",
+    image: "/acc-edu.png",
+    technologies: [
+      "React 19",
+      "Vite",
+      "Express (SSR)",
+      "Material UI",
+      "tss-react",
+      "Swiper",
+      "React Router",
+      "React Compiler",
+    ],
+    demoUrl: "https://acc.edu.in/",
+    githubUrl: "",
+    category: "react",
+  },
+  {
+    id: 11,
     title: "BudgetIQ",
     description:
       "A sleek, responsive personal finance and budget intelligence dashboard. Connects securely to Google Sheets as a database using Google OAuth 2.0, providing interactive financial trends (Chart.js), custom Excel (.xlsx) parsing/generation (ExcelJS), and dynamic multi-select bulk copy features.",
@@ -188,14 +208,14 @@ const projects = [
     description:
       "A modern website for a Events professional, built with React,TypeScript,tailwind css and Material UI, featuring a clean design, service pages.",
     image: "https://nikhilwebbucket.s3.eu-north-1.amazonaws.com/theSkyEvents.png",
-    technologies: ["React", "TypeScript","tailwind-CSS","Material UI",],
+    technologies: ["React", "TypeScript", "tailwind-CSS", "Material UI",],
     demoUrl: "https://theskyevents.netlify.app/",
     githubUrl: "https://github.com/NikhilMasurkar/theSkyEvents",
     category: "react",
   },
   {
     id: 6,
-    title: "App for 1FIN by Indigolearn",
+    title: "App for 1FIN by Avinash",
     description:
       "1FIN by IndigoLearn is a leading learning app for CA, CMA, and ACCA aspirants, offering expert-led video courses and practice tools Trusted by 1,00,000+ users, it’s your go-to app for exam success in finance and accounting.",
     image:
