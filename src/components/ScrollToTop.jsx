@@ -5,10 +5,9 @@ function ScrollToTop() {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    // ponytail: instant, not smooth — a route change should land at the top,
+    // not animate a long scroll the visitor didn't ask for.
+    window.scrollTo(0, 0);
   }, [location]);
 
   return null; // This component doesn't render anything

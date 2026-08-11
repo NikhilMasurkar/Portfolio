@@ -1,1 +1,28 @@
-@import "tailwindcss";
+/* Scroll reveal — see _core/APP/Global/reveal.js. Only applies once JS has
+   flagged .reveal-ready, so content stays visible if the script never runs. */
+.reveal-ready [data-aos] {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: opacity, transform;
+}
+
+.reveal-ready [data-aos="fade-up"] {
+  transform: translateY(24px);
+}
+
+.reveal-ready [data-aos="zoom-in"] {
+  transform: scale(0.9);
+}
+
+.reveal-ready [data-aos].aos-animate {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-aos] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

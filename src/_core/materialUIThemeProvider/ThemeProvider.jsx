@@ -1,7 +1,8 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, useMemo, createContext, useContext } from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const ThemeModeContext = createContext();
+const STORAGE_KEY = "theme-mode";
 
 export const useThemeMode = () => {
   const context = useContext(ThemeModeContext);
@@ -14,6 +15,20 @@ export const useThemeMode = () => {
 const isNightTime = () => {
   const currentHour = new Date().getHours();
   return currentHour >= 18 || currentHour < 6;
+};
+
+// Precedence: the visitor's saved choice, then their OS setting, then the
+// clock. Most systems report a colour scheme, so the clock is a last resort.
+const resolveInitialMode = () => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === "dark" || saved === "light") return saved === "dark";
+
+  const os = window.matchMedia("(prefers-color-scheme: dark)");
+  const osLight = window.matchMedia("(prefers-color-scheme: light)");
+  if (os.matches) return true;
+  if (osLight.matches) return false;
+
+  return isNightTime();
 };
 
 const createAppTheme = (isDarkMode) => {
@@ -100,58 +115,28 @@ const createAppTheme = (isDarkMode) => {
   });
 };
 
-export default function AppThemeProvider(props) {
-  const { children } = props;
-  const [isDarkMode, setIsDarkMode] = useState(() => isNightTime());
-  const [isManualMode, setIsManualMode] = useState(false);
+export default function AppThemeProvider({ children }) {
+  const [isDarkMode, setIsDarkMode] = useState(resolveInitialMode);
 
   useEffect(() => {
-    if (isManualMode) return;
-
-    const checkTime = () => {
-      const shouldBeDark = isNightTime();
-      if (shouldBeDark !== isDarkMode) {
-        setIsDarkMode(shouldBeDark);
-      }
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (event) => {
+      if (localStorage.getItem(STORAGE_KEY)) return;
+      setIsDarkMode(event.matches);
     };
-
-    checkTime();
-
-    const interval = setInterval(checkTime, 60000);
-
-    return () => clearInterval(interval);
-  }, [isDarkMode, isManualMode]);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
 
   const toggleTheme = () => {
-    setIsManualMode(true);
-    setIsDarkMode((prev) => !prev);
+    setIsDarkMode((prev) => {
+      localStorage.setItem(STORAGE_KEY, prev ? "light" : "dark");
+      return !prev;
+    });
   };
 
-  const setLightMode = () => {
-    setIsManualMode(true);
-    setIsDarkMode(false);
-  };
-
-  const setDarkMode = () => {
-    setIsManualMode(true);
-    setIsDarkMode(true);
-  };
-
-  const setAutoMode = () => {
-    setIsManualMode(false);
-    setIsDarkMode(isNightTime());
-  };
-
-  const theme = createAppTheme(isDarkMode);
-
-  const contextValue = {
-    isDarkMode,
-    toggleTheme,
-    setLightMode,
-    setDarkMode,
-    setAutoMode,
-    isAutoMode: !isManualMode,
-  };
+  const theme = useMemo(() => createAppTheme(isDarkMode), [isDarkMode]);
+  const contextValue = useMemo(() => ({ isDarkMode, toggleTheme }), [isDarkMode]);
 
   return (
     <ThemeModeContext.Provider value={contextValue}>

@@ -1,64 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Snackbar } from "@mui/material";
-import Alert from "@mui/material/Alert";
+import { Snackbar, Alert } from "@mui/material";
 
 export const SnackBarMessage = ({
   open,
   message,
   severity,
-  position,
-  duration,
+  position = { vertical: "top", horizontal: "center" },
+  duration = 4000,
   handleRemoveSnackbar,
-}) => {
-  // const [openState, setOpenState] = React.useState(open);
-
-  const [snackbarState, setSnackbarState] = useState({
-    openMe: false,
-    vertical: "bottom",
-    horizontal: "center",
-  });
-  const { vertical, horizontal, openMe } = snackbarState;
-
-  useEffect(() => {
-    if (!snackbarState.openMe) {
-      handleSnackBarOpen({
-        vertical: position.vertical,
-        horizontal: position.horizontal,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  /** used for opening of SnackBar  */
-
-  const handleSnackBarOpen = (newState) => {
-    setSnackbarState({ openMe: true, ...newState });
-  };
-
-  /** used for closing of SnackBar  */
-
-  const handleSnackBarClose = () => {
-    setSnackbarState({ ...snackbarState, openMe: false });
-    // setOpenState(false);
-    handleRemoveSnackbar();
-  };
-
-  return (
-    <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      open={openMe}
-      onClose={handleSnackBarClose}
-      key={vertical + horizontal}
-      autoHideDuration={duration}
+}) => (
+  <Snackbar
+    anchorOrigin={position}
+    open={open}
+    onClose={handleRemoveSnackbar}
+    autoHideDuration={duration}
+  >
+    <Alert
+      elevation={6}
+      variant="filled"
+      onClose={handleRemoveSnackbar}
+      severity={severity}
     >
-      <Alert
-        elevation={6}
-        variant="filled"
-        onClose={handleSnackBarClose}
-        severity={severity}
-      >
-        {message}
-      </Alert>
-    </Snackbar>
-  );
-};
+      {message}
+    </Alert>
+  </Snackbar>
+);

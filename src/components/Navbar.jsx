@@ -25,9 +25,12 @@ import {
   LinkedIn,
   Close,
   PhoneAndroid,
+  DarkMode,
+  LightMode,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { ContactNumber } from "../_core/APP/Global/contactConstant";
+import { useThemeMode } from "../_core/materialUIThemeProvider/ThemeProvider";
 
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: "none",
@@ -43,6 +46,7 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { isDarkMode, toggleTheme } = useThemeMode();
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -80,6 +84,13 @@ const Navbar = () => {
           >
             Nikhil Masurkar
           </Typography>
+          <IconButton
+            onClick={toggleTheme}
+            color="inherit"
+            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {isDarkMode ? <LightMode /> : <DarkMode />}
+          </IconButton>
         </Toolbar>
       </AppBar>
 

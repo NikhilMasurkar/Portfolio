@@ -2,17 +2,14 @@ import React from "react";
 import {
   Box,
   Typography,
-  Paper,
   Grid,
   List,
   ListItem,
   ListItemText,
-  useTheme,
 } from "@mui/material";
 import { Building, Calendar } from "lucide-react";
 
 const WorkExperienceCard = ({ experience }) => {
-  const theme = useTheme();
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} data-aos="fade-up" data-aos-delay="100">

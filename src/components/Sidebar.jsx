@@ -138,6 +138,9 @@ const Sidebar = () => {
             <IconButton
               onClick={toggleTheme}
               size="medium"
+              aria-label={
+                isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+              }
               sx={{
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.action.hover,

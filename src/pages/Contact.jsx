@@ -63,25 +63,17 @@ const Contact = () => {
         });
       }
 
-      setSnackBar(
-        <SnackBarMessage
-          handleRemoveSnackbar={() => setSnackBar(null)}
-          message="Message sent successfully! I'll get back to you soon."
-          severity="success"
-          position={{ vertical: "top", horizontal: "center" }}
-          duration={4000}
-        />
-      );
+      setSnackBar({
+        message: "Message sent successfully! I'll get back to you soon.",
+        severity: "success",
+      });
     } catch (error) {
-      setSnackBar(
-        <SnackBarMessage
-          handleRemoveSnackbar={() => setSnackBar(null)}
-          message="Failed to send message. Please try again or contact me directly."
-          severity="error"
-          position={{ vertical: "top", horizontal: "center" }}
-          duration={4000}
-        />
-      );
+      console.error("Contact form submission failed:", error);
+      setSnackBar({
+        message:
+          "Failed to send message. Please try again or contact me directly.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -126,18 +118,22 @@ const Contact = () => {
         questions, and suggestions.
       </Typography>
 
-      {snackBar}
+      <SnackBarMessage
+        open={Boolean(snackBar)}
+        message={snackBar?.message}
+        severity={snackBar?.severity}
+        handleRemoveSnackbar={() => setSnackBar(null)}
+      />
+
       <Grid container spacing={4}>
-        <Box>
-          <Typography
-            variant="h5"
-            gutterBottom
-            fontWeight={600}
-            color="text.primary"
-          >
-            Contact Information
-          </Typography>
-        </Box>
+        <Typography
+          variant="h5"
+          gutterBottom
+          fontWeight={600}
+          color="text.primary"
+        >
+          Contact Information
+        </Typography>
         <Grid container>
           <Grid
             size={{ xs: 12, md: 5 }}
