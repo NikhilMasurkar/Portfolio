@@ -323,11 +323,24 @@ Replace the entire contents of `src/app/globals.css`:
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
 
-  /* Layout */
-  --spacing-container: 1240px;
+  /* Layout — generates the `max-w-page` utility */
+  --container-page: 1240px;
+
+  /* Elevation */
+  --shadow-card: 0 30px 80px rgb(0 0 0 / 0.4);
+  --shadow-cta: 0 10px 34px rgb(var(--rgb-primary) / 0.42);
 }
 
 :root {
+  /*
+   * Brand colours as RGB triplets so any alpha can be applied at the use
+   * site: rgb(var(--rgb-primary) / 0.42). This is what keeps decorative
+   * glows and gradients token-driven instead of hardcoded rgba().
+   */
+  --rgb-primary: 108 99 255;
+  --rgb-secondary: 0 212 255;
+  --rgb-accent: 168 85 247;
+
   --gradient-01: linear-gradient(135deg, #6c63ff, #00d4ff);
   --gradient-02: linear-gradient(135deg, #a855f7, #ff4fd8);
   --gradient-03: linear-gradient(135deg, #00d4ff, #0072ff);
@@ -526,7 +539,7 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-[1240px] px-8 ${className}`}>
+    <div className={`mx-auto w-full max-w-page px-8 ${className}`}>
       {children}
     </div>
   );
@@ -802,20 +815,27 @@ export type BackgroundVariant =
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E\")";
 
-const GRID =
-  "repeating-linear-gradient(0deg, rgba(108,99,255,.06) 0 1px, transparent 1px 64px), repeating-linear-gradient(90deg, rgba(108,99,255,.06) 0 1px, transparent 1px 64px)";
+/** Brand colours come from tokens; only the alpha varies at the use site. */
+const PRIMARY = (a: number) => `rgb(var(--rgb-primary) / ${a})`;
+const SECONDARY = (a: number) => `rgb(var(--rgb-secondary) / ${a})`;
+const ACCENT = (a: number) => `rgb(var(--rgb-accent) / ${a})`;
+
+const GRID = [
+  `repeating-linear-gradient(0deg, ${PRIMARY(0.06)} 0 1px, transparent 1px 64px)`,
+  `repeating-linear-gradient(90deg, ${PRIMARY(0.06)} 0 1px, transparent 1px 64px)`,
+].join(",");
 
 const ORBS: Record<BackgroundVariant, string> = {
   hero: [
-    "radial-gradient(620px 620px at 8% -10%, rgba(108,99,255,.42), transparent 62%)",
-    "radial-gradient(680px 680px at 96% 12%, rgba(0,212,255,.24), transparent 62%)",
-    "radial-gradient(520px 520px at 46% 108%, rgba(168,85,247,.28), transparent 65%)",
+    `radial-gradient(620px 620px at 8% -10%, ${PRIMARY(0.42)}, transparent 62%)`,
+    `radial-gradient(680px 680px at 96% 12%, ${SECONDARY(0.24)}, transparent 62%)`,
+    `radial-gradient(520px 520px at 46% 108%, ${ACCENT(0.28)}, transparent 65%)`,
   ].join(","),
-  about: "radial-gradient(560px 560px at 92% -8%, rgba(108,99,255,.30), transparent 65%)",
-  projects: "radial-gradient(640px 520px at 30% -12%, rgba(168,85,247,.24), transparent 65%)",
-  contact: "radial-gradient(600px 520px at 88% 108%, rgba(0,212,255,.22), transparent 66%)",
-  footer: "radial-gradient(700px 400px at 50% 120%, rgba(108,99,255,.18), transparent 70%)",
-  "case-study": "radial-gradient(620px 520px at 100% -8%, rgba(108,99,255,.30), transparent 65%)",
+  about: `radial-gradient(560px 560px at 92% -8%, ${PRIMARY(0.3)}, transparent 65%)`,
+  projects: `radial-gradient(640px 520px at 30% -12%, ${ACCENT(0.24)}, transparent 65%)`,
+  contact: `radial-gradient(600px 520px at 88% 108%, ${SECONDARY(0.22)}, transparent 66%)`,
+  footer: `radial-gradient(700px 400px at 50% 120%, ${PRIMARY(0.18)}, transparent 70%)`,
+  "case-study": `radial-gradient(620px 520px at 100% -8%, ${PRIMARY(0.3)}, transparent 65%)`,
 };
 
 const WITH_GRID: BackgroundVariant[] = ["about", "footer"];
@@ -1420,7 +1440,7 @@ export function Hero() {
         <div className="mb-11 flex flex-wrap gap-4">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-[0_10px_34px_rgba(108,99,255,.42)] transition-transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
           >
             Explore My Work <span aria-hidden>→</span>
           </Link>
@@ -1516,7 +1536,7 @@ export function ProofStrip() {
   return (
     <section className="pt-5">
       <Container>
-        <Reveal className="rounded-[22px] border border-line bg-surface/85 shadow-[0_30px_80px_rgba(0,0,0,.4)]">
+        <Reveal className="rounded-[22px] border border-line bg-surface/85 shadow-card">
           <h2 className="px-8 pt-8 text-center text-[11.5px] font-semibold tracking-[0.2em] text-dim">
             WORKED WITH
           </h2>
@@ -1754,7 +1774,7 @@ export function ContactCta() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-8 py-4 text-[15px] font-semibold text-fg shadow-[0_10px_32px_rgba(108,99,255,.4)] transition-transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-8 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
           >
             Get In Touch <span aria-hidden>→</span>
           </Link>
