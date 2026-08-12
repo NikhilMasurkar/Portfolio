@@ -185,6 +185,24 @@ after measuring contrast — both original values failed WCAG AA as text.
 | `--secondary` | `#00D4FF` | highlights, links |
 | `--pink` | `#FF4FD8` | Gradient 02 only |
 
+**Neutral ramp** (from the DC prototype, one value corrected):
+
+| Token | Value | Use | on `#050816` |
+|---|---|---|---|
+| `--text` | `#FFFFFF` | primary | 19.95 |
+| `--text-2` | `#E6E9F5` | headline alt | 16.47 |
+| `--text-3` | `#C9D0E8` | card labels | 12.99 |
+| `--text-4` | `#B6BFE0` | tech chips | 10.94 |
+| `--muted` | `#94A3B8` | body secondary | 7.78 |
+| `--meta` | `#7C869E` | meta text | 5.47 |
+| `--dim` | `#757D94` | eyebrows, placeholders | 4.86 |
+
+`--dim` replaces the prototype's `#5B6480`, which measures **3.40** and fails AA
+at the 11–13px sizes it was used at — including `input::placeholder`.
+
+**Border ramp:** `#12172C` (header) · `#161C33` (inner rules) · `#1E2238`
+(default) · `#262C47` (raised) · `#2A3154` (emphasis).
+
 **Measured contrast (AA needs 4.5 for normal text):**
 
 | Colour | on `#050816` | on `#0F1224` | on `#1A1F2E` |
@@ -252,6 +270,47 @@ page transitions, image zoom, hero cursor spotlight.
 `prefers-reduced-motion` is handled once at the provider level, not per
 component — that is precisely the mistake the current site's animation setup
 made, which left content permanently invisible.
+
+---
+
+## 5b. Layout reference — the DC prototype
+
+`~/Documents/Nikhil Masurkar Portfolio.dc.html` is a working Claude-designed
+prototype of every page. **It is the source of truth for layout, spacing and
+motion. It is not a source of truth for content, markup or architecture.**
+
+### Carry over
+
+| | Value |
+|---|---|
+| Container | `max-width: 1240px`, `padding: 0 32px` |
+| Header | fixed, 74px, `backdrop-blur(18px)`, `rgba(5,8,22,.72)`, border `#12172C` |
+| Breakpoints | 1160 / 900 / 720 (plus 390 verification) |
+| Radii | 999px pills · 20–22px cards · 11–16px controls · 7–9px chips |
+| Keyframes | `nmFloat` 8s · `nmFloatSlow` 10s · `nmPulse` 4.5–9s · `nmSpin` 26–34s · `nmDrift` 22–28s · `nmMarquee` |
+| Reveal | `translateY(26px)` → none, opacity 0 → 1, `.75s cubic-bezier(.2,.7,.3,1)`, IO `threshold .12`, `rootMargin 0 0 -60px` |
+| Grid overlay | 64px cells, `rgba(108,99,255,.06)`, radial-mask fade |
+| Hero H1 | 76px desktop → 44px at ≤720px |
+
+### Must change in production
+
+1. **Real routes, not `state.page`.** The prototype is one page with a switch, so
+   no URL is crawlable. Fatal for the SEO target. Becomes App Router routes.
+2. **Real interactive elements.** Every nav item, filter, CTA and the send button
+   is a `<div onClick>` — not focusable, no focus ring, no href. Becomes
+   `<Link>` and `<button>`. Fatal for the Accessibility target.
+3. **Labelled form fields.** Inputs are placeholder-only; needs real `<label>`s.
+4. **Named social links.** `GH` / `in` / `X` / `@` need accessible names.
+5. **Fonts** via `next/font`, not the Google Fonts CDN `<link>`.
+6. **Tailwind + components**, not inline styles.
+
+### Do not ship from the prototype
+
+Its `renderVals()` data is filler and **contradicts real history**: it lists
+IndigoLearn as current (actually Avinash Group of Institute, 04/2026–present),
+invents a MezOrder role, omits the current employer, and uses a wrong email plus
+placeholder social URLs. MezOrder POS, TaskManager, Portfolio v2, Chat
+Application and all three blog posts do not exist. Content comes from §4 only.
 
 ---
 
