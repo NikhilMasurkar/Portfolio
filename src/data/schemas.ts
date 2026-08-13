@@ -26,6 +26,8 @@ export const projectSchema = z.object({
   name: z.string().min(1),
   category: z.enum(projectCategories),
   summary: z.string().min(1),
+  /** Card/hero screenshot. Local path under /public so next/image can optimise it. */
+  image: z.string().regex(/^\/projects\/[\w-]+\.(png|jpg|webp)$/, "image must be a local /projects/<name>.<ext> path"),
   tech: z.array(z.string().min(1)).min(1),
   year: z.number().int().min(2018).max(2100),
   featured: z.boolean(),

@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { clients, experience, stats } from "@/data/profile";
 import { clientSchema, experienceSchema, statSchema } from "@/data/schemas";
@@ -75,6 +77,7 @@ describe("projects data", () => {
         name: "x",
         category: "Web",
         summary: "x",
+        image: "/projects/acc.png",
         tech: ["x"],
         year: 2026,
         featured: false,
@@ -94,6 +97,13 @@ describe("projects data", () => {
     const names = projects.map((p) => p.name);
     expect(names).not.toContain("TaskManager");
     expect(names).not.toContain("Chat Application");
+  });
+
+  it("every project screenshot exists on disk", () => {
+    for (const project of projects) {
+      const file = path.join(process.cwd(), "public", project.image);
+      expect(existsSync(file), `missing image for ${project.slug}: ${project.image}`).toBe(true);
+    }
   });
 
   it("includes MezOrder POS, which is real", () => {

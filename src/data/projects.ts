@@ -4,6 +4,7 @@ import type { Project } from "./schemas";
 export const projects: Project[] = [
   {
     slug: "mezorder-pos",
+    image: "/projects/mezorder.png",
     name: "MezOrder POS",
     category: "Web",
     summary:
@@ -23,6 +24,7 @@ export const projects: Project[] = [
   },
   {
     slug: "acc-website",
+    image: "/projects/acc.png",
     name: "Avinash College of Commerce",
     category: "Web",
     summary:
@@ -34,6 +36,7 @@ export const projects: Project[] = [
   },
   {
     slug: "indigolearn-app",
+    image: "/projects/indigolearn-app.png",
     name: "1FIN by IndigoLearn",
     category: "Mobile",
     summary:
@@ -46,6 +49,7 @@ export const projects: Project[] = [
   },
   {
     slug: "maya-admin",
+    image: "/projects/maya.png",
     name: "MAYA Admin Panel",
     category: "Web",
     summary:
@@ -57,6 +61,7 @@ export const projects: Project[] = [
   },
   {
     slug: "budgetiq",
+    image: "/projects/budgetiq.png",
     name: "BudgetIQ",
     category: "Web",
     summary:
@@ -70,6 +75,7 @@ export const projects: Project[] = [
   },
   {
     slug: "indigolearn-web",
+    image: "/projects/indigolearn-web.png",
     name: "IndigoLearn Website",
     category: "Web",
     summary:
@@ -81,6 +87,7 @@ export const projects: Project[] = [
   },
   {
     slug: "the-sky-events",
+    image: "/projects/sky-events.png",
     name: "The Sky Events",
     category: "Web",
     summary:
@@ -93,6 +100,7 @@ export const projects: Project[] = [
   },
   {
     slug: "forum-ui",
+    image: "/projects/forum-ui.png",
     name: "ForumUI",
     category: "Web",
     summary:
