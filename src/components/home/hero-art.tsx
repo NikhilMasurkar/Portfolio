@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 /**
  * Decorative right-column composition for the hero: a code window, a phone
@@ -40,14 +39,14 @@ export function HeroArt() {
       className="relative min-h-[520px] max-[900px]:hidden"
     >
       {/* Code window — largest layer, lower-left */}
-      <div className="hero-art-float-a absolute bottom-0 left-0 w-[340px] overflow-hidden rounded-2xl border border-line-emphasis bg-[linear-gradient(160deg,var(--color-surface-raised),var(--color-bg))] shadow-card">
+      <div className="hero-art-float-a absolute bottom-0 left-0 z-20 w-[62%] min-w-[260px] overflow-hidden rounded-2xl border border-line-emphasis bg-[linear-gradient(160deg,var(--color-surface-raised),var(--color-bg))] shadow-card">
         <div className="flex items-center gap-2 border-b border-line-inner px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "#ff5f57" }} />
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "#febc2e" }} />
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "#28c840" }} />
           <span className="ml-2 font-mono text-[11.5px] text-dim">developer.ts</span>
         </div>
-        <div className="px-4 py-3 font-mono text-[12.5px] leading-[2]">
+        <div className="px-3 py-3 font-mono text-[11px] leading-[1.95]">
           {CODE_LINES.map((line, index) => (
             <div key={index} className="flex gap-4">
               <span className="w-4 shrink-0 select-none text-right text-dim">
@@ -60,18 +59,36 @@ export function HeroArt() {
       </div>
 
       {/* Phone card — upper-right, overlapping the code window */}
-      <div className="hero-art-float-b absolute right-4 top-0 w-[172px] rounded-[24px] border border-line-emphasis bg-surface-raised p-3 shadow-card">
+      <div className="hero-art-float-b absolute right-0 top-0 z-10 w-[40%] max-w-[172px] rounded-[24px] border border-line-emphasis bg-surface-raised p-3 shadow-card">
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-raised" />
         <p className="mb-2 truncate font-display text-[11.5px] font-semibold text-fg-3">
           1FIN by IndigoLearn
         </p>
-        <div className="relative mb-3 aspect-[9/16] w-full overflow-hidden rounded-[14px] border border-line">
-          <Image
+        {/*
+          Deliberately a plain <img>, not next/image.
+
+          Through next/image this decorative shot painted as a thin sliver in
+          Chromium — with `fill` and with explicit width/height alike — even
+          though the element measured its full 144x258, reported complete, and
+          the optimiser served correct, fully-decodable bytes at /_next/image.
+          A plain <img> in the identical box paints correctly; that was verified
+          directly in the browser before making this change. Root cause not
+          established.
+
+          The cost of opting out is small and bounded: one 172px-wide decorative
+          image, served at its natural size. Revisit if next/image behaves here
+          on a future Next release.
+        */}
+        <div className="mb-3 aspect-[9/16] w-full overflow-hidden rounded-[14px] border border-line">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/projects/indigolearn-app.png"
             alt=""
-            fill
-            sizes="172px"
-            className="object-cover"
+            width={344}
+            height={516}
+            loading="eager"
+            decoding="async"
+            className="h-full w-full object-cover"
           />
         </div>
         <div className="space-y-1.5">
@@ -82,7 +99,7 @@ export function HeroArt() {
       </div>
 
       {/* GitHub activity card — lower-right */}
-      <div className="hero-art-float-c absolute bottom-6 right-0 w-[228px] rounded-2xl border border-line-emphasis bg-surface p-4 shadow-card">
+      <div className="hero-art-float-c absolute bottom-6 right-0 z-10 w-[36%] max-w-[210px] max-[1160px]:hidden rounded-2xl border border-line-emphasis bg-surface p-4 shadow-card">
         <p className="mb-3 text-[11.5px] font-semibold tracking-[0.1em] text-dim">
           GitHub Activity
         </p>
