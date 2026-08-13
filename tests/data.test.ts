@@ -44,7 +44,10 @@ describe("content matches real history", () => {
     expect(experience[0].company).toBe("Avinash Group of Institute");
   });
 
-  it("contains no placeholder companies from the design prototype", () => {
+  // MezOrder is a real product Nikhil built, but it is not an employer — it
+  // belongs in `projects`, not in the employment timeline. The design
+  // prototype listed it as a job, which it never was.
+  it("does not list MezOrder as an employer", () => {
     const companies = experience.map((e) => e.company);
     expect(companies).not.toContain("MezOrder");
   });
@@ -83,10 +86,17 @@ describe("projects data", () => {
     expect(featuredProjects).toHaveLength(3);
   });
 
-  it("contains no placeholder projects from the design prototype", () => {
+  // MezOrder POS was originally on this list. That was wrong — it is a real
+  // product (github.com/NikhilMasurkar/Snapdesk) and now ships as a featured
+  // project. The remaining two are still unverified prototype filler; remove a
+  // name from this list only when the real work behind it is confirmed.
+  it("contains no unverified placeholder projects from the design prototype", () => {
     const names = projects.map((p) => p.name);
-    expect(names).not.toContain("MezOrder POS");
     expect(names).not.toContain("TaskManager");
     expect(names).not.toContain("Chat Application");
+  });
+
+  it("includes MezOrder POS, which is real", () => {
+    expect(projects.map((p) => p.slug)).toContain("mezorder-pos");
   });
 });

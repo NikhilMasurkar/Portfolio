@@ -18,7 +18,7 @@ export const stats: Stat[] = [
 
 export const experience: Experience[] = [
   {
-    role: "Senior Frontend Developer",
+    role: "Senior Software Developer",
     company: "Avinash Group of Institute",
     period: "04/2026 — Present",
     summary:

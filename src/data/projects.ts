@@ -1,7 +1,26 @@
 import type { Project } from "./schemas";
 
-/** The seven real projects. Prototype filler is deliberately absent. */
+/** The eight real projects. Prototype filler is deliberately absent. */
 export const projects: Project[] = [
+  {
+    slug: "mezorder-pos",
+    name: "MezOrder POS",
+    category: "Web",
+    summary:
+      "A multi-tenant restaurant POS platform built as four Next.js applications — customer menu, business dashboard, super-admin console and marketing site — on a shared Supabase backend. Covers table and menu management, dine-in and takeaway orders, a kitchen display, GST-compliant billing with UPI QR codes, analytics and subscription billing.",
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "Supabase",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "pdf-lib",
+    ],
+    year: 2026,
+    featured: true,
+    liveUrl: "https://mezorder.in",
+    githubUrl: "https://github.com/NikhilMasurkar/Snapdesk",
+  },
   {
     slug: "acc-website",
     name: "Avinash College of Commerce",
@@ -33,7 +52,7 @@ export const projects: Project[] = [
       "An admin portal for the 1FIN platform covering analytics, order and plan management, employee management, revenue and leads.",
     tech: ["React", "Material UI", "Chart.js", "Ant Design"],
     year: 2025,
-    featured: true,
+    featured: false,
     liveUrl: "https://admin.indigolearn.com",
   },
   {
