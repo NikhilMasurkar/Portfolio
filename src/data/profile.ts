@@ -1,3 +1,4 @@
+import { yearsOfExperience } from "@/lib/experience";
 import type { Client, Experience, Stat } from "./schemas";
 
 /**
@@ -10,7 +11,8 @@ export const clients: Client[] = [
 ];
 
 export const stats: Stat[] = [
-  { value: "4+", label: "Years Experience" },
+  // Derived from the 09/2022 start date so it cannot go stale.
+  { value: `${yearsOfExperience()}+`, label: "Years Experience" },
   { value: "100K+", label: "App Downloads" },
   { value: "177", label: "Routes Modernised" },
   { value: "50+", label: "Components Shipped" },

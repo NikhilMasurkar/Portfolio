@@ -18,7 +18,7 @@ export const projects: Project[] = [
     ],
     year: 2026,
     featured: true,
-    liveUrl: "https://mezorder.in",
+    liveUrl: "https://snapdeskbusinessdashboard-chi.vercel.app/",
     githubUrl: "https://github.com/NikhilMasurkar/Snapdesk",
   },
   {
