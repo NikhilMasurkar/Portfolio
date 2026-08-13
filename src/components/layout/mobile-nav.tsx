@@ -28,8 +28,9 @@ export function MobileNav() {
     setOpen(false);
   }, [pathname]);
 
-  // Sync back to React state when the dialog closes itself natively
-  // (Escape key triggers the browser's own close, not our setOpen).
+  // Secondary safety net only — some environments don't fire `close` (e.g.
+  // when nothing calls the imperative close()), so this must never be the
+  // only path that clears `open`. onCancel below is the real Escape path.
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -38,19 +39,28 @@ export function MobileNav() {
     return () => dialog.removeEventListener("close", handleNativeClose);
   }, []);
 
+  // Body scroll lock lives in its own effect, keyed only on `open`, so its
+  // cleanup restores overflow on every path that ends `open` — including
+  // unmount — regardless of what the dialog's own native state is doing.
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
     if (open) {
       dialog.showModal();
-      document.body.style.overflow = "hidden";
       const raf = requestAnimationFrame(() => setEntered(true));
       return () => cancelAnimationFrame(raf);
     }
 
     setEntered(false);
-    document.body.style.overflow = "";
     if (!dialog.open) return;
     const delay = prefersReducedMotion() ? 0 : TRANSITION_MS;
     const timer = setTimeout(() => dialog.close(), delay);
@@ -81,6 +91,14 @@ export function MobileNav() {
         id={dialogId}
         ref={dialogRef}
         aria-label="Main menu"
+        onCancel={(event) => {
+          // Escape fires `cancel` before the browser would close the dialog
+          // itself. Prevent that native close and route through setOpen so
+          // Escape runs the same exit transition + cleanup as every other
+          // close path.
+          event.preventDefault();
+          setOpen(false);
+        }}
         onClick={(event) => {
           if (event.target === event.currentTarget) setOpen(false);
         }}
