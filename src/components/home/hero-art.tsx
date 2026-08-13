@@ -82,7 +82,7 @@ export function HeroArt() {
         <div className="mb-3 aspect-[9/16] w-full overflow-hidden rounded-[14px] border border-line">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/projects/indigolearn-app.png"
+            src="/projects/indigolearn-app.jpg"
             alt=""
             width={344}
             height={516}

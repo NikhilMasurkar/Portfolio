@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { ProjectShot } from "@/components/ui/project-shot";
 import { Reveal } from "@/components/ui/reveal";
 import { featuredProjects } from "@/data/projects";
 
@@ -35,22 +35,16 @@ export function FeaturedProjects() {
                     }`}
                   >
                     <div
-                      className={`relative shrink-0 ${
+                      className={`shrink-0 overflow-hidden ${
                         isLarge
-                          ? "w-[150px] max-[720px]:h-[180px] max-[720px]:w-full"
+                          ? "w-[170px] self-stretch max-[720px]:h-[180px] max-[720px]:w-full"
                           : "h-[132px] w-full"
                       }`}
                     >
-                      <Image
+                      <ProjectShot
                         src={project.image}
-                        alt={project.name}
-                        fill
-                        sizes={
-                          isLarge
-                            ? "(max-width: 720px) 100vw, 150px"
-                            : "(max-width: 1160px) 50vw, 33vw"
-                        }
-                        className="object-cover"
+                        alt={`${project.name} screenshot`}
+                        eager={isLarge}
                       />
                     </div>
 

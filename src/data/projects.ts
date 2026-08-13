@@ -4,7 +4,7 @@ import type { Project } from "./schemas";
 export const projects: Project[] = [
   {
     slug: "mezorder-pos",
-    image: "/projects/mezorder.png",
+    image: "/projects/mezorder.jpg",
     name: "MezOrder POS",
     category: "Web",
     summary:
@@ -34,7 +34,7 @@ export const projects: Project[] = [
   },
   {
     slug: "acc-website",
-    image: "/projects/acc.png",
+    image: "/projects/acc.jpg",
     name: "Avinash College of Commerce",
     category: "Web",
     summary:
@@ -46,7 +46,7 @@ export const projects: Project[] = [
   },
   {
     slug: "indigolearn-app",
-    image: "/projects/indigolearn-app.png",
+    image: "/projects/indigolearn-app.jpg",
     name: "1FIN by IndigoLearn",
     category: "Mobile",
     summary:
@@ -59,7 +59,7 @@ export const projects: Project[] = [
   },
   {
     slug: "nucleus-admin",
-    image: "/projects/nucleus.png",
+    image: "/projects/nucleus.jpg",
     name: "Nucleus",
     category: "Web",
     summary:
@@ -71,7 +71,7 @@ export const projects: Project[] = [
   },
   {
     slug: "budgetiq",
-    image: "/projects/budgetiq.png",
+    image: "/projects/budgetiq.jpg",
     name: "BudgetIQ",
     category: "Web",
     summary:
@@ -85,7 +85,7 @@ export const projects: Project[] = [
   },
   {
     slug: "indigolearn-web",
-    image: "/projects/indigolearn-web.png",
+    image: "/projects/indigolearn-web.jpg",
     name: "IndigoLearn Website",
     category: "Web",
     summary:
@@ -97,7 +97,7 @@ export const projects: Project[] = [
   },
   {
     slug: "the-sky-events",
-    image: "/projects/sky-events.png",
+    image: "/projects/sky-events.jpg",
     name: "The Sky Events",
     category: "Web",
     summary:
@@ -110,7 +110,7 @@ export const projects: Project[] = [
   },
   {
     slug: "forum-ui",
-    image: "/projects/forum-ui.png",
+    image: "/projects/forum-ui.jpg",
     name: "ForumUI",
     category: "Web",
     summary:

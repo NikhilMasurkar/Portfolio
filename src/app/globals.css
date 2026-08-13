@@ -154,3 +154,33 @@ body {
     animation: none;
   }
 }
+
+/*
+ * Scroll reveal — see components/ui/reveal.tsx.
+ *
+ * Scoped to [data-reveal-ready], which JS sets on <html> only after the Reveal
+ * effect has run. Without JS the selector never matches and every block stays
+ * visible, so a script failure can never blank the page.
+ */
+[data-reveal-ready] [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+[data-reveal-ready] [data-reveal] {
+  transition:
+    opacity 0.75s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Handled in CSS, not JS, so it cannot depend on hydration completing. */
+  [data-reveal-ready] [data-reveal],
+  [data-reveal-ready] [data-reveal]:not([data-revealed]) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

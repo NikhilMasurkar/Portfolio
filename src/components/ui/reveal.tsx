@@ -1,15 +1,45 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 /**
- * Scroll reveal. Timing matches the design prototype:
- * translateY(26px), 0.75s, cubic-bezier(.2,.7,.3,1).
+ * Scroll reveal — failure-safe by construction.
  *
- * Reduced motion is resolved HERE, once. When it is on, children render
- * fully visible with no transform — never hidden.
+ * WHY NOT framer-motion's `whileInView`: it server-renders its `initial`
+ * state, so the static HTML shipped `opacity:0` on every wrapped block. If JS
+ * fails, is blocked, or hydration breaks, the page renders as a hero and a
+ * footer with nothing in between. That is the exact bug that made the previous
+ * portfolio look blank, and it was measurable here: five `opacity:0` blocks in
+ * the served HTML.
+ *
+ * The inversion: markup ships VISIBLE. The hidden state is applied only after
+ * this effect has run, by which point JS is demonstrably alive and able to
+ * un-hide it again. Worst case is no animation, never invisible content.
+ *
+ * Reduced motion is handled in CSS (see globals.css) rather than in JS, so it
+ * cannot depend on hydration completing either.
  */
+
+const READY_ATTR = "data-reveal-ready";
+const REVEALED_ATTR = "data-revealed";
+
+let observer: IntersectionObserver | null = null;
+
+function getObserver() {
+  if (observer) return observer;
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.setAttribute(REVEALED_ATTR, "");
+        observer?.unobserve(entry.target);
+      }
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+  );
+  return observer;
+}
+
 export function Reveal({
   children,
   delay = 0,
@@ -19,19 +49,23 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
-
-  if (reduced) return <div className={className}>{children}</div>;
+  useEffect(() => {
+    // Flag the document only once JS is running. The CSS that hides
+    // un-revealed blocks is scoped to this attribute.
+    document.documentElement.setAttribute(READY_ATTR, "");
+  }, []);
 
   return (
-    <motion.div
+    <div
       className={className}
-      initial={{ opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12, margin: "0px 0px -60px 0px" }}
-      transition={{ duration: 0.75, ease: [0.2, 0.7, 0.3, 1], delay }}
+      data-reveal=""
+      style={delay ? ({ "--reveal-delay": `${delay}s` } as React.CSSProperties) : undefined}
+      ref={(node) => {
+        if (!node || node.hasAttribute(REVEALED_ATTR)) return;
+        getObserver().observe(node);
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
