@@ -22,15 +22,19 @@
   --color-meta: #7c869e;
   --color-dim: #838a9f;
 
-  /* Brand — FILLS ONLY. Use the -text variants for text. */
+  /* Brand FILLS ONLY — never as text. Both fail AA on the card surfaces. */
   --color-primary: #6c63ff;
   --color-accent: #a855f7;
-  --color-secondary: #00d4ff;
-  --color-pink: #ff4fd8;
 
-  /* Brand text-safe tints */
+  /* Text-safe tints of the two fills above. Use these for coloured text. */
   --color-primary-text: #827aff;
   --color-accent-text: #b166f8;
+
+  /* Safe as both fill and text — clears AA on all three surfaces. */
+  --color-secondary: #00d4ff;
+
+  /* Gradient 02 stop. Decorative only; not classified as a text token. */
+  --color-pink: #ff4fd8;
 
   /* Type */
   --font-display: var(--font-space-grotesk), sans-serif;

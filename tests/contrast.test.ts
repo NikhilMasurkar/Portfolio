@@ -58,9 +58,14 @@ describe("contrastRatio", () => {
     expect(contrastRatio("#000000", "#FFFFFF")).toBeCloseTo(21, 2);
   });
 
+  // Pure maths — deliberately uses literals so it stays green even if the
+  // token parser or the globals.css path breaks. Those are failures of the
+  // token tests below, not of this one.
   it("is order independent", () => {
-    const bg = TOKENS["bg"];
-    expect(contrastRatio("#94A3B8", bg)).toBeCloseTo(contrastRatio(bg, "#94A3B8"), 5);
+    expect(contrastRatio("#94A3B8", "#050816")).toBeCloseTo(
+      contrastRatio("#050816", "#94A3B8"),
+      5,
+    );
   });
 });
 
