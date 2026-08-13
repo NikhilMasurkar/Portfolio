@@ -1,3 +1,4 @@
+import { FeaturedProjects } from "@/components/home/featured-projects";
 import { Hero } from "@/components/home/hero";
 import { ProofStrip } from "@/components/home/proof-strip";
 
@@ -6,6 +7,7 @@ export default function HomePage() {
     <>
       <Hero />
       <ProofStrip />
+      <FeaturedProjects />
     </>
   );
 }
