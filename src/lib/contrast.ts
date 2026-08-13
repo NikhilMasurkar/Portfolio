@@ -32,7 +32,12 @@ export function contrastRatio(a: string, b: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/** AA needs 4.5:1 for normal text, 3:1 for large text (>=18.66px bold or >=24px). */
-export function meetsAA(fg: string, bg: string, large = false): boolean {
-  return contrastRatio(fg, bg) >= (large ? 3 : 4.5);
+/**
+ * AA for normal text needs 4.5:1. Large text (>=18.66px bold or >=24px) only
+ * needs 3:1, but nothing in this project relies on that allowance — every
+ * text token clears 4.5:1 on every surface. Add a large-text variant with its
+ * own test when a real use appears.
+ */
+export function meetsAA(fg: string, bg: string): boolean {
+  return contrastRatio(fg, bg) >= 4.5;
 }
