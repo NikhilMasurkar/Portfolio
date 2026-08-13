@@ -195,10 +195,12 @@ after measuring contrast — both original values failed WCAG AA as text.
 | `--text-4` | `#B6BFE0` | tech chips | 10.94 |
 | `--muted` | `#94A3B8` | body secondary | 7.78 |
 | `--meta` | `#7C869E` | meta text | 5.47 |
-| `--dim` | `#757D94` | eyebrows, placeholders | 4.86 |
+| `--dim` | `#838A9F` | eyebrows, placeholders | 5.80 |
 
 `--dim` replaces the prototype's `#5B6480`, which measures **3.40** and fails AA
-at the 11–13px sizes it was used at — including `input::placeholder`.
+at the 11–13px sizes it was used at — including `input::placeholder`. Verified on
+all three surfaces: 5.80 / 5.39 / 4.77. (An earlier draft used `#757D94`, which
+passes on the page background but drops to 4.00 on `--surface-raised`.)
 
 **Border ramp:** `#12172C` (header) · `#161C33` (inner rules) · `#1E2238`
 (default) · `#262C47` (raised) · `#2A3154` (emphasis).

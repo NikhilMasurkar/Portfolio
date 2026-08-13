@@ -155,7 +155,7 @@ const TEXT_TOKENS = {
   text4: "#B6BFE0",
   muted: "#94A3B8",
   meta: "#7C869E",
-  dim: "#757D94",
+  dim: "#838A9F",
   primaryText: "#827AFF",
   accentText: "#B166F8",
   secondary: "#00D4FF",
@@ -306,7 +306,7 @@ Replace the entire contents of `src/app/globals.css`:
   --color-fg-4: #b6bfe0;
   --color-muted: #94a3b8;
   --color-meta: #7c869e;
-  --color-dim: #757d94;
+  --color-dim: #838a9f;
 
   /* Brand — FILLS ONLY. Use the -text variants for text. */
   --color-primary: #6c63ff;
@@ -1903,3 +1903,28 @@ git commit -m "fix: responsive and accessibility corrections for home page"
 **Type consistency.** `Stat`, `Client`, `Experience` defined in T9 and consumed in T13. `Project` defined in T10, consumed in T14. `BackgroundVariant` defined in T7, consumed in T12 and T15. `Reveal` props (`children`, `delay`, `className`) defined in T11 and used consistently in T13, T14, T15. `siteConfig` fields (`name`, `role`, `specialism`, `description`, `url`, `email`) defined in T4 and consumed in T4, T6, T12.
 
 **Known gap, deliberate.** T14's `/projects/[slug]` links 404 until M2 creates those routes. Called out in the task.
+
+---
+
+## Addendum: Task 6b — Mobile navigation drawer
+
+Added during execution. A review of Task 6 found the header had no mobile
+behaviour: the five nav links wrapped to two rows below ~720px, making the
+header taller than `--spacing-header`, so page content slid underneath it.
+
+Decision (user): hamburger button plus a slide-in drawer below 720px, so the
+header stays exactly `h-header` at every width.
+
+Implementation notes:
+- Built on the native `<dialog>` element opened with `showModal()`. That
+  provides focus trapping, background inerting and Escape handling without a
+  library or a hand-rolled focus trap.
+- `showModal()` must be called imperatively on a ref. Rendering `<dialog open>`
+  produces a *non-modal* dialog with no focus trap.
+- Escape must be intercepted via `onCancel` + `preventDefault()` and routed
+  through React state, and body scroll must be restored in effect cleanup.
+  Relying on the dialog's `close` event alone is not safe — it was observed not
+  to fire in Chromium during verification, which left the page permanently
+  unscrollable after Escape.
+
+Full requirements: `.superpowers/sdd/task-6b-brief.md`.
