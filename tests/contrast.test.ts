@@ -14,7 +14,7 @@ const TEXT_TOKENS = {
   text4: "#B6BFE0",
   muted: "#94A3B8",
   meta: "#7C869E",
-  dim: "#757D94",
+  dim: "#838A9F",
   primaryText: "#827AFF",
   accentText: "#B166F8",
   secondary: "#00D4FF",
@@ -48,7 +48,6 @@ describe("text tokens meet WCAG AA on every surface", () => {
 });
 
 describe("fill-only tokens are correctly excluded from text use", () => {
-  // These are the two that fail. They are fills only; the guard documents why.
   it("#6C63FF fails as text on the card surface", () => {
     expect(meetsAA("#6C63FF", SURFACE)).toBe(false);
   });
