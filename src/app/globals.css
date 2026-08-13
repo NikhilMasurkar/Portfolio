@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
+@theme {
+  /* Surfaces */
+  --color-bg: #050816;
+  --color-surface: #0f1224;
+  --color-surface-raised: #1a1f2e;
+
+  /* Borders */
+  --color-line-header: #12172c;
+  --color-line-inner: #161c33;
+  --color-line: #1e2238;
+  --color-line-raised: #262c47;
+  --color-line-emphasis: #2a3154;
+
+  /* Text ramp — every value verified >= 4.5:1 on all three surfaces */
+  --color-fg: #ffffff;
+  --color-fg-2: #e6e9f5;
+  --color-fg-3: #c9d0e8;
+  --color-fg-4: #b6bfe0;
+  --color-muted: #94a3b8;
+  --color-meta: #7c869e;
+  --color-dim: #838a9f;
+
+  /* Brand — FILLS ONLY. Use the -text variants for text. */
+  --color-primary: #6c63ff;
+  --color-accent: #a855f7;
+  --color-secondary: #00d4ff;
+  --color-pink: #ff4fd8;
+
+  /* Brand text-safe tints */
+  --color-primary-text: #827aff;
+  --color-accent-text: #b166f8;
+
+  /* Type */
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Layout — generates the `max-w-page` utility */
+  --container-page: 1240px;
+
+  /* Elevation */
+  --shadow-card: 0 30px 80px rgb(0 0 0 / 0.4);
+  --shadow-cta: 0 10px 34px rgb(var(--rgb-primary) / 0.42);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /*
+   * Brand colours as RGB triplets so any alpha can be applied at the use
+   * site: rgb(var(--rgb-primary) / 0.42). This is what keeps decorative
+   * glows and gradients token-driven instead of hardcoded rgba().
+   */
+  --rgb-primary: 108 99 255;
+  --rgb-secondary: 0 212 255;
+  --rgb-accent: 168 85 247;
+
+  --gradient-01: linear-gradient(135deg, #6c63ff, #00d4ff);
+  --gradient-02: linear-gradient(135deg, #a855f7, #ff4fd8);
+  --gradient-03: linear-gradient(135deg, #00d4ff, #0072ff);
+  --gradient-04: linear-gradient(135deg, #6c63ff, #a855f7);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Visible focus for keyboard users — required by the accessibility target. */
+:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-line-emphasis);
 }
