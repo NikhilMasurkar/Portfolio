@@ -31,6 +31,15 @@ export const projectSchema = z.object({
   tech: z.array(z.string().min(1)).min(1),
   year: z.number().int().min(2018).max(2100),
   featured: z.boolean(),
+  /** Extra screenshots shown on the project detail page. */
+  gallery: z
+    .array(
+      z.object({
+        src: z.string().regex(/^\/projects\/[\w-]+\/[\w-]+\.(png|jpg|webp)$/),
+        caption: z.string().min(1),
+      }),
+    )
+    .optional(),
   liveUrl: z.string().url().optional(),
   githubUrl: z.string().url().optional(),
 });

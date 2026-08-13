@@ -19,6 +19,16 @@ export const projects: Project[] = [
     ],
     year: 2026,
     featured: true,
+    gallery: [
+      { src: "/projects/mezorder/dashboard.jpg", caption: "Business dashboard — live orders, revenue and table state at a glance" },
+      { src: "/projects/mezorder/live-dashboard.jpg", caption: "Order mix by type and top-selling items" },
+      { src: "/projects/mezorder/tables.jpg", caption: "Table management across floors, with occupancy and reservations" },
+      { src: "/projects/mezorder/menu-management.jpg", caption: "Menu editor with categories, modifiers and per-channel availability" },
+      { src: "/projects/mezorder/orders.jpg", caption: "Order management filtered by type and status" },
+      { src: "/projects/mezorder/gst-bill.jpg", caption: "GST-compliant bill with CGST/SGST breakdown and a UPI QR code" },
+      { src: "/projects/mezorder/analytics.jpg", caption: "Sales reporting and analytics" },
+      { src: "/projects/mezorder/customer-menu.jpg", caption: "Customer-facing menu, opened by scanning the table QR" },
+    ],
     liveUrl: "https://snapdeskbusinessdashboard-chi.vercel.app/",
     githubUrl: "https://github.com/NikhilMasurkar/Snapdesk",
   },
@@ -48,12 +58,12 @@ export const projects: Project[] = [
       "https://play.google.com/store/apps/details?id=com.indigolearn.fin1",
   },
   {
-    slug: "maya-admin",
-    image: "/projects/maya.png",
-    name: "MAYA Admin Panel",
+    slug: "nucleus-admin",
+    image: "/projects/nucleus.png",
+    name: "Nucleus",
     category: "Web",
     summary:
-      "An admin portal for the 1FIN platform covering analytics, order and plan management, employee management, revenue and leads.",
+      "A secure admin portal for the 1FIN platform — Google-authenticated, covering analytics, order and plan management, employee management, revenue and leads. Previously shipped as MAYA.",
     tech: ["React", "Material UI", "Chart.js", "Ant Design"],
     year: 2025,
     featured: false,
@@ -113,4 +123,21 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((p) => p.featured);
+/**
+ * Order the home page shows featured work in — deliberate, not array order,
+ * so reordering the source list cannot silently reshuffle the home page.
+ * A test asserts this stays in sync with the `featured` flags.
+ */
+export const FEATURED_ORDER = [
+  "indigolearn-app",
+  "mezorder-pos",
+  "acc-website",
+] as const;
+
+export const featuredProjects: Project[] = FEATURED_ORDER.map((slug) => {
+  const project = projects.find((p) => p.slug === slug);
+  if (!project) {
+    throw new Error(`FEATURED_ORDER references unknown project slug "${slug}"`);
+  }
+  return project;
+});

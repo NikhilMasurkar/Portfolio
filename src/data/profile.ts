@@ -8,6 +8,7 @@ import type { Client, Experience, Stat } from "./schemas";
 export const clients: Client[] = [
   { name: "Avinash Group", mark: "AG" },
   { name: "IndigoLearn", mark: "IL" },
+  { name: "Freelance Clients", mark: "FC" },
 ];
 
 export const stats: Stat[] = [

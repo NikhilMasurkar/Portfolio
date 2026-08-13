@@ -55,7 +55,7 @@ describe("content matches real history", () => {
   });
 });
 
-import { featuredProjects, projects } from "@/data/projects";
+import { FEATURED_ORDER, featuredProjects, projects } from "@/data/projects";
 import { projectSchema } from "@/data/schemas";
 
 describe("projects data", () => {
@@ -87,6 +87,15 @@ describe("projects data", () => {
 
   it("exposes exactly three featured projects for the home page", () => {
     expect(featuredProjects).toHaveLength(3);
+  });
+
+  it("FEATURED_ORDER matches the projects flagged featured", () => {
+    const flagged = projects.filter((p) => p.featured).map((p) => p.slug).sort();
+    expect([...FEATURED_ORDER].sort()).toEqual(flagged);
+  });
+
+  it("leads with the 1FIN app", () => {
+    expect(featuredProjects[0].slug).toBe("indigolearn-app");
   });
 
   // MezOrder POS was originally on this list. That was wrong — it is a real
