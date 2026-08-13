@@ -62,7 +62,7 @@ export function HeroArt() {
       <div className="hero-art-float-b absolute right-0 top-0 z-10 w-[40%] max-w-[172px] rounded-[24px] border border-line-emphasis bg-surface-raised p-3 shadow-card">
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-raised" />
         <p className="mb-2 truncate font-display text-[11.5px] font-semibold text-fg-3">
-          1FIN by IndigoLearn
+          1FIN by Avinash
         </p>
         {/*
           Deliberately a plain <img>, not next/image.

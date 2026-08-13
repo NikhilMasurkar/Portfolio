@@ -47,7 +47,7 @@ export const projects: Project[] = [
   {
     slug: "indigolearn-app",
     image: "/projects/indigolearn-app.jpg",
-    name: "1FIN by IndigoLearn",
+    name: "1FIN by Avinash",
     category: "Mobile",
     summary:
       "A learning app for CA, CMA and ACCA aspirants with expert-led video courses and practice tools, serving 100,000+ downloads across Android and iOS.",
