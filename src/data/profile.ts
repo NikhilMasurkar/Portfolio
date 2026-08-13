@@ -13,6 +13,7 @@ export const clients: Client[] = [
 export const stats: Stat[] = [
   // Derived from the 09/2022 start date so it cannot go stale.
   { value: `${yearsOfExperience()}+`, label: "Years Experience" },
+  { value: "8", label: "Projects Shipped" },
   { value: "100K+", label: "App Downloads" },
   { value: "177", label: "Routes Modernised" },
   { value: "50+", label: "Components Shipped" },

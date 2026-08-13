@@ -28,7 +28,7 @@ export function ProofStrip() {
             ))}
           </ul>
 
-          <dl className="grid grid-cols-4 border-t border-line-inner px-8 py-8 max-[900px]:grid-cols-2 max-[900px]:gap-y-7">
+          <dl className="grid grid-cols-5 border-t border-line-inner px-8 py-8 max-[1160px]:grid-cols-3 max-[1160px]:gap-y-7 max-[720px]:grid-cols-2">
             {stats.map((stat) => (
               <div key={stat.label} className="px-2 text-center">
                 <dt className="sr-only">{stat.label}</dt>
