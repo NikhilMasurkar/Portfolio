@@ -64,7 +64,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteHeader />
-        <main id="main" className="relative z-10 pt-[74px]">
+        <main id="main" className="relative z-10 pt-header">
           {children}
         </main>
         <SiteFooter />

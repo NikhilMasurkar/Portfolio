@@ -10,7 +10,7 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line-header bg-bg/70 backdrop-blur-[18px]">
-      <Container className="flex h-[74px] items-center justify-between gap-8">
+      <Container className="flex h-header items-center justify-between gap-8">
         <Link
           href="/"
           className="font-display text-2xl font-bold tracking-tight text-fg"
@@ -24,7 +24,7 @@ export function SiteHeader() {
               const active =
                 item.href === "/"
                   ? pathname === "/"
-                  : pathname.startsWith(item.href);
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <li key={item.href}>
                   <Link

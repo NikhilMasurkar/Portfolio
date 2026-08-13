@@ -44,6 +44,13 @@
   /* Layout — generates the `max-w-page` utility */
   --container-page: 1240px;
 
+  /*
+   * Header height. The fixed header and <main>'s top padding must stay equal
+   * or content slides under the header, so both read this one token
+   * (`h-header` / `pt-header`).
+   */
+  --spacing-header: 74px;
+
   /* Elevation */
   --shadow-card: 0 30px 80px rgb(0 0 0 / 0.4);
   --shadow-cta: 0 10px 34px rgb(var(--rgb-primary) / 0.42);
