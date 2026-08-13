@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { navItems } from "@/lib/nav";
 
 export function SiteHeader() {
@@ -18,7 +19,7 @@ export function SiteHeader() {
           NM<span className="text-accent-text">.</span>
         </Link>
 
-        <nav aria-label="Main">
+        <nav aria-label="Main" className="hidden min-[720px]:block">
           <ul className="flex flex-wrap items-center gap-x-[34px] gap-y-3">
             {navItems.map((item) => {
               const active =
@@ -47,6 +48,8 @@ export function SiteHeader() {
             })}
           </ul>
         </nav>
+
+        <MobileNav />
       </Container>
     </header>
   );
