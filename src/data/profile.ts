@@ -22,13 +22,13 @@ export const experience: Experience[] = [
     company: "Avinash Group of Institute",
     period: "04/2026 — Present",
     summary:
-      "Modernised a React admin portal spanning 177 routes and 368 modals, rebuilt the theme system, and shipped a full responsive redesign in 15 working days. Deployed production workloads on AWS ECS and ran end-to-end React Native releases to both stores.",
+      "Modernised a large-scale React admin portal spanning 177 routes and 368 modals, rebuilt its theme system, and delivered a fully responsive redesign in 15 working days. Also handled production deployments on AWS ECS and end-to-end React Native releases across Android and iOS.",
   },
   {
-    role: "React Native Developer | Frontend Developer",
+    role: "Frontend Developer | React Native Developer",
     company: "IndigoLearn Edu Tech Pvt Ltd",
     period: "09/2022 — 03/2026",
     summary:
-      "Led development of a React Native app with 100,000+ downloads across Android and iOS. Built a 50+ component library that cut development time by 30%, and mentored three junior developers.",
+      "Developed and maintained a React Native learning platform with 100,000+ downloads across Android and iOS. Built and maintained a 50+ component reusable UI library that reduced development time by 30%, worked across production debugging and releases, and mentored three junior developers.",
   },
 ];
