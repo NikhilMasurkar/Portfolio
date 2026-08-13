@@ -49,3 +49,44 @@ describe("content matches real history", () => {
     expect(companies).not.toContain("MezOrder");
   });
 });
+
+import { featuredProjects, projects } from "@/data/projects";
+import { projectSchema } from "@/data/schemas";
+
+describe("projects data", () => {
+  it("every project parses", () => {
+    for (const project of projects) {
+      expect(() => projectSchema.parse(project)).not.toThrow();
+    }
+  });
+
+  it("slugs are unique", () => {
+    const slugs = projects.map((p) => p.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("rejects an invalid slug", () => {
+    expect(() =>
+      projectSchema.parse({
+        slug: "Not A Slug",
+        name: "x",
+        category: "Web",
+        summary: "x",
+        tech: ["x"],
+        year: 2026,
+        featured: false,
+      }),
+    ).toThrow();
+  });
+
+  it("exposes exactly three featured projects for the home page", () => {
+    expect(featuredProjects).toHaveLength(3);
+  });
+
+  it("contains no placeholder projects from the design prototype", () => {
+    const names = projects.map((p) => p.name);
+    expect(names).not.toContain("MezOrder POS");
+    expect(names).not.toContain("TaskManager");
+    expect(names).not.toContain("Chat Application");
+  });
+});
