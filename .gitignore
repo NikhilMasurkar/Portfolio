@@ -13,12 +13,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
+/build-server
 
 # misc
 .DS_Store
@@ -42,3 +39,6 @@ next-env.d.ts
 
 # Committed on purpose: documents required env vars, contains no secrets.
 !.env.example
+
+# netlify cli
+.netlify

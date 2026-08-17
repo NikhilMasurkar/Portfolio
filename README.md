@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio v3
 
-## Getting Started
+Personal site of Nikhil Masurkar — Frontend Engineer, React Native specialist.
 
-First, run the development server:
+React 19 · Vite · Tailwind v4 · Express SSR · Firebase · Netlify Functions.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run build
+npm run ssr          # http://localhost:8080
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run dev` gives a fast dev server on :3000 **without SSR** — fine for
+styling, wrong for anything SEO-related. Use `build` + `ssr` for that.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+With the server running, in another shell:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run verify
+```
 
-## Learn More
+That is the check that matters. It catches the failure this stack is prone
+to: SSR throwing, falling back to the empty SPA shell, and serving a site that
+looks perfect in a browser while being blank to every crawler.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm test             # exercises the Netlify Function entry point
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Why SSR
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Social crawlers — WhatsApp, LinkedIn, Facebook, X — do not run JavaScript. A
+client-rendered site shares as a generic title and no preview. Redirects,
+`sitemap.xml` and real 404s are Express routes, so a static host cannot serve
+this correctly.
 
-## Deploy on Vercel
+## Adding a page
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Five files, and the fifth is the one people forget:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. `src/app/pages/<area>/<Page>.jsx` — include `<Seo path="..." />`
+2. `src/app/global/RoutePath.jsx`
+3. `src/app/global/seoMeta.json`
+4. `src/app/router/routeTable.js`
+5. `src/app/router/Routes.jsx` **and** `server/ServerRoutes.jsx`
+
+Miss the server one and the app refuses to start rather than serving a page
+that is invisible to Google. That guard is deliberate.
+
+## Layout
+
+```
+src/app/pages/      one folder per page
+src/app/widgets/    Seo and shared bits
+src/app/global/     RoutePath, seoMeta.json, siteConfig
+src/app/router/     routeTable (shared), Routes (lazy, client)
+src/_core/          Layout
+src/index.css       design tokens — no raw hex anywhere else
+server/             Express SSR, sitemap, redirects
+netlify/functions/  serverless-http wrapper around the same app
+legacy/             previous Next.js build; port source only
+```
+
+## Docs
+
+`docs/specs/2026-08-17-portfolio-v3-dynamic-rebuild.md` — decisions, data
+model, phase plan. Read before changing architecture.
+
+`project.config.json` is the only file to edit for site identity: name,
+domain, description, OG defaults.

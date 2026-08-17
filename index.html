@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Nikhil Masurkar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="theme-color" content="#050816" />
+  <!-- Both fonts are used above the fold. Without preload the browser only
+       discovers them after the stylesheet parses, which shows as a flash of
+       fallback text on the headline. Filenames are stable (not content
+       hashed), so these cannot go stale. -->
+  <link rel="preload" href="/fonts/space-grotesk-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- Per-page title/description/canonical are rendered by <Seo>. A static
+       one here would sit alongside the page-specific tag rather than being
+       replaced by it, so only site-wide values belong in this file. -->
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/index.jsx"></script>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "Nikhil Masurkar",
+  "shortName": "NM",
+  "domain": "https://nikhilmasurkar.netlify.app",
+  "description": "Frontend Engineer and React Native specialist building high-performance web and mobile applications.",
+  "locale": "en_US",
+  "twitterHandle": "",
+
+  "defaultOgImage": "/images/og-default.jpg",
+  "defaultOgImageWidth": 1200,
+  "defaultOgImageHeight": 630,
+
+  "gtmId": "",
+
+  "deploy": {
+    "awsAccountId": "",
+    "awsRegion": "ap-south-1",
+    "ecrRepo": "nikhil-portfolio-web",
+    "ecsCluster": "Prod",
+    "ecsService": "Web-Prod"
+  }
+}
