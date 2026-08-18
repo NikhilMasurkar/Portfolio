@@ -10,5 +10,9 @@
   "/projects/": {
     "title": "Projects — Nikhil Masurkar",
     "description": "Web and mobile work — a multi-tenant restaurant POS, a server-rendered college site, a learning app with 100K+ downloads, and admin platforms."
+  },
+  "/contact/": {
+    "title": "Contact — Nikhil Masurkar",
+    "description": "Get in touch about full-time roles, freelance work or a project idea. Email, LinkedIn and a direct message form."
   }
 }

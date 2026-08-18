@@ -29,6 +29,7 @@ import { getDb } from "./db.js";
 import { SITE } from "../src/app/global/siteConfig.js";
 import { verifyIdToken, isAdminClaims } from "./auth.js";
 import { presignUpload } from "./upload.js";
+import { validateSubmission, sendMail, rateLimit } from "./contact.js";
 
 /**
  * The client build's index.html, inlined into this bundle at build time.
@@ -222,6 +223,43 @@ app.get("/robots.txt", (_req, res) => {
       "",
     ].join("\n")
   );
+});
+
+/**
+ * Contact form submissions.
+ *
+ * Server-side so the mail credentials never reach the browser, and so
+ * validation, the honeypot and the rate limit sit somewhere a sender cannot
+ * edit. The previous site sent mail straight from the client, which put its
+ * provider keys in the bundle for anyone to reuse.
+ */
+app.post("/api/contact", express.json({ limit: "16kb" }), async (req, res) => {
+  // Netlify terminates TLS upstream, so the socket address is the proxy;
+  // x-forwarded-for carries the real client.
+  const ip =
+    (req.get("x-nf-client-connection-ip") ||
+      req.get("x-forwarded-for") ||
+      req.ip ||
+      "unknown")
+      .split(",")[0]
+      .trim();
+
+  const limit = rateLimit(ip);
+  if (!limit.allowed) {
+    return res.status(429).json({
+      error: `Too many messages. Try again in ${Math.ceil(limit.retryAfterMs / 60000)} minutes.`,
+    });
+  }
+
+  try {
+    const message = validateSubmission(req.body);
+    await sendMail({ to: process.env.ADMIN_EMAIL, message });
+    res.json({ ok: true });
+  } catch (err) {
+    const status = err.status ?? 500;
+    if (status >= 500 && status !== 503) console.error("[contact] failed:", err);
+    res.status(status).json({ error: err.message });
+  }
 });
 
 /**

@@ -15,6 +15,7 @@ export const ROUTES = [
   { path: ROUTE_PATH.PROJECTS, component: "Projects" },
   // Must come after the listing, or "/projects/" would match :slug as "".
   { path: ROUTE_PATH.PROJECT_DETAIL, component: "ProjectDetail" },
+  { path: ROUTE_PATH.CONTACT, component: "Contact" },
 ];
 
 /** Client-side redirects. Real 301s live in server/redirects.js. */

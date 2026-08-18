@@ -12,6 +12,7 @@ const components = {
   About: lazy(() => import("../pages/about/About.jsx")),
   Projects: lazy(() => import("../pages/projects/Projects.jsx")),
   ProjectDetail: lazy(() => import("../pages/projects/ProjectDetail.jsx")),
+  Contact: lazy(() => import("../pages/contact/Contact.jsx")),
 };
 
 const NotFound = lazy(() => import("../pages/error/NotFound.jsx"));

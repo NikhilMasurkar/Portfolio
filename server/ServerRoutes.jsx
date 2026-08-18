@@ -19,9 +19,10 @@ import Home from "../src/app/pages/home/Home.jsx";
 import About from "../src/app/pages/about/About.jsx";
 import Projects from "../src/app/pages/projects/Projects.jsx";
 import ProjectDetail from "../src/app/pages/projects/ProjectDetail.jsx";
+import Contact from "../src/app/pages/contact/Contact.jsx";
 import NotFound from "../src/app/pages/error/NotFound.jsx";
 
-const components = { Home, About, Projects, ProjectDetail };
+const components = { Home, About, Projects, ProjectDetail, Contact };
 
 // Throws at startup rather than serving a blank 200 for a route whose
 // component was never added here.

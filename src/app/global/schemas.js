@@ -120,6 +120,7 @@ export const profileSchema = z.object({
   tagline: z.string().min(1),
   description: z.string().min(1),
   email: z.email(),
+  phone: z.string().optional(),
   location: z.string().optional(),
   socials: z.array(socialSchema).default([]),
   stats: z.array(statSchema).default([]),
