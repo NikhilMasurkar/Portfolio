@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { StaticRouter, Routes, Route, Navigate } from "react-router";
 import Layout from "../src/_core/Layout";
+import { ContentProvider } from "../src/app/global/ContentContext.jsx";
 import {
   ROUTES,
   REDIRECT_ROUTES,
@@ -26,25 +27,38 @@ assertRoutesResolvable(components, "server/ServerRoutes.jsx");
 function ServerPageRoutes() {
   return (
     <Layout>
-      <Routes>
-        {ROUTES.map(({ path, component }) => {
-          const Page = components[component];
-          return <Route key={path} path={path} element={<Page />} />;
-        })}
-        {REDIRECT_ROUTES.map(({ path, to }) => (
-          <Route key={path} path={path} element={<Navigate to={to} replace />} />
-        ))}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {/*
+       * MUST MATCH src/app/router/Routes.jsx, boundary and fallback both.
+       *
+       * Nothing suspends here — these imports are eager — but a Suspense
+       * boundary emits marker comments into the SSR output, so the client
+       * cannot hydrate a boundary the server never opened. Omitting it makes
+       * the trees structurally different and hydration fails at the first
+       * child of <main>, which discards the entire server render.
+       */}
+      <Suspense fallback={<div style={{ minHeight: "60vh" }} />}>
+        <Routes>
+          {ROUTES.map(({ path, component }) => {
+            const Page = components[component];
+            return <Route key={path} path={path} element={<Page />} />;
+          })}
+          {REDIRECT_ROUTES.map(({ path, to }) => (
+            <Route key={path} path={path} element={<Navigate to={to} replace />} />
+          ))}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </Layout>
   );
 }
 
 /** No Emotion CacheProvider — see the note in server/index.js. */
-export default function ServerRoutes({ location }) {
+export default function ServerRoutes({ location, content }) {
   return (
-    <StaticRouter location={location}>
-      <ServerPageRoutes />
-    </StaticRouter>
+    <ContentProvider content={content}>
+      <StaticRouter location={location}>
+        <ServerPageRoutes />
+      </StaticRouter>
+    </ContentProvider>
   );
 }

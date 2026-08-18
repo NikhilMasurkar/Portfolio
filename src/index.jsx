@@ -5,10 +5,18 @@ import "./index.css";
 
 const container = document.getElementById("root");
 
-// The server sends fully rendered HTML, so hydrate it rather than throwing it
-// away. createRoot is only the fallback for a container the server left empty.
+/*
+ * The exact object the server rendered from, inlined by server/index.js.
+ * Reading it back rather than refetching is what keeps the first client render
+ * identical to the server's markup — a refetch would race hydration and React
+ * would discard the server HTML.
+ *
+ * Absent under `vite dev`, which has no SSR; the fallback content covers that.
+ */
+const content = window.__CONTENT__ ?? null;
+
 if (container.hasChildNodes()) {
-  hydrateRoot(container, <App />);
+  hydrateRoot(container, <App content={content} />);
 } else {
-  createRoot(container).render(<App />);
+  createRoot(container).render(<App content={content} />);
 }

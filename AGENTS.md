@@ -27,6 +27,23 @@ is the single source for the sitemap and the 404 list, and each dynamic
 family is gated on its route existing in `RoutePath.js` — that gate is what
 stops content published before its page from advertising soft 404s.
 
+**The server and client React trees must be structurally identical.**
+`Routes.jsx` and `ServerRoutes.jsx` differ only in lazy vs eager imports —
+every wrapper, including the `<Suspense>` boundary and its fallback, has to
+match. A boundary present on one side only emits different SSR markers, and
+hydration fails at the first child of `<main>`, discarding the whole server
+render. The page still looks perfect in a browser; only `curl` and crawlers
+see the damage.
+
+**JSON-LD goes through `<JsonLd>` in `Seo.jsx`**, never a `<script>` with a
+text child, and `hoistHeadTags` deliberately leaves it in the body. React 19
+hoists `title`/`meta`/`link` on the client but not scripts, so moving it
+server-side desynchronises the two trees.
+
+**Anything rendered from `Date`, `Math.random()` or locale formatting will
+break hydration.** See `shadeForCell` in `HeroArt.jsx` for the pattern:
+derive from the index, not from entropy.
+
 **Server files need explicit import extensions** (`./content.js`, not
 `./content`) and cannot be `.jsx`. Vite resolves both; the tests load these
 modules with plain Node, which resolves neither. JSON imports need

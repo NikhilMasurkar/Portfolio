@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router";
+import { ContentProvider } from "./app/global/ContentContext.jsx";
 import { PageRoutes } from "./app/router/Routes";
 
 /**
@@ -12,10 +13,12 @@ import { PageRoutes } from "./app/router/Routes";
  * render a single MUI component. Tailwind's preflight covers what
  * CssBaseline was doing.
  */
-export default function App() {
+export default function App({ content }) {
   return (
-    <BrowserRouter>
-      <PageRoutes />
-    </BrowserRouter>
+    <ContentProvider content={content}>
+      <BrowserRouter>
+        <PageRoutes />
+      </BrowserRouter>
+    </ContentProvider>
   );
 }

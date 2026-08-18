@@ -18,6 +18,7 @@ assertRoutesResolvable(components, "src/app/router/Routes.jsx");
 export function PageRoutes() {
   return (
     <Layout>
+      {/* MUST MATCH server/ServerRoutes.jsx — see the note there. */}
       <Suspense fallback={<div style={{ minHeight: "60vh" }} />}>
         <Routes>
           {ROUTES.map(({ path, component }) => {

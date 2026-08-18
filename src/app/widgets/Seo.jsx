@@ -39,6 +39,30 @@ const breadcrumbSchema = (path, title) => {
   };
 };
 
+/**
+ * Structured data, written as raw HTML rather than as a text child.
+ *
+ * `<script>{json}</script>` makes React manage the JSON as a hydratable text
+ * node, and the server and client representations do not match — hydration
+ * fails, React throws away the server's markup, and the page silently becomes
+ * client-rendered. It looks perfect in a browser while every crawler gets a
+ * blank document, which is the failure this whole SSR setup exists to prevent.
+ *
+ * The "<" escape is what keeps that raw injection safe: content is
+ * admin-authored, and a value containing "</script>" would otherwise close
+ * this tag early and let the rest parse as markup.
+ */
+function JsonLd({ data }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
+    />
+  );
+}
+
 export default function Seo({
   path,
   title,
@@ -84,13 +108,9 @@ export default function Seo({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content={finalImage} />
       {SITE.twitterHandle && <meta name="twitter:site" content={SITE.twitterHandle} />}
-      {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
+      {jsonLd && <JsonLd data={jsonLd} />}
       {/* Fallback so no page ships without structured data. */}
-      {path !== "/" && (
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema(path, finalTitle))}
-        </script>
-      )}
+      {path !== "/" && <JsonLd data={breadcrumbSchema(path, finalTitle)} />}
     </>
   );
 }

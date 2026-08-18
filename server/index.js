@@ -24,6 +24,8 @@ import hoistHeadTags from "./hoistHeadTags";
 import ServerRoutes from "./ServerRoutes";
 import buildSitemap, { knownPaths } from "./sitemap";
 import redirectFor from "./redirects";
+import { getContent } from "./content.js";
+import { getDb } from "./db.js";
 
 /**
  * The client build's index.html, inlined into this bundle at build time.
@@ -69,7 +71,21 @@ const SHELL = {
     .trim(),
 };
 
-function renderDocument({ head, pageHead, appHtml, bodyEnd }) {
+/**
+ * Serialise content for the client so hydration sees the same data the server
+ * rendered from. Without it React finds different markup and throws the
+ * server's HTML away.
+ *
+ * The escaping is not optional. Content is admin-authored prose, and a project
+ * summary containing "</script>" would otherwise close this tag early and let
+ * the remainder parse as markup — a stored XSS through the person's own CMS.
+ * Escaping "<" defeats that without needing to know where it appears.
+ */
+function serialiseContent(content) {
+  return JSON.stringify(content ?? null).replace(/</g, "\\u003c");
+}
+
+function renderDocument({ head, pageHead, appHtml, state, bodyEnd }) {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -78,6 +94,7 @@ function renderDocument({ head, pageHead, appHtml, bodyEnd }) {
   </head>
   <body>
     <div id="root">${appHtml}</div>
+    <script>window.__CONTENT__=${state}</script>
     ${bodyEnd}
   </body>
 </html>`;
@@ -95,8 +112,12 @@ async function handleRender(req, res) {
      * to collect nothing. Do not add it back without first putting an MUI
      * component on a server-rendered page.
      */
+    // Fetched once per render and shared with knownPaths() below via the
+    // content cache, so this is not two round trips.
+    const content = await getContent({ db: getDb() });
+
     const rendered = ReactDOMServer.renderToString(
-      createElement(ServerRoutes, { location: req.originalUrl })
+      createElement(ServerRoutes, { location: req.originalUrl, content })
     );
 
     const { head: pageHead, body: appHtml } = hoistHeadTags(rendered);
@@ -108,6 +129,7 @@ async function handleRender(req, res) {
         head: SHELL.head,
         pageHead,
         appHtml,
+        state: serialiseContent(content),
         bodyEnd: SHELL.bodyExtras,
       })
     );
