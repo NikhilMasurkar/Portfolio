@@ -142,9 +142,11 @@ test("duplicate paths are collapsed", async () => {
     routes: ALL_ROUTES,
   });
 
-  const blogEntries = pages.filter(([loc]) => loc.startsWith("/blog/"));
+  // Post URLs only. "/blog/" itself is a static page in seoMeta, so a plain
+  // startsWith would count the listing too and mask what is being tested.
+  const postEntries = pages.filter(([loc]) => /^\/blog\/.+/.test(loc));
   // A duplicate <loc> is a sitemap validation error.
-  assert.equal(blogEntries.length, 1);
+  assert.equal(postEntries.length, 1);
 });
 
 test("the sitemap is well-formed with no content at all", async () => {

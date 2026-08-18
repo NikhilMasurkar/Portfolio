@@ -18,5 +18,9 @@
   "/resume/": {
     "title": "Resume — Nikhil Masurkar",
     "description": "Frontend Engineer and React Native specialist. Experience, skills and education, downloadable as a PDF generated from this page."
+  },
+  "/blog/": {
+    "title": "Blog — Nikhil Masurkar",
+    "description": "Thoughts, technical notes and lessons from shipping production React and React Native software."
   }
 }

@@ -71,6 +71,7 @@ export const SECTIONS = [
   { label: "Overview", path: "/admin", page: null },
   { label: "Profile", path: "/admin/profile", page: "Home · About · Contact · footer" },
   { label: "Projects", path: "/admin/projects", page: "Home · /projects · case studies" },
+  { label: "Blog", path: "/admin/posts", page: "/blog · post pages" },
   { label: "Resume", path: "/admin/resume", page: "/resume + the PDF" },
   { label: "Experience", path: "/admin/experience", page: "/about · /resume" },
   { label: "Education", path: "/admin/education", page: "/resume" },

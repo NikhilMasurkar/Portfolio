@@ -12,6 +12,8 @@ const components = {
   About: lazy(() => import("../pages/about/About.jsx")),
   Projects: lazy(() => import("../pages/projects/Projects.jsx")),
   ProjectDetail: lazy(() => import("../pages/projects/ProjectDetail.jsx")),
+  Blog: lazy(() => import("../pages/blog/Blog.jsx")),
+  BlogPost: lazy(() => import("../pages/blog/BlogPost.jsx")),
   Resume: lazy(() => import("../pages/resume/Resume.jsx")),
   Contact: lazy(() => import("../pages/contact/Contact.jsx")),
 };
