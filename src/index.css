@@ -223,3 +223,104 @@ body {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * Print — this IS the resume PDF.
+ *
+ * The download button calls window.print(), so whatever these rules produce is
+ * the file a recruiter opens. Generating it from the live page rather than
+ * uploading a PDF means the download can never be older than the content:
+ * editing an experience entry in the admin panel changes the PDF, with no
+ * second artefact to remember to re-export.
+ *
+ * Two things would otherwise ruin it:
+ *
+ *   1. The site is dark. Printers drop background colours by default, so a
+ *      dark theme prints as near-invisible light text on white. Everything is
+ *      forced back to black-on-white here.
+ *   2. Gradient headings use background-clip:text with transparent fill. With
+ *      backgrounds dropped they print as NOTHING — an invisible name at the
+ *      top of the resume. They have to be given a real colour back.
+ * ------------------------------------------------------------------------ */
+@media print {
+  @page {
+    margin: 14mm 14mm 16mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Site furniture has no place in a resume. */
+  header,
+  footer,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+  }
+
+  /* Decorative layers: orbs, grids, noise, the hero backdrop. */
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  [data-print="page"] {
+    padding: 0 !important;
+  }
+
+  /* Reveal must never leave content hidden in a PDF. */
+  [data-reveal],
+  [data-reveal-ready] [data-reveal]:not([data-revealed]) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  [data-print="page"] * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Undo the gradient-text treatment, which prints as nothing. */
+  [data-print="page"] .text-transparent,
+  [data-print="page"] [class*="bg-clip-text"] {
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+    background-image: none !important;
+  }
+
+  /* Cards become rules rather than boxes — cheaper on ink, easier to read. */
+  [data-print="page"] .border,
+  [data-print="page"] [class*="border-line"] {
+    border-color: #ccc !important;
+  }
+
+  /* Keep an entry and its heading together across a page break. */
+  [data-print="entry"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* A printed link is only useful if its destination is visible. */
+  [data-print="page"] a[href^="http"]::after,
+  [data-print="page"] a[href^="mailto"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10px;
+    color: #555 !important;
+    word-break: break-all;
+  }
+}

@@ -15,12 +15,8 @@
     "title": "Contact — Nikhil Masurkar",
     "description": "Get in touch about full-time roles, freelance work or a project idea. Email, LinkedIn and a direct message form."
   },
-  "/experience/": {
-    "title": "Experience — Nikhil Masurkar",
-    "description": "Senior Software Developer at Avinash Group; previously Frontend and React Native Developer at IndigoLearn, on a learning platform with 100K+ downloads."
-  },
   "/resume/": {
     "title": "Resume — Nikhil Masurkar",
-    "description": "Frontend Engineer and React Native specialist. Experience, skills and education, with a PDF download."
+    "description": "Frontend Engineer and React Native specialist. Experience, skills and education, downloadable as a PDF generated from this page."
   }
 }

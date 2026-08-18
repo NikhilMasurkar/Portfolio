@@ -13,8 +13,8 @@ const CANDIDATES = [
   ["Home", ROUTE_PATH.HOME],
   ["About", ROUTE_PATH.ABOUT],
   ["Projects", ROUTE_PATH.PROJECTS],
-  ["Experience", ROUTE_PATH.EXPERIENCE],
   ["Blog", ROUTE_PATH.BLOG],
+  ["Resume", ROUTE_PATH.RESUME],
   ["Contact", ROUTE_PATH.CONTACT],
 ];
 

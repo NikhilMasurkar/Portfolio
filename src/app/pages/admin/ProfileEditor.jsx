@@ -167,27 +167,13 @@ export default function ProfileEditor() {
             onChange={setValue("avatarUrl")}
             helperText="Shown on the About page. Resized to 900px before upload."
           />
-          <Divider />
-          <FileField
-            label="Resume (PDF)"
-            kind="resume"
-            accept="application/pdf"
-            value={form.resumeUrl}
-            onChange={(url) =>
-              setForm({
-                ...form,
-                resumeUrl: url,
-                // Stamped here so the resume page can show when it was last
-                // refreshed without anyone maintaining the date by hand.
-                resumeUpdatedAt: new Date().toISOString().slice(0, 10),
-              })
-            }
-            helperText={
-              form.resumeUpdatedAt
-                ? `Last updated ${form.resumeUpdatedAt}. Replacing it takes effect within 60 seconds.`
-                : "Uploading replaces the download on the resume page."
-            }
-          />
+          {/*
+            No resume upload. The PDF is generated from /resume when a visitor
+            clicks Download, so it is produced from the same experience,
+            skills and education you edit here. An uploaded file would be a
+            second copy that goes stale the moment anything changes — which is
+            exactly what the previous site did.
+          */}
         </Stack>
       </Paper>
 
