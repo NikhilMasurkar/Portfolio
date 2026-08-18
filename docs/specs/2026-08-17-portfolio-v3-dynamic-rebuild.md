@@ -60,7 +60,8 @@ sitemap/404/redirect/Emotion-SSR/cache-header plumbing.
 | **D1** | Rebuild on `react-ssr-boilerplate`, drop Next.js | Matches production stack. The boilerplate's SEO plumbing is already debugged in production on ACC. |
 | **D2** | **Tailwind on the public site, MUI only in `/admin`** | The v3 design is custom-token Tailwind; MUI components would each need restyling to match it. Confining MUI to the admin panel avoids the specificity war entirely, and MUI ships as a lazy chunk that public pages never load. MUI earns its place where it is strong — DataGrid, Dialog, TextField, Snackbar. |
 | **D3** | Firestore is the content source; reads go through `firebase-admin` on the server only | Visitors never touch Firestore. Reads stay inside the free tier regardless of traffic, and the rendered HTML is complete for crawlers. |
-| **D4** | Writes go browser → Firestore directly, guarded by security rules | No CRUD API to build. Security lives at the database, so `/admin` being discovered grants nothing. Browser → Storage uploads also dodge any request-body size limit on the resume PDF. |
+| **D4** | Firestore writes go browser → Firestore directly, guarded by security rules | No CRUD API to build. Security lives at the database, so `/admin` being discovered grants nothing. |
+| **D4b** | **Files go to AWS S3, not Firebase Storage**, via presigned PUT URLs | Firebase Storage requires the Blaze plan on new projects; the AWS account already exists. Cost of the switch: S3 has no client-side security-rule equivalent, so an authenticated server route must mint a short-lived presigned URL. The browser then PUTs directly to S3, which is what preserves the reason for choosing direct upload in the first place — the resume PDF and screenshots never pass through the function, so no request-body limit applies. |
 | **D5** | Netlify Functions | Keeps the current host and URL, free. Cost: no long-lived process, so §4's cache is TTL-based rather than realtime, and content edits appear within ~60s rather than instantly. |
 | **D6** | Google sign-in, single UID allowlisted in rules | No signup flow, no password to store, nobody else can ever obtain write access. |
 | **D7** | Blog body is Markdown, edited in a textarea with live preview | A WYSIWYG is a large dependency and a permanent maintenance cost for a single author. |
@@ -196,13 +197,62 @@ SSR skips it and returns the plain shell.
 
 ---
 
+## 7b. File uploads (S3)
+
+```
+admin browser                    server route                S3
+  pick file
+  resize via canvas
+  POST /api/upload-url      →  verify Firebase ID token
+  (contentType, size)          reject non-image/pdf
+                               server-generate the key
+                               presign POST, 60s TTL,
+                                 content-length-range 0..10MB
+                          ←  { url, fields, publicUrl }
+  FormData PUT ──────────────────────────────────────────→  object stored
+  save publicUrl to Firestore
+```
+
+- **Presigned POST, not presigned PUT.** A presigned PUT URL cannot cap upload
+  size — the signature covers the key and headers, not the body length, so
+  "10 MB max" would be a client-side suggestion and any holder of the URL could
+  push an arbitrarily large object. Only presigned POST carries a policy
+  document with `content-length-range`, which S3 itself enforces. The cost is a
+  `FormData` request instead of a raw body; the benefit is that the limit is
+  real. Do not "simplify" this back to PUT.
+- **The presign route is the trust boundary.** It verifies the caller's Firebase
+  ID token with the Admin SDK and constrains key prefix, content type and size
+  *before* signing. A presigned credential grants whatever its signature
+  permits, so constraints must be baked into the signature, not checked
+  afterwards.
+- **Keys are server-generated** (`<collection>/<uuid>.<ext>`), never taken from
+  the client filename. A client-supplied key is a path-traversal and
+  overwrite-any-object primitive.
+- **Public read comes from the bucket policy, not object ACLs.** Buckets created
+  in recent years default to Object Ownership = "Bucket owner enforced", which
+  disables ACLs outright — so a presigned request asking for
+  `acl: public-read` is rejected. Only a prefix used for served assets is
+  public; the rest of the bucket stays private.
+- **Objects are immutable.** A replacement gets a new key, so
+  `Cache-Control: immutable` is safe and nothing needs invalidating.
+- **CORS must allow POST from the site origin**, or the browser upload fails
+  while `curl` against the same URL succeeds — a confusing failure worth
+  recognising quickly.
+- **AWS credentials are server-only**, in Netlify env vars, never `VITE_`-
+  prefixed. That prefix is the mechanism keeping them out of the bundle.
+
+Exact bucket, CORS, bucket-policy and IAM settings: `docs/aws/s3-setup.md`.
+
 ## 8. Security
 
 - **Firestore rules:** public read where `published == true`; all writes require
-  `request.auth.uid == ADMIN_UID`. `messages` allows no client read or write —
-  it is written by the server with the Admin SDK.
-- **Storage rules:** public read; writes require the same UID; uploads capped at
-  10 MB and restricted to image and PDF content types.
+  an authenticated admin. Bootstrapped as
+  `request.auth.token.email == ADMIN_EMAIL` rather than a UID, because the UID
+  does not exist until after the first sign-in — a chicken-and-egg that would
+  otherwise block building the admin panel. Google-federated sign-in gives a
+  verified email claim, so this is sound; tighten to UID once known.
+  `messages` allows no client read or write — the server writes it.
+- **S3:** see §7b.
 - **Contact route:** Zod validation, honeypot field, per-IP rate limit, size cap.
   Distinct user-visible messages for validation failure, rate limit and server
   error. No silent failures.
