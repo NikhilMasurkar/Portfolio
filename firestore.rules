@@ -1,0 +1,81 @@
+rules_version = '2';
+
+/*
+ * Paste into Firebase console → Firestore Database → Rules → Publish.
+ *
+ * These rules ARE the access control for this project. There is no service
+ * account and no server-side privilege: the SSR server reads through the
+ * public REST API and gets exactly what a visitor would. So anything readable
+ * here is readable by the world, and anything writable here is writable by
+ * anyone who satisfies the condition.
+ *
+ * The admin panel writes straight from the browser. That is safe only because
+ * of isAdmin() below — /admin being discovered grants nothing.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /*
+     * Bootstrapped on the email claim rather than a uid, because the uid does
+     * not exist until after the first sign-in — a chicken-and-egg that would
+     * otherwise block building the admin panel at all.
+     *
+     * email_verified is not decoration: without it, a provider that allows
+     * unverified addresses would let someone sign up as this address and gain
+     * write access. Google-federated sign-in always sets it.
+     */
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'nikhildmasurkar@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Site identity, about copy, stats, socials, resume link. Public by nature.
+    match /profile/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /*
+     * Drafts stay private. A reader may only see documents already published;
+     * the admin sees everything.
+     *
+     * A LIST against these collections must filter on published == true, or
+     * Firestore refuses it — it will not evaluate per-document to decide what
+     * to hide. server/db.js issues that filter via runQuery. The admin's
+     * unfiltered list is allowed because isAdmin() does not depend on document
+     * data, so the rule can be satisfied without inspecting results.
+     */
+    match /projects/{slug} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /posts/{slug} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Shown in full whenever they exist; no draft state.
+    match /experience/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /education/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /skills/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Anything not named above is denied. New collections must be added here
+    // deliberately rather than inheriting access by accident.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
