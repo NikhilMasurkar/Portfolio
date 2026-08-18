@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { AuthProvider, useAuth } from "../../admin/useAuth.jsx";
 import { configError, storageReport } from "../../admin/firebase.js";
+import { SECTIONS } from "./sections.jsx";
 
 /**
  * Admin gate and shell. Client-rendered only — server/index.js serves the bare
@@ -20,11 +21,6 @@ import { configError, storageReport } from "../../admin/firebase.js";
  * out of the server bundle entirely.
  */
 
-/** Sections that exist. Added here as each editor is built. */
-const SECTIONS = [
-  { label: "Overview", path: "/admin" },
-  { label: "Profile", path: "/admin/profile" },
-];
 
 function Centered({ children }) {
   return (
@@ -50,6 +46,7 @@ function Shell({ title, children }) {
   // Exact match: "/admin" is a prefix of every other section, so a startsWith
   // check would light up Overview on every page.
   const active = SECTIONS.findIndex((section) => section.path === pathname);
+  const current = SECTIONS[active];
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
@@ -69,13 +66,25 @@ function Shell({ title, children }) {
               <Typography variant="body2" color="text.secondary">
                 {user.email}
               </Typography>
+              {/* Names the public page this section drives, so it is obvious
+                  where an edit will show up. */}
+              {current?.page && (
+                <Typography variant="caption" color="text.disabled">
+                  Updates {current.page}
+                </Typography>
+              )}
             </Box>
             <Button variant="outlined" size="small" onClick={signOut}>
               Sign out
             </Button>
           </Stack>
 
-          <Tabs value={active === -1 ? false : active} sx={{ mt: 2 }}>
+          <Tabs
+            value={active === -1 ? false : active}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ mt: 2 }}
+          >
             {SECTIONS.map((section) => (
               <Tab
                 key={section.path}

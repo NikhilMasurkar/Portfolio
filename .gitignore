@@ -42,3 +42,6 @@ next-env.d.ts
 
 # netlify cli
 .netlify
+
+# Source resume, kept out of the deploy
+*.pdf

@@ -6,6 +6,8 @@ import { adminTheme } from "./app/admin/theme.js";
 import Admin from "./app/pages/admin/Admin.jsx";
 import Overview from "./app/pages/admin/Overview.jsx";
 import ProfileEditor from "./app/pages/admin/ProfileEditor.jsx";
+import ResumeEditor from "./app/pages/admin/ResumeEditor.jsx";
+import { ExperienceEditor, EducationEditor } from "./app/pages/admin/sections.jsx";
 
 /**
  * The admin panel's own root, separate from the public App.

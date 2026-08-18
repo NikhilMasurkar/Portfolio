@@ -1,6 +1,39 @@
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, getDocs, collection as coll } from "firebase/firestore";
 import { db } from "./firebase.js";
+
+/**
+ * Loads a whole collection for editing, ordered by `order`.
+ *
+ * Unfiltered, unlike the public site: the admin sees drafts and unpublished
+ * rows, which is exactly what firestore.rules permits for the admin account
+ * and refuses for everyone else.
+ */
+export function useCollection(name, reloadKey = 0) {
+  const [state, setState] = useState({ loading: true, rows: [], error: null });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getDocs(coll(db, name))
+      .then((snapshot) => {
+        if (cancelled) return;
+        const rows = snapshot.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        setState({ loading: false, rows, error: null });
+      })
+      .catch((error) => {
+        if (!cancelled) setState({ loading: false, rows: [], error });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [name, reloadKey]);
+
+  return state;
+}
 
 /**
  * Loads one Firestore document for editing.
