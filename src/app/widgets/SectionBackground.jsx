@@ -55,6 +55,15 @@ const PLATES = {
    */
   about: { src: "/bg/about.jpg", position: "62% 45%" },
   contact: { src: "/bg/contact.jpg", position: "center 78%" },
+  /*
+   * The home plate does duty for the work pages too. Reusing it is deliberate
+   * rather than lazy: /projects and a case study read as one continuous
+   * section of the site, and giving each its own scene would make moving
+   * between them feel like leaving and arriving somewhere else.
+   */
+  projects: { src: "/bg/home.jpg", position: "center 30%" },
+  "case-study": { src: "/bg/home.jpg", position: "center 20%" },
+  resume: { src: "/bg/home.jpg", position: "center 35%" },
 };
 
 /**

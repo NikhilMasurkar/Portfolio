@@ -7,6 +7,7 @@ import Admin from "./app/pages/admin/Admin.jsx";
 import Overview from "./app/pages/admin/Overview.jsx";
 import ProfileEditor from "./app/pages/admin/ProfileEditor.jsx";
 import ResumeEditor from "./app/pages/admin/ResumeEditor.jsx";
+import ProjectsEditor from "./app/pages/admin/ProjectsEditor.jsx";
 import { ExperienceEditor, EducationEditor } from "./app/pages/admin/sections.jsx";
 import ResumeInlineEditor from "./app/pages/admin/ResumeInlineEditor.jsx";
 
@@ -43,6 +44,14 @@ export default function AdminApp() {
             element={
               <Admin title="Profile">
                 <ProfileEditor />
+              </Admin>
+            }
+          />
+          <Route
+            path="/admin/projects"
+            element={
+              <Admin title="Projects">
+                <ProjectsEditor />
               </Admin>
             }
           />

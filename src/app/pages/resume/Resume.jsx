@@ -1,6 +1,7 @@
 import React from "react";
 import Seo from "../../widgets/Seo.jsx";
 import Container from "../../widgets/Container.jsx";
+import SectionBackground from "../../widgets/SectionBackground.jsx";
 import DownloadResume from "./DownloadResume.jsx";
 import ResumeSheet from "./ResumeSheet.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
@@ -20,8 +21,14 @@ export default function Resume() {
   const { resume, experience, education } = useContent();
 
   return (
-    <section className="py-16 max-[720px]:py-8" data-print="page">
+    <section
+      className="relative overflow-hidden py-16 max-[720px]:py-8"
+      data-print="page"
+    >
       <Seo path={ROUTE_PATH.RESUME} />
+      {/* aria-hidden already, and the print rules drop it — a resume PDF has
+          no business carrying a nebula. */}
+      <SectionBackground variant="resume" />
 
       <Container>
         {/* Excluded from the PDF — a printed resume should not carry its own
