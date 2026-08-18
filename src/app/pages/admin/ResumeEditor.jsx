@@ -79,10 +79,17 @@ export default function ResumeEditor() {
 
   return (
     <Stack spacing={4}>
-      <Alert severity="info">
+      <Alert severity="info" action={
+        <Button color="inherit" size="small" href="/resume/edit">
+          Edit on the page
+        </Button>
+      }>
         These sections appear on <strong>/resume</strong> and in the PDF it
         generates. The PDF is the page printed, so anything you change here is
         in the next download — there is no file to re-upload.
+        <br />
+        This form is the structural view: it adds, removes and reorders. To
+        reword something in place, edit it on the document itself.
       </Alert>
 
       <Paper sx={{ p: 3 }}>

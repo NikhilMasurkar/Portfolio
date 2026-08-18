@@ -13,7 +13,14 @@ const container = document.getElementById("root");
  * than hydrated. Loading it dynamically also keeps the Firebase SDK out of the
  * bundle every visitor downloads.
  */
-if (window.location.pathname.startsWith("/admin")) {
+/*
+ * Routes served as a bare shell and mounted fresh, not hydrated. /resume/edit
+ * is the resume page with editing switched on, so it belongs to the admin
+ * bundle even though it does not sit under /admin.
+ */
+const CLIENT_ONLY = ["/admin", "/resume/edit"];
+
+if (CLIENT_ONLY.some((prefix) => window.location.pathname.startsWith(prefix))) {
   import("./AdminApp.jsx").then(({ default: AdminApp }) => {
     createRoot(container).render(<AdminApp />);
   });

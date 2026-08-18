@@ -218,6 +218,7 @@ app.get("/robots.txt", (_req, res) => {
       // Behind a login and served as a bare shell — nothing to index, and no
       // reason to advertise it.
       "Disallow: /admin",
+      "Disallow: /resume/edit",
       "",
       `Sitemap: ${SITE.domain}/sitemap.xml`,
       "",
@@ -312,8 +313,10 @@ app.post("/api/upload-url", express.json({ limit: "4kb" }), async (req, res) => 
  * not being in the sitemap. It stays out of the sitemap on purpose, and
  * robots.txt disallows it.
  */
+const CLIENT_ONLY = ["/admin", "/resume/edit"];
+
 app.get("/{*splat}", (req, res, next) => {
-  if (!req.path.startsWith("/admin")) return next();
+  if (!CLIENT_ONLY.some((prefix) => req.path.startsWith(prefix))) return next();
   res.status(200).set("Content-Type", "text/html; charset=utf-8").send(shellHtml);
 });
 
