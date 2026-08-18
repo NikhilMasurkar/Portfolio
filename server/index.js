@@ -27,6 +27,8 @@ import redirectFor from "./redirects";
 import { getContent } from "./content.js";
 import { getDb } from "./db.js";
 import { SITE } from "../src/app/global/siteConfig.js";
+import { verifyIdToken, isAdminClaims } from "./auth.js";
+import { presignUpload } from "./upload.js";
 
 /**
  * The client build's index.html, inlined into this bundle at build time.
@@ -220,6 +222,45 @@ app.get("/robots.txt", (_req, res) => {
       "",
     ].join("\n")
   );
+});
+
+/**
+ * Mints a presigned S3 upload for the admin panel.
+ *
+ * This is the trust boundary for uploads. The browser talks to S3 directly
+ * afterwards — which is the point, since a resume PDF never has to fit through
+ * a function's request body — so every constraint has to be baked into the
+ * signature here rather than checked later.
+ *
+ * Two gates, in order: a valid Firebase ID token, then that token belonging to
+ * the admin. A valid token from any other Google account gets 403, not 401,
+ * because the difference matters when debugging.
+ */
+app.post("/api/upload-url", express.json({ limit: "4kb" }), async (req, res) => {
+  const header = req.get("authorization") || "";
+  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
+
+  let claims;
+  try {
+    claims = await verifyIdToken(token);
+  } catch (err) {
+    console.warn("[upload] rejected token:", err.message);
+    return res.status(401).json({ error: "Not signed in" });
+  }
+
+  if (!isAdminClaims(claims)) {
+    console.warn(`[upload] non-admin attempt by ${claims.email ?? "unknown"}`);
+    return res.status(403).json({ error: "Not authorised" });
+  }
+
+  try {
+    const { contentType, kind } = req.body ?? {};
+    res.json(await presignUpload({ contentType, kind }));
+  } catch (err) {
+    const status = err.status ?? 500;
+    if (status >= 500) console.error("[upload] presign failed:", err);
+    res.status(status).json({ error: err.message });
+  }
 });
 
 /**

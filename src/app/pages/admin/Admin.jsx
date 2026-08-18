@@ -1,130 +1,193 @@
 import React from "react";
+import { Link, useLocation } from "react-router";
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { AuthProvider, useAuth } from "../../admin/useAuth.jsx";
 import { configError } from "../../admin/firebase.js";
-import Dashboard from "./Dashboard.jsx";
 
 /**
- * Admin entry point. Client-rendered only — server/index.js serves the bare
- * shell for /admin and never runs this on the server, which keeps the Firebase
- * SDK out of the server bundle entirely.
- *
- * Styled with Tailwind rather than MUI. MUI is the right tool for the CRUD
- * screens (data grids, dialogs, form fields) and will be added when those land;
- * pulling in a large component library for a single sign-in button would not
- * earn its place.
+ * Admin gate and shell. Client-rendered only — server/index.js serves the bare
+ * shell for /admin and never runs this, which keeps the Firebase SDK and MUI
+ * out of the server bundle entirely.
  */
 
-function Panel({ children }) {
+/** Sections that exist. Added here as each editor is built. */
+const SECTIONS = [
+  { label: "Overview", path: "/admin" },
+  { label: "Profile", path: "/admin/profile" },
+];
+
+function Centered({ children }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-6">
-      <div className="w-full max-w-md rounded-[22px] border border-line bg-surface p-10 text-center">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        p: 3,
+      }}
+    >
+      <Paper sx={{ p: 5, maxWidth: 440, width: "100%", textAlign: "center" }}>
         {children}
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 }
 
-function AdminGate() {
+function Shell({ title, children }) {
+  const { user, signOut } = useAuth();
+  const { pathname } = useLocation();
+
+  // Exact match: "/admin" is a prefix of every other section, so a startsWith
+  // check would light up Overview on every page.
+  const active = SECTIONS.findIndex((section) => section.path === pathname);
+
+  return (
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Container maxWidth="lg" sx={{ pt: 4 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-start"
+            flexWrap="wrap"
+            gap={2}
+          >
+            <Box>
+              <Typography variant="h1" sx={{ fontSize: 28 }}>
+                {title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {user.email}
+              </Typography>
+            </Box>
+            <Button variant="outlined" size="small" onClick={signOut}>
+              Sign out
+            </Button>
+          </Stack>
+
+          <Tabs value={active === -1 ? false : active} sx={{ mt: 2 }}>
+            {SECTIONS.map((section) => (
+              <Tab
+                key={section.path}
+                label={section.label}
+                component={Link}
+                to={section.path}
+              />
+            ))}
+          </Tabs>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ py: 5 }}>
+        {children}
+      </Container>
+    </Box>
+  );
+}
+
+function Gate({ title, children }) {
   const { user, isAdmin, loading, error, signIn, signInRedirect, signOut, adminEmail } =
     useAuth();
 
   if (loading) {
     return (
-      <Panel>
-        <p className="text-muted">Checking your session…</p>
-      </Panel>
+      <Centered>
+        <Typography color="text.secondary">Checking your session…</Typography>
+      </Centered>
     );
   }
 
   if (!user) {
     return (
-      <Panel>
-        <h1 className="font-display text-3xl font-bold text-fg">Admin</h1>
-        <p className="mt-3 text-sm text-muted">
+      <Centered>
+        <Typography variant="h1" sx={{ fontSize: 30, mb: 1 }}>
+          Admin
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           Sign in to edit the content of this site.
-        </p>
+        </Typography>
 
         {error && (
-          <p
-            role="alert"
-            className="mt-6 rounded-xl border border-line-raised bg-bg px-4 py-3 text-left text-[13px] leading-relaxed text-fg-3"
-          >
+          <Alert severity="error" sx={{ mt: 3, textAlign: "left" }}>
             {error}
-          </p>
+          </Alert>
         )}
 
-        <button
-          type="button"
-          onClick={signIn}
-          className="mt-8 w-full rounded-xl bg-[image:var(--gradient-04)] px-6 py-3.5 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
-        >
+        <Button variant="contained" fullWidth sx={{ mt: 4 }} onClick={signIn}>
           Continue with Google
-        </button>
+        </Button>
 
         {/*
-          The popup is the fragile path — it needs storage the opener can read
-          back, which browsers increasingly partition, and blockers stop it
-          outright. Offered permanently rather than only after a failure, so
-          there is always a way through without a second attempt.
+          Offered permanently, not only after a failure. The popup needs
+          storage the opener can read back, which browsers increasingly
+          partition — this path does not.
         */}
-        <button
-          type="button"
-          onClick={signInRedirect}
-          className="mt-3 w-full rounded-xl border border-line-raised px-6 py-3 text-[13px] font-medium text-muted transition-colors hover:border-primary hover:text-fg"
-        >
+        <Button size="small" fullWidth sx={{ mt: 1.5 }} onClick={signInRedirect}>
           Popup blocked? Sign in by redirect
-        </button>
-      </Panel>
+        </Button>
+      </Centered>
     );
   }
 
   if (!isAdmin) {
     /*
      * Signed in as the wrong account. Saying so plainly beats letting every
-     * write fail with a permissions error from Firestore, which is the actual
-     * enforcement and cannot be talked out of.
+     * write fail against Firestore rules, which are the real enforcement and
+     * cannot be talked out of.
      */
     return (
-      <Panel>
-        <h1 className="font-display text-2xl font-bold text-fg">Not authorised</h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          You are signed in as <span className="text-fg-3">{user.email}</span>.
-          This site can only be edited by <span className="text-fg-3">{adminEmail}</span>.
-        </p>
-        <button
-          type="button"
-          onClick={signOut}
-          className="mt-8 w-full rounded-xl border border-line-raised px-6 py-3 text-sm font-semibold text-fg transition-colors hover:border-primary"
-        >
+      <Centered>
+        <Typography variant="h1" sx={{ fontSize: 24, mb: 1.5 }}>
+          Not authorised
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          You are signed in as {user.email}. This site can only be edited by{" "}
+          {adminEmail}.
+        </Typography>
+        <Button variant="outlined" fullWidth sx={{ mt: 4 }} onClick={signOut}>
           Sign out
-        </button>
-      </Panel>
+        </Button>
+      </Centered>
     );
   }
 
-  return <Dashboard />;
+  return <Shell title={title}>{children}</Shell>;
 }
 
-export default function Admin() {
+export default function Admin({ title, children }) {
   const problem = configError();
 
   if (problem) {
     // Without this the SDK throws something opaque about an invalid API key.
     return (
-      <Panel>
-        <h1 className="font-display text-2xl font-bold text-fg">Not configured</h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{problem}</p>
-        <p className="mt-3 text-[13px] leading-relaxed text-meta">
-          Set these in <code className="font-mono">.env</code> locally, and in
-          Netlify under Site settings → Environment variables.
-        </p>
-      </Panel>
+      <Centered>
+        <Typography variant="h1" sx={{ fontSize: 24, mb: 1.5 }}>
+          Not configured
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {problem}
+        </Typography>
+        <Typography variant="caption" color="text.disabled" sx={{ display: "block", mt: 2 }}>
+          Set these in .env locally, and in Netlify under Site settings →
+          Environment variables.
+        </Typography>
+      </Centered>
     );
   }
 
   return (
     <AuthProvider>
-      <AdminGate />
+      <Gate title={title}>{children}</Gate>
     </AuthProvider>
   );
 }
