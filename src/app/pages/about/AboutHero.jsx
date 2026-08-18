@@ -1,13 +1,17 @@
-import Link from "next/link";
-import { ProjectShot } from "@/components/ui/project-shot";
-import { aboutHeadline, aboutParagraphs } from "@/data/about";
-import { siteConfig } from "@/lib/site-config";
+import React from "react";
+import { Link } from "react-router";
+import ProjectShot from "../../widgets/ProjectShot.jsx";
+import { ROUTE_PATH } from "../../global/RoutePath.js";
+import { useProfile } from "../../global/ContentContext.jsx";
 
-export function AboutHero() {
-  // The gradient treatment applies to the name only, not the whole greeting —
-  // split the lead on the first name so this stays correct if the copy ever
-  // changes without hardcoding the sentence structure here.
-  const firstName = siteConfig.name.split(" ")[0];
+export default function AboutHero() {
+  const profile = useProfile();
+  const { aboutHeadline, aboutParagraphs } = profile;
+
+  // The gradient applies to the name only, not the whole greeting. Splitting
+  // on the first name keeps that correct if the copy is reworded in the admin
+  // panel, rather than hardcoding the sentence structure here.
+  const firstName = profile.name.split(" ")[0];
   const [before, after] = aboutHeadline.lead.split(firstName);
 
   return (
@@ -37,12 +41,22 @@ export function AboutHero() {
             ))}
           </div>
 
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
-          >
-            Let&apos;s Talk <span aria-hidden>→</span>
-          </Link>
+          {/* Gated like every other CTA — no link to a page that does not exist. */}
+          {ROUTE_PATH.CONTACT ? (
+            <Link
+              to={ROUTE_PATH.CONTACT}
+              className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+            >
+              Let&apos;s Talk <span aria-hidden>→</span>
+            </Link>
+          ) : (
+            <a
+              href={`mailto:${profile.email}`}
+              className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+            >
+              Let&apos;s Talk <span aria-hidden>→</span>
+            </a>
+          )}
         </div>
 
         <div className="relative mx-auto w-full max-w-[360px]">
@@ -61,14 +75,17 @@ export function AboutHero() {
 
           <div className="relative aspect-[2/3] overflow-hidden rounded-[28px] border border-line-raised shadow-card">
             <ProjectShot
-              src="/about/avatar.png"
-              alt={`Portrait of ${siteConfig.name}`}
+              src={profile.avatarUrl || "/about/avatar.png"}
+              alt={`Portrait of ${profile.name}`}
               eager
+              width={720}
+              height={1080}
             />
           </div>
         </div>
       </div>
 
+      {/* 70ch keeps the long-form prose at a readable measure. */}
       <div className="mt-16 max-w-[70ch] space-y-5">
         {aboutParagraphs.slice(2).map((paragraph) => (
           <p key={paragraph} className="text-[16px] leading-[1.75] text-muted">

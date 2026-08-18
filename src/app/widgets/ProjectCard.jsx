@@ -1,9 +1,10 @@
-import Link from "next/link";
-import { ProjectShot } from "@/components/ui/project-shot";
-import type { Project } from "@/data/schemas";
+import React from "react";
+import { Link } from "react-router";
+import ProjectShot from "./ProjectShot.jsx";
+import { ROUTE_PATH } from "../global/RoutePath.js";
 
-/** A project card for the listing grid — a sibling of the home page's featured card. */
-export function ProjectCard({ project }: { project: Project }) {
+/** A project card for the listing grid — sibling of the home page's featured card. */
+export default function ProjectCard({ project }) {
   return (
     <article className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-line bg-surface/90 transition-all hover:-translate-y-1 hover:border-primary">
       <div className="h-[180px] w-full shrink-0 overflow-hidden">
@@ -56,7 +57,7 @@ export function ProjectCard({ project }: { project: Project }) {
             </a>
           )}
           <Link
-            href={`/projects/${project.slug}`}
+            to={`${ROUTE_PATH.PROJECTS}${project.slug}/`}
             className="flex items-center gap-1.5 transition-colors hover:text-fg"
           >
             Case Study <span aria-hidden>→</span>

@@ -8,10 +8,13 @@ import { ROUTES, REDIRECT_ROUTES, assertRoutesResolvable } from "./routeTable";
  * Paths come from routeTable.js — shared with the server.
  */
 const components = {
-  Home: lazy(() => import("../pages/home/Home")),
+  Home: lazy(() => import("../pages/home/Home.jsx")),
+  About: lazy(() => import("../pages/about/About.jsx")),
+  Projects: lazy(() => import("../pages/projects/Projects.jsx")),
+  ProjectDetail: lazy(() => import("../pages/projects/ProjectDetail.jsx")),
 };
 
-const NotFound = lazy(() => import("../pages/error/NotFound"));
+const NotFound = lazy(() => import("../pages/error/NotFound.jsx"));
 
 assertRoutesResolvable(components, "src/app/router/Routes.jsx");
 

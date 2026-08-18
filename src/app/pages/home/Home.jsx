@@ -2,6 +2,7 @@ import React from "react";
 import Seo from "../../widgets/Seo.jsx";
 import Hero from "./Hero.jsx";
 import ProofStrip from "./ProofStrip.jsx";
+import FeaturedProjects from "./FeaturedProjects.jsx";
 import ContactCta from "./ContactCta.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
 import { useProfile } from "../../global/ContentContext.jsx";
@@ -31,6 +32,7 @@ export default function Home() {
       <Seo path={ROUTE_PATH.HOME} jsonLd={jsonLd} />
       <Hero />
       <ProofStrip />
+      <FeaturedProjects />
       <ContactCta />
     </>
   );

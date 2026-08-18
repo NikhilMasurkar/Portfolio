@@ -61,7 +61,6 @@ src/_core/          Layout
 src/index.css       design tokens — no raw hex anywhere else
 server/             Express SSR, sitemap, redirects
 netlify/functions/  serverless-http wrapper around the same app
-legacy/             previous Next.js build; port source only
 ```
 
 ## Docs

@@ -1,7 +1,12 @@
-import { Reveal } from "@/components/ui/reveal";
-import { experience } from "@/data/profile";
+import React from "react";
+import Reveal from "../../widgets/Reveal.jsx";
+import { useContent } from "../../global/ContentContext.jsx";
 
-export function ExperienceTimeline() {
+export default function ExperienceTimeline() {
+  const { experience } = useContent();
+
+  if (experience.length === 0) return null;
+
   return (
     <ol className="relative border-l border-line pl-10 max-[720px]:pl-7">
       <div
@@ -10,7 +15,7 @@ export function ExperienceTimeline() {
       />
 
       {experience.map((entry, index) => (
-        <li key={entry.company} className="relative pb-12 last:pb-0">
+        <li key={entry.id} className="relative pb-12 last:pb-0">
           <span
             aria-hidden
             className="absolute -left-[45px] top-1 h-3 w-3 rounded-full border-2 border-bg bg-secondary shadow-[0_0_10px_var(--color-secondary)] max-[720px]:-left-[32px]"

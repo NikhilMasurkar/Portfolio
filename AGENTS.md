@@ -69,5 +69,5 @@ src/app/global/     RoutePath, seoMeta.json, siteConfig
 src/app/router/     routeTable (shared), Routes (lazy, client)
 src/_core/          Layout
 server/             Express SSR, sitemap, redirects
-legacy/             previous Next.js build — port source only, delete when empty
+(legacy/ is gone — the port is complete)
 ```

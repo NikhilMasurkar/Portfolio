@@ -9,7 +9,13 @@ import { ROUTE_PATH } from "../global/RoutePath.js";
  * they cannot drift. Adding a page and forgetting the server copy used to
  * produce a page that worked in a browser and was invisible to Google.
  */
-export const ROUTES = [{ path: ROUTE_PATH.HOME, component: "Home" }];
+export const ROUTES = [
+  { path: ROUTE_PATH.HOME, component: "Home" },
+  { path: ROUTE_PATH.ABOUT, component: "About" },
+  { path: ROUTE_PATH.PROJECTS, component: "Projects" },
+  // Must come after the listing, or "/projects/" would match :slug as "".
+  { path: ROUTE_PATH.PROJECT_DETAIL, component: "ProjectDetail" },
+];
 
 /** Client-side redirects. Real 301s live in server/redirects.js. */
 export const REDIRECT_ROUTES = [];

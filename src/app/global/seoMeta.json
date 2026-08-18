@@ -2,5 +2,13 @@
   "/": {
     "title": "Nikhil Masurkar — Frontend Engineer & React Native Specialist",
     "description": "Frontend Engineer and React Native specialist building high-performance web and mobile applications. 100K+ app downloads shipped."
+  },
+  "/about/": {
+    "title": "About — Nikhil Masurkar",
+    "description": "Mechanical engineer turned frontend engineer. Three years shipping production React and React Native, from a 100K-download learning app to a 177-route admin platform."
+  },
+  "/projects/": {
+    "title": "Projects — Nikhil Masurkar",
+    "description": "Web and mobile work — a multi-tenant restaurant POS, a server-rendered college site, a learning app with 100K+ downloads, and admin platforms."
   }
 }
