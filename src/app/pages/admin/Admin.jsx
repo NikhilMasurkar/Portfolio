@@ -25,7 +25,8 @@ function Panel({ children }) {
 }
 
 function AdminGate() {
-  const { user, isAdmin, loading, error, signIn, signOut, adminEmail } = useAuth();
+  const { user, isAdmin, loading, error, signIn, signInRedirect, signOut, adminEmail } =
+    useAuth();
 
   if (loading) {
     return (
@@ -58,6 +59,20 @@ function AdminGate() {
           className="mt-8 w-full rounded-xl bg-[image:var(--gradient-04)] px-6 py-3.5 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
         >
           Continue with Google
+        </button>
+
+        {/*
+          The popup is the fragile path — it needs storage the opener can read
+          back, which browsers increasingly partition, and blockers stop it
+          outright. Offered permanently rather than only after a failure, so
+          there is always a way through without a second attempt.
+        */}
+        <button
+          type="button"
+          onClick={signInRedirect}
+          className="mt-3 w-full rounded-xl border border-line-raised px-6 py-3 text-[13px] font-medium text-muted transition-colors hover:border-primary hover:text-fg"
+        >
+          Popup blocked? Sign in by redirect
         </button>
       </Panel>
     );

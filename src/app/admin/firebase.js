@@ -1,5 +1,14 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import {
+  initializeAuth,
+  getAuth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence,
+  browserPopupRedirectResolver,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 /**
@@ -34,7 +43,42 @@ export function configError() {
 // a duplicate app name.
 const app = getApps().length ? getApps()[0] : initializeApp(config);
 
-export const auth = getAuth(app);
+/**
+ * Persistence is declared as a fallback chain rather than left to getAuth().
+ *
+ * getAuth() commits to IndexedDB, and when that store is unavailable the SDK
+ * fails with "Database is closing/hidden" instead of degrading. IndexedDB is
+ * genuinely absent or unreliable in more places than it sounds: private
+ * windows, Safari and Brave with strict storage settings, browsers evicting
+ * storage for a backgrounded tab, and profiles where site data is blocked.
+ *
+ * Firebase walks this list in order and uses the first that works. The last
+ * entry cannot fail — an in-memory session lasts only until the tab closes,
+ * which for an admin panel is a mild annoyance rather than a broken login.
+ *
+ * getAuth() is the fallback path here only for Vite HMR, where initializeAuth
+ * throws on a second call for the same app.
+ */
+function createAuth() {
+  try {
+    return initializeAuth(app, {
+      persistence: [
+        indexedDBLocalPersistence,
+        browserLocalPersistence,
+        browserSessionPersistence,
+        inMemoryPersistence,
+      ],
+      popupRedirectResolver: browserPopupRedirectResolver,
+    });
+  } catch {
+    return getAuth(app);
+  }
+}
+
+export const auth = createAuth();
 export const db = getFirestore(app);
 
 export const googleProvider = new GoogleAuthProvider();
+// Always ask which account. Without this, a browser holding several Google
+// sessions silently picks one, which is confusing when it picks the wrong one.
+googleProvider.setCustomParameters({ prompt: "select_account" });
