@@ -25,12 +25,12 @@ export default function Footer() {
         </div>
 
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-6">
+          <ul className="flex flex-wrap gap-x-6">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
                 <Link
                   to={item.href}
-                  className="text-[13px] text-meta transition-colors hover:text-fg"
+                  className="inline-block py-2 text-[13px] text-meta transition-colors hover:text-fg"
                 >
                   {item.label}
                 </Link>

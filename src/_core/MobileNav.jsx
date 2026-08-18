@@ -149,7 +149,7 @@ export default function MobileNav() {
                     to={item.href}
                     aria-current={active ? "page" : undefined}
                     onClick={() => setOpen(false)}
-                    className={`text-lg font-medium ${active ? "text-fg" : "text-muted"}`}
+                    className={`block py-2 text-lg font-medium ${active ? "text-fg" : "text-muted"}`}
                   >
                     {item.label}
                   </Link>

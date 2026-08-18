@@ -55,7 +55,7 @@ export default function BlogPost() {
       <Container>
         <Link
           to={ROUTE_PATH.BLOG}
-          className="mb-10 inline-flex items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-fg"
+          className="mb-8 inline-flex items-center gap-2 py-2 text-sm font-semibold text-muted transition-colors hover:text-fg"
         >
           <span aria-hidden>←</span> All posts
         </Link>

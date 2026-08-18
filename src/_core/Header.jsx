@@ -54,7 +54,7 @@ export default function Header() {
                   <Link
                     to={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative py-1 text-[14.5px] font-medium transition-colors hover:text-fg ${
+                    className={`relative py-2.5 text-[14.5px] font-medium transition-colors hover:text-fg ${
                       active ? "text-fg" : "text-muted"
                     }`}
                   >

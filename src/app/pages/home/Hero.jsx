@@ -42,14 +42,20 @@ export default function Hero() {
           />
         </picture>
         {/*
-          Asymmetric on purpose. Sampling the render shows its mid-tones are
+          Two scrims, because the copy sits somewhere different at each size.
+
+          Desktop is asymmetric: sampling the render shows its mid-tones are
           already near-black (rgb(0,4,26) around the laptop), so an even scrim
-          buries it entirely — the earlier values did exactly that. The left
-          stays fully covered because that is where the headline sits and it
-          has to hold 4.5:1; the right is barely touched so the artwork can be
-          seen at all.
+          buries it — earlier values did exactly that. The left stays fully
+          covered because the headline is there and has to hold 4.5:1; the
+          right is barely touched so the artwork can be seen at all.
+
+          Below 900px the copy spans the full width, so a left-to-right scrim
+          protects nothing on the right and the paragraph runs over the bright
+          part of the plate. The mobile one is vertical and even instead.
         */}
-        <div className="absolute inset-0 bg-[linear-gradient(100deg,var(--color-bg)_0%,rgb(5_8_22/0.88)_30%,rgb(5_8_22/0.22)_56%,rgb(5_8_22/0.3)_100%)]" />
+        <div className="absolute inset-0 hidden bg-[linear-gradient(100deg,var(--color-bg)_0%,rgb(5_8_22/0.88)_30%,rgb(5_8_22/0.22)_56%,rgb(5_8_22/0.3)_100%)] min-[900px]:block" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(5_8_22/0.86)_0%,rgb(5_8_22/0.78)_55%,rgb(5_8_22/0.92)_100%)] min-[900px]:hidden" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_bottom,transparent,var(--color-bg))]" />
       </div>
 
