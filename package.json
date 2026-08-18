@@ -10,7 +10,7 @@
     "build": "vite build && npm run build:server",
     "build:server": "vite build --config vite.config.server.js",
     "preview": "vite preview",
-    "ssr": "node server/listen.cjs",
+    "ssr": "node --env-file-if-exists=.env server/listen.cjs",
     "ssr:build": "npm run build && npm run ssr",
     "verify": "node scripts/verify.mjs",
     "test": "node --test \"tests/**/*.test.js\"",

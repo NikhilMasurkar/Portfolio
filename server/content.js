@@ -72,15 +72,30 @@ async function load(db) {
       readCollection(db, "skills", skillSchema),
     ]);
 
-  return {
-    // A missing or malformed profile falls back rather than being dropped —
-    // without it there is no name, email or about copy anywhere on the site.
-    profile: parseOne(
+  /*
+   * A missing or malformed profile falls back rather than being dropped —
+   * without it there is no name, email or about copy anywhere on the site.
+   *
+   * The two cases are logged differently on purpose. "Not seeded yet" is the
+   * expected state before the seed script runs; "failed validation" means a
+   * real document is wrong and needs fixing. Reporting both as a validation
+   * failure sends you looking for a schema bug that is not there.
+   */
+  let profile;
+  if (profileDoc.exists) {
+    profile = parseOne(
       profileSchema,
-      profileDoc.exists ? profileDoc.data() : null,
+      profileDoc.data(),
       FALLBACK_PROFILE,
       "profile/main"
-    ),
+    );
+  } else {
+    console.warn("[content] profile/main does not exist; using fallback");
+    profile = FALLBACK_PROFILE;
+  }
+
+  return {
+    profile,
     projects: publishedProjects(projects),
     posts: publishedPosts(posts),
     experience: ordered(experience),
