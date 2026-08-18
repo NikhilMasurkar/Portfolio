@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
-import HeroArt from "./HeroArt.jsx";
 import SocialIcon from "../../widgets/SocialIcon.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
 import { useProfile } from "../../global/ContentContext.jsx";
@@ -23,9 +22,9 @@ export default function Hero() {
       */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20">
         <picture>
-          <source media="(max-width: 720px)" srcSet="/bg/hero-mobile.jpg" />
+          <source media="(max-width: 720px)" srcSet="/bg/home-mobile.jpg" />
           <img
-            src="/bg/hero-desktop.jpg"
+            src="/bg/home.jpg"
             alt=""
             className="h-full w-full object-cover object-right"
             loading="eager"
@@ -113,7 +112,38 @@ export default function Hero() {
             </ul>
           </div>
 
-          <HeroArt />
+          {/*
+            The commissioned hero render: laptop, phone and the React mark.
+            Decorative — it sets the tone, and the real product screenshots
+            live in the case studies where their accuracy actually matters.
+            Eager and high priority because it is the largest thing above the
+            fold; hidden below 900px, where the layout is single column and it
+            would only push the copy down.
+          */}
+          <img
+            src="/hero/devices.jpg"
+            alt=""
+            aria-hidden="true"
+            width={1500}
+            height={1000}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="h-auto w-full max-[900px]:hidden"
+            style={{
+              /*
+                Feathered edges. The render is a rectangular JPEG on a dark
+                page, and without this its straight border cuts across the
+                composition — the one thing that makes it read as a pasted-in
+                image rather than part of the page. The mask fades all four
+                sides into the background, which is how the reference sits.
+              */
+              maskImage:
+                "radial-gradient(ellipse 82% 78% at 50% 50%, #000 55%, transparent 100%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 82% 78% at 50% 50%, #000 55%, transparent 100%)",
+            }}
+          />
         </div>
       </Container>
     </section>
