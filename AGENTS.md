@@ -10,19 +10,27 @@ anything. It carries the decisions and the phase plan.
 
 ## Rules that are load-bearing
 
-**Adding a page touches five files.** `pages/`, `RoutePath.jsx`,
+**Adding a page touches five files.** `pages/`, `RoutePath.js`,
 `seoMeta.json`, `routeTable.js`, and **both** `Routes.jsx` and
 `ServerRoutes.jsx`. Miss the server one and the page works in a browser while
 being blank to Google. `assertRoutesResolvable` turns that into a startup
 crash instead of a silent blank 200 — do not weaken it.
 
-**A path in `RoutePath.jsx` with no page behind it is a 404 waiting to
+**A path in `RoutePath.js` with no page behind it is a 404 waiting to
 ship.** Add paths as pages are built, not ahead of time.
 
-**`KNOWN_PATHS` decides 200 vs 404.** Once slugs come from Firestore
-(P3), a published item missing from that set renders a perfect page that
-returns 404 to crawlers. The sitemap and the 404 list must keep coming from
-one source.
+**`knownPaths()` decides 200 vs 404**, and it now includes Firestore slugs.
+A published item missing from that set renders a perfect page that returns
+404 to crawlers; a set entry with no page renders the 404 component under a
+200, which gets indexed. Both are invisible in a browser. `server/sitemap.js`
+is the single source for the sitemap and the 404 list, and each dynamic
+family is gated on its route existing in `RoutePath.js` — that gate is what
+stops content published before its page from advertising soft 404s.
+
+**Server files need explicit import extensions** (`./content.js`, not
+`./content`) and cannot be `.jsx`. Vite resolves both; the tests load these
+modules with plain Node, which resolves neither. JSON imports need
+`with { type: "json" }` for the same reason.
 
 **MUI is admin-only.** The public site is Tailwind against the tokens in
 `src/index.css`. There is no Emotion SSR path — see the note in

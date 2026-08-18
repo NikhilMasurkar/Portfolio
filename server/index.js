@@ -22,7 +22,7 @@ import ReactDOMServer from "react-dom/server";
 
 import hoistHeadTags from "./hoistHeadTags";
 import ServerRoutes from "./ServerRoutes";
-import buildSitemap, { KNOWN_PATHS } from "./sitemap";
+import buildSitemap, { knownPaths } from "./sitemap";
 import redirectFor from "./redirects";
 
 /**
@@ -43,7 +43,12 @@ const BUILD_DIR = path.resolve("./build");
 
 // Exact match, not a prefix check: "/blog/anything-at-all" must 404. A prefix
 // check reports every junk URL as a real page, which Google indexes.
-const isKnownRoute = (url) => KNOWN_PATHS.has(url.replace(/\/$/, "") || "/");
+//
+// Async because the set now includes Firestore slugs. It is served from the
+// content cache, so this is a map lookup on all but the first request per
+// cache window, not a database round trip per page view.
+const isKnownRoute = async (url) =>
+  (await knownPaths()).has(url.replace(/\/$/, "") || "/");
 
 // index.html's own <title>/description would sit alongside the per-page ones
 // that <Seo> renders. Comments are dev notes, not worth sending to visitors.
@@ -78,7 +83,7 @@ function renderDocument({ head, pageHead, appHtml, bodyEnd }) {
 </html>`;
 }
 
-function handleRender(req, res) {
+async function handleRender(req, res) {
   try {
     /*
      * No Emotion critical-CSS extraction here, unlike the boilerplate.
@@ -96,7 +101,7 @@ function handleRender(req, res) {
 
     const { head: pageHead, body: appHtml } = hoistHeadTags(rendered);
 
-    res.status(isKnownRoute(req.path) ? 200 : 404);
+    res.status((await isKnownRoute(req.path)) ? 200 : 404);
     res.set("Content-Type", "text/html; charset=utf-8");
     res.send(
       renderDocument({
@@ -162,9 +167,9 @@ app.use(express.static(BUILD_DIR, staticOptions));
 // Load-balancer probe. Cheaper than "/", which renders a full page.
 app.get("/healthz", (_req, res) => res.json({ ok: true }));
 
-app.get("/sitemap.xml", (_req, res) => {
+app.get("/sitemap.xml", async (_req, res) => {
   res.set("Content-Type", "application/xml; charset=utf-8");
-  res.send(buildSitemap());
+  res.send(await buildSitemap());
 });
 
 // Must sit before the catch-all, or these would render as pages.

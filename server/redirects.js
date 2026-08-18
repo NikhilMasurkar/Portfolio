@@ -1,4 +1,4 @@
-import { ROUTE_PATH } from "../src/app/global/RoutePath";
+import { ROUTE_PATH } from "../src/app/global/RoutePath.js";
 
 /**
  * Permanent redirects, served as real 301s.

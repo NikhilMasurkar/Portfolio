@@ -1,5 +1,5 @@
 import React from "react";
-import seoMeta from "../global/seoMeta.json";
+import seoMeta from "../global/seoMeta.json" with { type: "json" };
 import { SITE } from "../global/siteConfig";
 
 /**

@@ -99,6 +99,11 @@ async function load(db) {
 export async function getContent({ db, now = Date.now() } = {}) {
   if (cache && now - cachedAt < TTL_MS) return cache;
 
+  // Firestore not configured yet. A supported state, distinct from a failure:
+  // db.js has already said so once, so this stays quiet rather than logging a
+  // stack trace on every render.
+  if (!db) return FALLBACK_CONTENT;
+
   try {
     cache = await load(db);
     cachedAt = now;

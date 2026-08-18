@@ -42,7 +42,7 @@ this correctly.
 Five files, and the fifth is the one people forget:
 
 1. `src/app/pages/<area>/<Page>.jsx` — include `<Seo path="..." />`
-2. `src/app/global/RoutePath.jsx`
+2. `src/app/global/RoutePath.js`
 3. `src/app/global/seoMeta.json`
 4. `src/app/router/routeTable.js`
 5. `src/app/router/Routes.jsx` **and** `server/ServerRoutes.jsx`

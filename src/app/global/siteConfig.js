@@ -1,4 +1,4 @@
-import config from "../../../project.config.json";
+import config from "../../../project.config.json" with { type: "json" };
 
 /**
  * project.config.json, with the noise stripped and a trailing-slash-free

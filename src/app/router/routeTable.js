@@ -1,4 +1,4 @@
-import { ROUTE_PATH } from "../global/RoutePath";
+import { ROUTE_PATH } from "../global/RoutePath.js";
 
 /**
  * Every route, declared once.

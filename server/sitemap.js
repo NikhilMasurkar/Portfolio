@@ -1,48 +1,90 @@
-import seoMeta from "../src/app/global/seoMeta.json";
-import { SITE } from "../src/app/global/siteConfig";
-import { REDIRECT_PATHS } from "./redirects";
+import seoMeta from "../src/app/global/seoMeta.json" with { type: "json" };
+import { SITE } from "../src/app/global/siteConfig.js";
+import { ROUTE_PATH } from "../src/app/global/RoutePath.js";
+import { REDIRECT_PATHS } from "./redirects.js";
+import { getContent } from "./content.js";
+import { getDb } from "./db.js";
 
 /**
  * The sitemap and the "is this a real page?" list come from ONE source, so a
  * URL can never be advertised as canonical while also returning 404.
  *
- * Add dynamic URLs (blog posts, products) to collectPages().
+ * Static pages come from seoMeta.json. Project and post URLs come from
+ * Firestore, which is the part that makes this dangerous: server/index.js
+ * decides 200 vs 404 from KNOWN_PATHS, so a published slug missing from this
+ * set renders a perfect-looking page that returns 404 to every crawler. The
+ * ACC site shipped four blog posts that way before anyone noticed.
+ *
+ * Because content is now async, so is everything here. That is the trade for
+ * publishing a post without a deploy.
  */
-function collectPages() {
-  const pages = Object.keys(seoMeta)
-    .filter((p) => !REDIRECT_PATHS.has(p.replace(/\/$/, "")))
+
+const normalise = (p) => p.replace(/\/$/, "") || "/";
+
+/**
+ * URLs for content that lives in Firestore.
+ *
+ * Each family is gated on its route existing in RoutePath. Without that gate
+ * there is a window — content published before its page is built — where this
+ * would advertise URLs that render the 404 component under a 200, which is
+ * precisely the soft 404 the rest of this file exists to prevent. The gate
+ * closes automatically as each page is added.
+ */
+function dynamicPages(content, routes) {
+  const pages = [];
+
+  if (routes.PROJECT_DETAIL) {
+    for (const project of content.projects) {
+      pages.push([`/projects/${project.slug}/`, null]);
+    }
+  }
+
+  if (routes.POST_DETAIL) {
+    for (const post of content.posts) {
+      pages.push([`/blog/${post.slug}/`, post.updatedAt || post.publishedAt]);
+    }
+  }
+
+  return pages;
+}
+
+/**
+ * @param {object} opts
+ * @param {object} opts.content  Injected in tests; fetched otherwise.
+ * @param {object} opts.routes   Route map; injected to test the family gate.
+ * @returns {Promise<[string, string|null][]>} [path, lastmod]
+ */
+export async function collectPages({ content, routes = ROUTE_PATH } = {}) {
+  const resolved = content ?? (await getContent({ db: getDb() }));
+
+  const staticPages = Object.keys(seoMeta)
+    .filter((p) => !REDIRECT_PATHS.has(normalise(p)))
     .sort()
     .map((p) => [p, null]);
 
-  // Example — read a content directory and append its URLs:
-  //
-  //   const posts = fs.readdirSync(POSTS_DIR)
-  //     .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-  //     .map((f) => {
-  //       const post = JSON.parse(fs.readFileSync(path.join(POSTS_DIR, f), "utf8"));
-  //       return [`/blog/${post.slug}/`, post.modified || post.date];
-  //     });
-  //   return dedupe([...pages, ...posts]);
-
   const seen = new Set();
-  return pages.filter(([loc]) => {
-    if (seen.has(loc)) return false;
-    seen.add(loc);
+  return [...staticPages, ...dynamicPages(resolved, routes)].filter(([loc]) => {
+    const key = normalise(loc);
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
 }
 
 /** Valid URLs, trailing slash stripped, for the 404 check. */
-export const KNOWN_PATHS = new Set(
-  collectPages().map(([p]) => p.replace(/\/$/, "") || "/")
-);
+export async function knownPaths(opts) {
+  const pages = await collectPages(opts);
+  return new Set(pages.map(([p]) => normalise(p)));
+}
 
-export default function buildSitemap() {
-  const urls = collectPages()
+export default async function buildSitemap(opts) {
+  const pages = await collectPages(opts);
+
+  const urls = pages
     .map(
       ([loc, lastmod]) =>
         `  <url>\n    <loc>${SITE.domain}${loc}</loc>` +
-        (lastmod ? `\n    <lastmod>${lastmod.slice(0, 10)}</lastmod>` : "") +
+        (lastmod ? `\n    <lastmod>${String(lastmod).slice(0, 10)}</lastmod>` : "") +
         `\n  </url>`
     )
     .join("\n");
