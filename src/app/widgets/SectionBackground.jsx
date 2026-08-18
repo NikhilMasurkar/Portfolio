@@ -118,6 +118,8 @@ export default function SectionBackground({ variant }) {
           <img
             src={plate.src}
             alt=""
+            width={1800}
+            height={1200}
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"

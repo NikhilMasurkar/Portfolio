@@ -8,10 +8,8 @@ export default function TechGrid() {
   if (skills.length === 0) return null;
 
   return (
-    <Reveal className="rounded-[22px] border border-line bg-surface/85 shadow-card">
-      <h2 className="px-8 pt-8 text-center text-[11.5px] font-semibold tracking-[0.2em] text-dim">
-        TECH I WORK WITH
-      </h2>
+    <Reveal className="surface">
+      <h2 className="eyebrow px-8 pt-8 text-center">Tech I work with</h2>
 
       <ul className="grid grid-cols-6 gap-6 p-8 max-[1160px]:grid-cols-4 max-[900px]:grid-cols-3 max-[720px]:grid-cols-2">
         {skills.map((item) => (

@@ -35,6 +35,8 @@ export default function Hero() {
           <img
             src="/hero/devices.jpg"
             alt=""
+            width={1500}
+            height={1000}
             className="h-full w-full object-cover object-[68%_center]"
             loading="eager"
             fetchPriority="high"

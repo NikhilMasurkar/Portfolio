@@ -22,7 +22,7 @@ export default function ExperienceTimeline() {
           />
 
           <Reveal delay={index * 0.08}>
-            <div className="rounded-2xl border border-line bg-surface/85 p-7 shadow-card">
+            <div className="surface surface-interactive p-7 max-[720px]:p-5">
               <p className="mb-2 font-mono text-[12.5px] text-dim">{entry.period}</p>
               <h3 className="m-0 mb-1 font-display text-[21px] font-semibold tracking-[-0.01em]">
                 {entry.role}

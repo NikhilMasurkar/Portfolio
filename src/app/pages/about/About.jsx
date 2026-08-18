@@ -16,6 +16,7 @@ export default function About() {
       <Seo path={ROUTE_PATH.ABOUT} description={profile.aboutSummary} />
       <SectionBackground variant="about" />
       <Container>
+        <p className="eyebrow mb-4">About</p>
         <AboutHero />
 
         <div className="mt-24">
@@ -23,9 +24,7 @@ export default function About() {
         </div>
 
         <div className="mt-24">
-          <h2 className="mb-8 text-xs font-semibold tracking-[0.2em] text-dim">
-            EXPERIENCE
-          </h2>
+          <h2 className="eyebrow mb-8">Experience</h2>
           <ExperienceTimeline />
         </div>
       </Container>
