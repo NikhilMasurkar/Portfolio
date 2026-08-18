@@ -156,9 +156,25 @@ async function checkRobots() {
     pass("does not block social crawlers");
   }
 
-  /sitemap/.test(body)
-    ? pass("points at the site's own sitemap")
-    : fail("Sitemap directive missing or pointing at the wrong domain");
+  /*
+   * Check the actual URL, not just that the word "sitemap" appears. The
+   * looser test passed happily while robots.txt still carried the
+   * boilerplate's example.com, which is exactly the bug it claimed to catch.
+   */
+  const sitemapLine = body.match(/^\s*Sitemap:\s*(\S+)/im);
+  if (!sitemapLine) {
+    fail("no Sitemap directive");
+  } else if (!sitemapLine[1].endsWith("/sitemap.xml")) {
+    fail(`Sitemap points at ${sitemapLine[1]}, which is not a sitemap.xml`);
+  } else if (/example\.com|YOUR-|localhost/i.test(sitemapLine[1])) {
+    fail(`Sitemap still points at a placeholder domain: ${sitemapLine[1]}`);
+  } else {
+    pass(`points at ${sitemapLine[1]}`);
+  }
+
+  /admin/i.test(body)
+    ? pass("keeps /admin out of the index")
+    : fail("robots.txt should Disallow /admin");
 }
 
 // ---------------------------------------------------------------------------

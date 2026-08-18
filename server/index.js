@@ -26,6 +26,7 @@ import buildSitemap, { knownPaths } from "./sitemap";
 import redirectFor from "./redirects";
 import { getContent } from "./content.js";
 import { getDb } from "./db.js";
+import { SITE } from "../src/app/global/siteConfig.js";
 
 /**
  * The client build's index.html, inlined into this bundle at build time.
@@ -192,6 +193,49 @@ app.get("/healthz", (_req, res) => res.json({ ok: true }));
 app.get("/sitemap.xml", async (_req, res) => {
   res.set("Content-Type", "application/xml; charset=utf-8");
   res.send(await buildSitemap());
+});
+
+/**
+ * robots.txt, generated rather than stored.
+ *
+ * It shipped as a static file carrying the boilerplate's example.com sitemap
+ * URL — a stored copy of the domain is a second source of truth, and it rotted
+ * immediately. Building it from SITE.domain means it cannot.
+ *
+ * Do NOT add a Disallow for facebookexternalhit: that is the crawler Facebook,
+ * Messenger and WhatsApp use to build link previews, and blocking it defeats
+ * the entire reason this server renders HTML.
+ */
+app.get("/robots.txt", (_req, res) => {
+  res.set("Content-Type", "text/plain; charset=utf-8");
+  res.send(
+    [
+      "User-agent: *",
+      "Allow: /",
+      // Behind a login and served as a bare shell — nothing to index, and no
+      // reason to advertise it.
+      "Disallow: /admin",
+      "",
+      `Sitemap: ${SITE.domain}/sitemap.xml`,
+      "",
+    ].join("\n")
+  );
+});
+
+/**
+ * The admin panel: shell only, never server-rendered.
+ *
+ * It sits behind a login, so there is nothing for a crawler to read, and its
+ * Firebase and MUI dependencies have no business in the server bundle. Serving
+ * the plain shell lets the client mount it fresh — see src/index.jsx.
+ *
+ * Answers 200 rather than going through isKnownRoute(), which would 404 it for
+ * not being in the sitemap. It stays out of the sitemap on purpose, and
+ * robots.txt disallows it.
+ */
+app.get("/{*splat}", (req, res, next) => {
+  if (!req.path.startsWith("/admin")) return next();
+  res.status(200).set("Content-Type", "text/html; charset=utf-8").send(shellHtml);
 });
 
 // Must sit before the catch-all, or these would render as pages.

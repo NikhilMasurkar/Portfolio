@@ -15,7 +15,18 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      /*
+       * eslint-plugin-react is not installed, so nothing teaches this rule
+       * that JSX uses a variable — every imported component would report as
+       * unused. The capitalised-identifier exemption stands in for that.
+       *
+       * argsIgnorePattern covers the same thing for a component destructured
+       * out of a dynamic import: `import(…).then(({ default: Page }) => …)`.
+       */
+      "no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^[A-Z_]", argsIgnorePattern: "^[A-Z_]" },
+      ],
     },
   },
 ];
