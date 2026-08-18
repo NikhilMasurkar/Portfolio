@@ -10,36 +10,53 @@ export default function Hero() {
   const profile = useProfile();
 
   return (
-    <section className="relative overflow-hidden px-0 pb-10 pt-24">
+    <section className="relative flex min-h-[86vh] items-center overflow-hidden px-0 pb-16 pt-24 max-[900px]:min-h-0">
       {/*
-        Hero backdrop. Two sources so phones never download the 1920px desktop
-        plate; <picture> picks one at parse time, before any JS runs.
-        Decorative, so alt is empty and it is aria-hidden.
+        Hero backdrop — the commissioned device render, used as the scene the
+        copy sits inside rather than as a picture beside it.
 
-        The gradient scrim is not decoration: the artwork is bright on the
+        That is what the composition is built for: the laptop and phone occupy
+        the right of the frame and the left is open space, so the headline
+        lands in the gap the artwork already leaves. Placing it in a column
+        instead put a second rectangle on the page and fought the layout.
+
+        Two sources, so phones never download the wide desktop plate —
+        <picture> chooses at parse time, before any JS runs. Decorative, so the
+        alt is empty and the whole layer is aria-hidden.
+
+        The scrim is load-bearing, not decoration: the render is bright on the
         right, and the headline needs a guaranteed-dark bed on the left to hold
-        the 4.5:1 contrast floor the rest of the palette is held to.
+        the 4.5:1 floor the rest of the palette is held to. Weakening the first
+        two stops is what would break it.
       */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20">
         <picture>
-          <source media="(max-width: 720px)" srcSet="/bg/home-mobile.jpg" />
+          <source media="(max-width: 900px)" srcSet="/bg/home-mobile.jpg" />
           <img
-            src="/bg/home.jpg"
+            src="/hero/devices.jpg"
             alt=""
-            className="h-full w-full object-cover object-right"
+            className="h-full w-full object-cover object-[68%_center]"
             loading="eager"
             fetchPriority="high"
             decoding="async"
           />
         </picture>
-        <div className="absolute inset-0 bg-[linear-gradient(100deg,var(--color-bg)_0%,rgb(5_8_22/0.92)_38%,rgb(5_8_22/0.55)_70%,rgb(5_8_22/0.75)_100%)]" />
+        {/*
+          Asymmetric on purpose. Sampling the render shows its mid-tones are
+          already near-black (rgb(0,4,26) around the laptop), so an even scrim
+          buries it entirely — the earlier values did exactly that. The left
+          stays fully covered because that is where the headline sits and it
+          has to hold 4.5:1; the right is barely touched so the artwork can be
+          seen at all.
+        */}
+        <div className="absolute inset-0 bg-[linear-gradient(100deg,var(--color-bg)_0%,rgb(5_8_22/0.88)_30%,rgb(5_8_22/0.22)_56%,rgb(5_8_22/0.3)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_bottom,transparent,var(--color-bg))]" />
       </div>
 
       <SectionBackground variant="hero" />
 
       <Container>
-        <div className="grid grid-cols-[1.05fr_.95fr] items-center gap-16 max-[900px]:grid-cols-1">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-center gap-16 max-[900px]:grid-cols-1">
           <div>
             <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-xs font-semibold tracking-[0.14em] text-muted">
               <span aria-hidden>👋</span>
@@ -112,38 +129,6 @@ export default function Hero() {
             </ul>
           </div>
 
-          {/*
-            The commissioned hero render: laptop, phone and the React mark.
-            Decorative — it sets the tone, and the real product screenshots
-            live in the case studies where their accuracy actually matters.
-            Eager and high priority because it is the largest thing above the
-            fold; hidden below 900px, where the layout is single column and it
-            would only push the copy down.
-          */}
-          <img
-            src="/hero/devices.jpg"
-            alt=""
-            aria-hidden="true"
-            width={1500}
-            height={1000}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            className="h-auto w-full max-[900px]:hidden"
-            style={{
-              /*
-                Feathered edges. The render is a rectangular JPEG on a dark
-                page, and without this its straight border cuts across the
-                composition — the one thing that makes it read as a pasted-in
-                image rather than part of the page. The mask fades all four
-                sides into the background, which is how the reference sits.
-              */
-              maskImage:
-                "radial-gradient(ellipse 82% 78% at 50% 50%, #000 55%, transparent 100%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 82% 78% at 50% 50%, #000 55%, transparent 100%)",
-            }}
-          />
         </div>
       </Container>
     </section>

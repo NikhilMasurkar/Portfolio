@@ -122,11 +122,27 @@
   --gradient-04: linear-gradient(135deg, #6c63ff, #a855f7);
 }
 
+/*
+ * The page colour lives on <html> ONLY.
+ *
+ * Putting it on <body> as well looks harmless and is not. Within the root
+ * stacking context the paint order is: html's background, then negative
+ * z-index descendants, then block-level backgrounds — and <body> is a block.
+ * So an opaque body background paints straight over every -z-10 and -z-20
+ * layer on the site: the hero backdrop and the section background plates were
+ * loading, sizing and positioning perfectly, and were simply covered.
+ *
+ * <html> keeps the colour so there is no white flash before paint and no gap
+ * when a short page is over-scrolled.
+ */
+html {
+  background: var(--color-bg);
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-bg);
   color: var(--color-fg);
 }
 
