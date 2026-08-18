@@ -55,6 +55,28 @@ function describe(error) {
   return `[${code}] ${message}`;
 }
 
+/**
+ * Whether a popup failure is worth retrying as a redirect.
+ *
+ * The failure observed here threw a bare storage exception with no Firebase
+ * `code` at all — "Database is closing/hidden" — so matching on codes alone
+ * would miss it, hence the `!code` arm. Redirect succeeded in the same browser
+ * moments later, which is the evidence for doing this automatically rather
+ * than expecting someone to notice a second button.
+ */
+function isRecoverableWithRedirect(error) {
+  const code = error?.code ?? "";
+  const message = error?.message ?? String(error);
+  return (
+    !code || // not a Firebase error object — a raw storage/DOM exception
+    code === "auth/popup-blocked" ||
+    code === "auth/internal-error" ||
+    code === "auth/operation-not-supported-in-this-environment" ||
+    code === "auth/web-storage-unsupported" ||
+    /database|indexeddb|storage/i.test(message)
+  );
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -92,6 +114,15 @@ export function AuthProvider({ children }) {
       // Closing the popup is a normal thing to do, not something to report.
       if (popupError.code === "auth/popup-closed-by-user") return;
       if (popupError.code === "auth/cancelled-popup-request") return;
+
+      // Popups depend on storage the opener can read back, which plenty of
+      // browsers now deny. Rather than leave a dead end, fall through to the
+      // flow that does not need it.
+      if (isRecoverableWithRedirect(popupError)) {
+        await signInRedirect();
+        return;
+      }
+
       setError(describe(popupError));
     }
   }
