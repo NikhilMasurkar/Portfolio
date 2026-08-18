@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
 import HeroArt from "./HeroArt.jsx";
+import SocialIcon from "../../widgets/SocialIcon.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
 import { useProfile } from "../../global/ContentContext.jsx";
 
@@ -42,7 +43,7 @@ export default function Hero() {
         <div className="grid grid-cols-[1.05fr_.95fr] items-center gap-16 max-[900px]:grid-cols-1">
           <div>
             <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-xs font-semibold tracking-[0.14em] text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-secondary shadow-[0_0_10px_var(--color-secondary)]" />
+              <span aria-hidden>👋</span>
               HELLO, I&apos;M
             </p>
 
@@ -77,12 +78,17 @@ export default function Hero() {
                   Explore My Work <span aria-hidden>→</span>
                 </Link>
               )}
+              {/*
+                Links to the resume page rather than straight at the PDF: the
+                page works on a phone, is indexable, and offers the download
+                itself. It also cannot 404 when no PDF has been uploaded.
+              */}
               {ROUTE_PATH.RESUME && (
                 <Link
                   to={ROUTE_PATH.RESUME}
                   className="inline-flex items-center gap-2.5 rounded-xl border border-line-raised bg-surface/70 px-7 py-4 text-[15px] font-semibold text-fg transition-colors hover:border-primary"
                 >
-                  View Resume <span aria-hidden>↓</span>
+                  Download Resume <span aria-hidden>↓</span>
                 </Link>
               )}
             </div>
@@ -100,7 +106,7 @@ export default function Hero() {
                     aria-label={social.name}
                     className="flex h-11 w-11 items-center justify-center rounded-[11px] border border-line bg-surface/80 font-mono text-[13px] font-semibold text-muted transition-all hover:-translate-y-0.5 hover:border-primary hover:text-fg"
                   >
-                    <span aria-hidden>{social.label}</span>
+                    <SocialIcon name={social.name} mark={social.label} size={19} />
                   </a>
                 </li>
               ))}

@@ -16,5 +16,7 @@ export const ROUTE_PATH = {
   PROJECTS: "/projects/",
   /** Pattern, not a URL. Its presence is what lets the sitemap list slugs. */
   PROJECT_DETAIL: "/projects/:slug/",
+  EXPERIENCE: "/experience/",
+  RESUME: "/resume/",
   CONTACT: "/contact/",
 };

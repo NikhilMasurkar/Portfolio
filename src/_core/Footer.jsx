@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import Container from "../app/widgets/Container.jsx";
+import SocialIcon from "../app/widgets/SocialIcon.jsx";
 import { NAV_ITEMS } from "../app/global/nav.js";
 import { useProfile } from "../app/global/ContentContext.jsx";
 
@@ -50,7 +51,7 @@ export default function Footer() {
                 aria-label={social.name}
                 className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-line font-mono text-[11px] text-meta transition-colors hover:border-primary hover:text-fg"
               >
-                <span aria-hidden>{social.label}</span>
+                <SocialIcon name={social.name} mark={social.label} size={16} />
               </a>
             </li>
           ))}

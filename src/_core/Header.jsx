@@ -20,7 +20,7 @@ export default function Header() {
 
         <nav aria-label="Main" className="hidden min-[720px]:block">
           <ul className="flex flex-wrap items-center gap-x-[34px] gap-y-3">
-            {NAV_ITEMS.map((item) => {
+            {NAV_ITEMS.filter((item) => item.href !== ROUTE_PATH.RESUME).map((item) => {
               const active = isActivePath(pathname, item.href);
               return (
                 <li key={item.href}>
@@ -45,7 +45,23 @@ export default function Header() {
           </ul>
         </nav>
 
-        <MobileNav />
+        <div className="flex items-center gap-3">
+          {/*
+            Resume is a button rather than a nav item, per the design. It is
+            filtered out of the list above so it does not appear twice — but
+            only rendered at all once the page exists, like every other route.
+          */}
+          {ROUTE_PATH.RESUME && (
+            <Link
+              to={ROUTE_PATH.RESUME}
+              className="hidden rounded-full bg-[image:var(--gradient-04)] px-5 py-2 text-[14px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5 min-[720px]:inline-flex"
+            >
+              Resume
+            </Link>
+          )}
+
+          <MobileNav />
+        </div>
       </Container>
     </header>
   );

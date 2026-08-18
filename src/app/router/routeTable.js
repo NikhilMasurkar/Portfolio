@@ -15,6 +15,8 @@ export const ROUTES = [
   { path: ROUTE_PATH.PROJECTS, component: "Projects" },
   // Must come after the listing, or "/projects/" would match :slug as "".
   { path: ROUTE_PATH.PROJECT_DETAIL, component: "ProjectDetail" },
+  { path: ROUTE_PATH.EXPERIENCE, component: "Experience" },
+  { path: ROUTE_PATH.RESUME, component: "Resume" },
   { path: ROUTE_PATH.CONTACT, component: "Contact" },
 ];
 

@@ -4,6 +4,7 @@ import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
 import Reveal from "../../widgets/Reveal.jsx";
 import ContactForm from "./ContactForm.jsx";
+import SocialIcon from "../../widgets/SocialIcon.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
 import { useProfile } from "../../global/ContentContext.jsx";
 
@@ -82,7 +83,7 @@ export default function Contact() {
                     aria-hidden
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-line-raised bg-surface-raised font-mono text-[13px] text-primary-text"
                   >
-                    {detail.mark}
+                    <SocialIcon name={detail.title} mark={detail.mark} size={17} />
                   </span>
 
                   <div className="min-w-0">
