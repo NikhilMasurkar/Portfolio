@@ -62,9 +62,26 @@ const app = getApps().length ? getApps()[0] : initializeApp(config);
 function createAuth() {
   try {
     return initializeAuth(app, {
+      /*
+       * localStorage FIRST, ahead of IndexedDB.
+       *
+       * Firebase's own default prefers IndexedDB, and it selects it whenever
+       * the API merely *exists* — not when it actually works. On a browser
+       * where IndexedDB is present but its operations fail ("Database is
+       * closing/hidden"), the session is written nowhere and the redirect
+       * sign-in lands back on the login screen with no user.
+       *
+       * A Firebase session is a couple of KB, so IndexedDB's advantages are
+       * irrelevant here while its failure modes are not. localStorage is
+       * synchronous, far more widely reliable, and fails loudly if blocked.
+       *
+       * inMemory is last and cannot fail — but note it CANNOT survive a
+       * redirect sign-in, because the redirect reloads the page. If the chain
+       * ever falls that far, use the popup.
+       */
       persistence: [
-        indexedDBLocalPersistence,
         browserLocalPersistence,
+        indexedDBLocalPersistence,
         browserSessionPersistence,
         inMemoryPersistence,
       ],
@@ -73,6 +90,35 @@ function createAuth() {
   } catch {
     return getAuth(app);
   }
+}
+
+/**
+ * What storage is actually usable, tested rather than feature-detected.
+ *
+ * Shown on the sign-in screen when something goes wrong. Firebase reports a
+ * failure from deep inside its storage layer, which says nothing about which
+ * mechanism is missing — this does.
+ */
+export function storageReport() {
+  const report = { localStorage: false, indexedDB: false, cookies: false };
+
+  try {
+    const key = "__nm_probe__";
+    window.localStorage.setItem(key, "1");
+    report.localStorage = window.localStorage.getItem(key) === "1";
+    window.localStorage.removeItem(key);
+  } catch {
+    report.localStorage = false;
+  }
+
+  try {
+    report.indexedDB = typeof window.indexedDB !== "undefined";
+  } catch {
+    report.indexedDB = false;
+  }
+
+  report.cookies = navigator.cookieEnabled === true;
+  return report;
 }
 
 export const auth = createAuth();

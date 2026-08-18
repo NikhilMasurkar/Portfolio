@@ -70,27 +70,42 @@ function isRecoverableWithRedirect(error) {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  /*
+   * Two things must settle before it is safe to say "not signed in", and both
+   * start at once on load.
+   *
+   * onAuthStateChanged fires almost immediately, with null on a cold load.
+   * Treating that alone as the answer renders the sign-in screen while
+   * getRedirectResult is still completing a redirect — the user arrives back
+   * from Google and is told to sign in again, which is exactly what it looks
+   * like when a redirect sign-in has failed.
+   */
+  const [authSettled, setAuthSettled] = useState(false);
+  const [redirectSettled, setRedirectSettled] = useState(false);
+  const loading = !authSettled || !redirectSettled;
 
   useEffect(() => {
     return onAuthStateChanged(
       auth,
       (nextUser) => {
         setUser(nextUser);
-        setLoading(false);
+        setAuthSettled(true);
       },
       (authError) => {
-        setError(authError.message);
-        setLoading(false);
+        setError(describe(authError));
+        setAuthSettled(true);
       }
     );
   }, []);
 
   useEffect(() => {
-    getRedirectResult(auth).catch((redirectError) => {
-      setError(describe(redirectError));
-    });
+    // Resolves to null on an ordinary load; only completes a sign-in when
+    // arriving back from Google.
+    getRedirectResult(auth)
+      .catch((redirectError) => setError(describe(redirectError)))
+      .finally(() => setRedirectSettled(true));
   }, []);
 
   async function signIn() {

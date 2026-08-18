@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { AuthProvider, useAuth } from "../../admin/useAuth.jsx";
-import { configError } from "../../admin/firebase.js";
+import { configError, storageReport } from "../../admin/firebase.js";
 
 /**
  * Admin gate and shell. Client-rendered only — server/index.js serves the bare
@@ -108,6 +108,8 @@ function Gate({ title, children }) {
   }
 
   if (!user) {
+    const storage = storageReport();
+
     return (
       <Centered>
         <Typography variant="h1" sx={{ fontSize: 30, mb: 1 }}>
@@ -116,6 +118,20 @@ function Gate({ title, children }) {
         <Typography variant="body2" color="text.secondary">
           Sign in to edit the content of this site.
         </Typography>
+
+        {/*
+          Raised before an attempt, not after. Without localStorage the session
+          cannot outlive the page, so a redirect sign-in returns to this exact
+          screen — indistinguishable from a rejected login unless we say so.
+        */}
+        {!storage.localStorage && (
+          <Alert severity="warning" sx={{ mt: 3, textAlign: "left" }}>
+            This browser is blocking site storage for localhost, so a session
+            cannot be kept. Sign-in will appear to succeed and return you here.
+            Allow cookies and site data for this origin, or use a normal
+            (non-private) window.
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ mt: 3, textAlign: "left" }}>
@@ -135,6 +151,16 @@ function Gate({ title, children }) {
         <Button size="small" fullWidth sx={{ mt: 1.5 }} onClick={signInRedirect}>
           Popup blocked? Sign in by redirect
         </Button>
+
+        {/* Named plainly so a failure can be reported without guesswork. */}
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ display: "block", mt: 3 }}
+        >
+          storage — localStorage: {String(storage.localStorage)} · indexedDB:{" "}
+          {String(storage.indexedDB)} · cookies: {String(storage.cookies)}
+        </Typography>
       </Centered>
     );
   }
