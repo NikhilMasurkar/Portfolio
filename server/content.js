@@ -2,6 +2,7 @@ import {
   projectSchema,
   postSchema,
   profileSchema,
+  resumeSchema,
   experienceSchema,
   educationSchema,
   skillSchema,
@@ -62,9 +63,10 @@ const publishedPosts = (posts) =>
 const ordered = (rows) => [...rows].sort((a, b) => a.order - b.order);
 
 async function load(db) {
-  const [profileDoc, projects, posts, experience, education, skills] =
+  const [profileDoc, resumeDoc, projects, posts, experience, education, skills] =
     await Promise.all([
       db.collection("profile").doc("main").get(),
+      db.collection("resume").doc("main").get(),
       readCollection(db, "projects", projectSchema),
       readCollection(db, "posts", postSchema),
       readCollection(db, "experience", experienceSchema),
@@ -94,8 +96,14 @@ async function load(db) {
     profile = FALLBACK_PROFILE;
   }
 
+  /* Absent until seeded; the resume page renders what it has. */
+  const resume = resumeDoc.exists
+    ? parseOne(resumeSchema, resumeDoc.data(), null, "resume/main")
+    : null;
+
   return {
     profile,
+    resume,
     projects: publishedProjects(projects),
     posts: publishedPosts(posts),
     experience: ordered(experience),

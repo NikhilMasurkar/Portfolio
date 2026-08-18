@@ -227,30 +227,24 @@ body {
 /* ---------------------------------------------------------------------------
  * Print — this IS the resume PDF.
  *
- * The download button calls window.print(), so whatever these rules produce is
- * the file a recruiter opens. Generating it from the live page rather than
- * uploading a PDF means the download can never be older than the content:
- * editing an experience entry in the admin panel changes the PDF, with no
- * second artefact to remember to re-export.
+ * The download button calls window.print(), so what these rules produce is the
+ * file a recruiter opens. Generating it from the live page means the download
+ * can never be older than the content: editing an experience entry in the
+ * admin panel changes the PDF, with nothing to re-export.
  *
- * Two things would otherwise ruin it:
- *
- *   1. The site is dark. Printers drop background colours by default, so a
- *      dark theme prints as near-invisible light text on white. Everything is
- *      forced back to black-on-white here.
- *   2. Gradient headings use background-clip:text with transparent fill. With
- *      backgrounds dropped they print as NOTHING — an invisible name at the
- *      top of the resume. They have to be given a real colour back.
+ * Deliberately small. The resume page already renders a white A4-width sheet
+ * with print typography — see Resume.jsx — so there is no dark theme to undo
+ * and no second layout to keep in step. All this does is take away the site
+ * furniture around the sheet. What you see on screen is the PDF.
  * ------------------------------------------------------------------------ */
 @media print {
   @page {
-    margin: 14mm 14mm 16mm;
+    margin: 12mm 0;
   }
 
   html,
   body {
     background: #fff !important;
-    color: #000 !important;
   }
 
   /* Site furniture has no place in a resume. */
@@ -264,7 +258,7 @@ body {
     padding-top: 0 !important;
   }
 
-  /* Decorative layers: orbs, grids, noise, the hero backdrop. */
+  /* Decorative layers: orbs, grids, noise. */
   [aria-hidden="true"] {
     display: none !important;
   }
@@ -273,7 +267,20 @@ body {
     padding: 0 !important;
   }
 
-  /* Reveal must never leave content hidden in a PDF. */
+  /* The sheet becomes the page: no shadow, no cap, printer margins only. */
+  [data-print="sheet"] {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 14mm !important;
+    box-shadow: none !important;
+    /* Without this, browsers may drop the blue headings and their rules,
+       since those are treated as decorative colour. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Reveal must never leave content hidden in a PDF — an un-scrolled section
+     would otherwise export blank. */
   [data-reveal],
   [data-reveal-ready] [data-reveal]:not([data-revealed]) {
     opacity: 1 !important;
@@ -281,28 +288,7 @@ body {
     transition: none !important;
   }
 
-  [data-print="page"] * {
-    color: #000 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  /* Undo the gradient-text treatment, which prints as nothing. */
-  [data-print="page"] .text-transparent,
-  [data-print="page"] [class*="bg-clip-text"] {
-    -webkit-text-fill-color: #000 !important;
-    color: #000 !important;
-    background-image: none !important;
-  }
-
-  /* Cards become rules rather than boxes — cheaper on ink, easier to read. */
-  [data-print="page"] .border,
-  [data-print="page"] [class*="border-line"] {
-    border-color: #ccc !important;
-  }
-
-  /* Keep an entry and its heading together across a page break. */
+  /* Keep a role, project or qualification whole across a page break. */
   [data-print="entry"] {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -313,14 +299,5 @@ body {
   h3 {
     break-after: avoid;
     page-break-after: avoid;
-  }
-
-  /* A printed link is only useful if its destination is visible. */
-  [data-print="page"] a[href^="http"]::after,
-  [data-print="page"] a[href^="mailto"]::after {
-    content: " (" attr(href) ")";
-    font-size: 10px;
-    color: #555 !important;
-    word-break: break-all;
   }
 }

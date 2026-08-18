@@ -56,6 +56,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // The CV. Public, like everything else it is assembled from.
+    match /resume/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Shown in full whenever they exist; no draft state.
     match /experience/{id} {
       allow read: if true;

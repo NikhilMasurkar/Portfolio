@@ -45,8 +45,12 @@ export const experienceSchema = z.object({
   id: z.string().min(1),
   role: z.string().min(1),
   company: z.string().min(1),
+  location: z.string().optional(),
   period: z.string().min(1),
+  /** Prose, for the narrative timeline on /about. */
   summary: z.string().min(1),
+  /** The same role as resume bullets. One record, two presentations. */
+  bullets: z.array(z.string().min(1)).default([]),
   order: z.number().int().default(0),
 });
 
@@ -55,7 +59,40 @@ export const educationSchema = z.object({
   institution: z.string().min(1),
   qualification: z.string().min(1),
   period: z.string().min(1),
+  grade: z.string().optional(),
   order: z.number().int().default(0),
+});
+
+/**
+ * Resume-only content: the sections that exist on a CV and nowhere else.
+ *
+ * Separate from `profile` because the audiences differ. The site's about copy
+ * is written to be read; this is written to be scanned by a recruiter and
+ * parsed by an ATS. Experience and education stay in their own collections so
+ * the resume and /about cannot disagree about where you worked.
+ */
+export const resumeSchema = z.object({
+  headline: z.string().min(1),
+  summary: z.string().min(1),
+  achievements: z.array(z.string().min(1)).default([]),
+  /** Rendered as "Label: a, b, c", two columns, in this order. */
+  skillGroups: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        items: z.array(z.string().min(1)).min(1),
+      })
+    )
+    .default([]),
+  keyProjects: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        bullets: z.array(z.string().min(1)).min(1),
+      })
+    )
+    .default([]),
+  professionalDevelopment: z.array(z.string().min(1)).default([]),
 });
 
 export const skillSchema = z.object({
@@ -115,6 +152,8 @@ export const postSchema = z.object({
 
 export const profileSchema = z.object({
   name: z.string().min(1),
+  /** Full legal name for the resume header; the site uses `name`. */
+  fullName: z.string().optional(),
   role: z.string().min(1),
   specialism: z.string().min(1),
   tagline: z.string().min(1),

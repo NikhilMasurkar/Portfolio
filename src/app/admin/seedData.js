@@ -82,27 +82,6 @@ export const profile = {
     "Building high-performance digital experiences for web and mobile. I enjoy solving complex problems and turning ideas into production software.",
 };
 
-export const experience = [
-  {
-    id: "avinash-2026",
-    role: "Senior Software Developer",
-    company: "Avinash Group of Institute",
-    period: "04/2026 — Present",
-    summary:
-      "Modernised a large-scale React admin portal spanning 177 routes and 368 modals, rebuilt its theme system, and delivered a fully responsive redesign in 15 working days. Also handled production deployments on AWS ECS and end-to-end React Native releases across Android and iOS.",
-    order: 0,
-  },
-  {
-    id: "indigolearn-2022",
-    role: "Frontend Developer | React Native Developer",
-    company: "IndigoLearn Edu Tech Pvt Ltd",
-    period: "09/2022 — 03/2026",
-    summary:
-      "Developed and maintained a React Native learning platform with 100,000+ downloads across Android and iOS. Built and maintained a 50+ component reusable UI library that reduced development time by 30%, worked across production debugging and releases, and mentored three junior developers.",
-    order: 1,
-  },
-];
-
 export const skills = [
   { name: "React", mark: "Re", category: "Core" },
   { name: "React Native", mark: "RN", category: "Core" },

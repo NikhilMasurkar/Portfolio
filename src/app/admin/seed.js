@@ -1,17 +1,19 @@
 import { doc, writeBatch } from "firebase/firestore";
 import { db } from "./firebase.js";
+import { profile, projects, skills, FEATURED_ORDER } from "./seedData.js";
 import {
-  profile,
-  projects,
+  resume,
   experience,
-  skills,
-  FEATURED_ORDER,
-} from "./seedData.js";
+  education,
+  contactPatch,
+} from "./resumeSeedData.js";
 import {
   profileSchema,
   projectSchema,
   experienceSchema,
+  educationSchema,
   skillSchema,
+  resumeSchema,
 } from "../global/schemas.js";
 
 /**
@@ -61,7 +63,15 @@ export async function seedContent(onProgress = () => {}) {
 
   // Validate everything first, so a bad document aborts before any write
   // rather than leaving Firestore half-seeded.
-  check(profileSchema, profile, "profile/main");
+  // Phone and location come from the resume header, which is the only place
+  // they were recorded.
+  const fullProfile = { ...profile, ...contactPatch };
+  check(profileSchema, fullProfile, "profile/main");
+  check(resumeSchema, resume, "resume/main");
+
+  const preparedEducation = education.map((entry) =>
+    check(educationSchema, entry, `education/${entry.id}`)
+  );
 
   const preparedProjects = projects.map((project) => {
     const value = {
@@ -90,8 +100,11 @@ export async function seedContent(onProgress = () => {}) {
 
   log("Validated all documents.");
 
-  batch.set(doc(db, "profile", "main"), profile);
+  batch.set(doc(db, "profile", "main"), fullProfile);
   log("profile/main");
+
+  batch.set(doc(db, "resume", "main"), resume);
+  log("resume/main");
 
   for (const { slug, body } of preparedProjects) {
     batch.set(doc(db, "projects", slug), body);
@@ -107,6 +120,11 @@ export async function seedContent(onProgress = () => {}) {
     batch.set(doc(db, "skills", id), body);
   }
   log(`${preparedSkills.length} skills`);
+
+  for (const { id, ...body } of preparedEducation) {
+    batch.set(doc(db, "education", id), body);
+  }
+  log(`${preparedEducation.length} education entries`);
 
   // One batch, so a permissions failure leaves Firestore untouched rather than
   // partially written.

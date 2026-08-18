@@ -43,6 +43,7 @@ export const FALLBACK_PROFILE = {
 
 export const FALLBACK_CONTENT = {
   profile: FALLBACK_PROFILE,
+  resume: null,
   projects: [],
   posts: [],
   experience: [],
