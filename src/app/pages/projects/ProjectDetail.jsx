@@ -4,7 +4,8 @@ import Seo from "../../widgets/Seo.jsx";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
 import Reveal from "../../widgets/Reveal.jsx";
-import ProjectShot from "../../widgets/ProjectShot.jsx";
+import DeviceFrame from "../../widgets/DeviceFrame.jsx";
+import CaseStudy from "./CaseStudy.jsx";
 import ProjectGallery from "./ProjectGallery.jsx";
 import NotFound from "../error/NotFound.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
@@ -77,7 +78,7 @@ export default function ProjectDetail() {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-6 py-3 text-sm font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+                    className="btn btn-primary !py-3 !text-sm"
                   >
                     Live Site <span aria-hidden>↗</span>
                   </a>
@@ -87,7 +88,7 @@ export default function ProjectDetail() {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2.5 rounded-xl border border-line px-6 py-3 text-sm font-semibold text-fg transition-colors hover:border-primary"
+                    className="btn btn-ghost !py-3 !text-sm"
                   >
                     GitHub <span aria-hidden>↗</span>
                   </a>
@@ -97,18 +98,24 @@ export default function ProjectDetail() {
           </div>
         </Reveal>
 
-        <Reveal
-          delay={0.08}
-          className="mb-16 block overflow-hidden rounded-2xl border border-line"
-        >
-          <div className="aspect-video w-full">
-            <ProjectShot
+        {/*
+          The real screenshot, in a CSS device frame. The presentation is the
+          portfolio's; the pixels inside the screen are the product's, exactly
+          as captured — a redesigned screenshot would make the whole case study
+          untrustworthy.
+        */}
+        <Reveal delay={0.08} className="mb-16 block">
+          <div className={project.category === "Mobile" ? "mx-auto max-w-[320px]" : ""}>
+            <DeviceFrame
               src={project.image}
-              alt={`${project.name} screenshot`}
+              alt={`${project.name} — product screenshot`}
+              kind={project.category === "Mobile" ? "mobile" : "web"}
               eager
             />
           </div>
         </Reveal>
+
+        <CaseStudy caseStudy={project.caseStudy} />
 
         {project.gallery.length > 0 && (
           <Reveal delay={0.12} className="mb-16 block">

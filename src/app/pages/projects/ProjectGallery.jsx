@@ -7,14 +7,18 @@ export default function ProjectGallery({ gallery }) {
       {gallery.map((item) => (
         <figure
           key={item.src}
-          className="overflow-hidden rounded-2xl border border-line bg-surface/90"
+          className="surface surface-interactive group overflow-hidden"
         >
           <div className="aspect-video w-full overflow-hidden">
             {/* The caption is the accessible description — these screenshots
                 carry meaning, so an empty alt would drop it. */}
-            <ProjectShot src={item.src} alt={item.caption} />
+            <ProjectShot
+              src={item.src}
+              alt={item.caption}
+              className="transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transform-none"
+            />
           </div>
-          <figcaption className="border-t border-line px-4 py-3 text-sm leading-relaxed text-muted">
+          <figcaption className="border-t border-line-inner px-4 py-3 text-sm leading-relaxed text-muted">
             {item.caption}
           </figcaption>
         </figure>
