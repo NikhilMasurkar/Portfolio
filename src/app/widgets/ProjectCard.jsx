@@ -6,9 +6,15 @@ import { ROUTE_PATH } from "../global/RoutePath.js";
 /** A project card for the listing grid — sibling of the home page's featured card. */
 export default function ProjectCard({ project }) {
   return (
-    <article className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-line bg-surface/90 transition-all hover:-translate-y-1 hover:border-primary">
-      <div className="h-[180px] w-full shrink-0 overflow-hidden">
-        <ProjectShot src={project.image} alt={`${project.name} screenshot`} />
+    <article className="group surface surface-interactive flex h-full w-full flex-col overflow-hidden">
+      {/* Zoom lives on the image, not the card, so the card's own border and
+          radius stay put while the artwork moves under them. */}
+      <div className="h-[190px] w-full shrink-0 overflow-hidden">
+        <ProjectShot
+          src={project.image}
+          alt={`${project.name} screenshot`}
+          className="transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
+        />
       </div>
 
       <div className="flex flex-1 flex-col p-6">
@@ -58,9 +64,9 @@ export default function ProjectCard({ project }) {
           )}
           <Link
             to={`${ROUTE_PATH.PROJECTS}${project.slug}/`}
-            className="flex items-center gap-1.5 transition-colors hover:text-fg"
+            className="btn flex items-center gap-1.5 !text-sm transition-colors hover:text-fg"
           >
-            Case Study <span aria-hidden>→</span>
+            Case Study <span aria-hidden className="arrow">→</span>
           </Link>
         </div>
       </div>

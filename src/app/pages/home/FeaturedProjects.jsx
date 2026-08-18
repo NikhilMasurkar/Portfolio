@@ -16,15 +16,18 @@ export default function FeaturedProjects() {
   return (
     <section className="py-24">
       <Container>
-        <div className="mb-8 flex items-center justify-between gap-6">
-          <h2 className="text-xs font-semibold tracking-[0.2em] text-dim">
-            FEATURED PROJECTS
-          </h2>
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h2 className="eyebrow">Featured work</h2>
+            <p className="mt-3 font-display text-[30px] font-bold tracking-[-0.02em] text-fg max-[720px]:text-[24px]">
+              Products I&apos;ve shipped
+            </p>
+          </div>
           <Link
             to={ROUTE_PATH.PROJECTS}
-            className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-secondary"
+            className="btn shrink-0 !text-sm font-medium text-muted transition-colors hover:text-secondary"
           >
-            View All Projects <span aria-hidden>→</span>
+            View All Projects <span aria-hidden className="arrow">→</span>
           </Link>
         </div>
 
@@ -40,7 +43,7 @@ export default function FeaturedProjects() {
               >
                 <Reveal delay={index * 0.08} className="flex w-full">
                   <article
-                    className={`flex w-full overflow-hidden rounded-[20px] border border-line bg-surface/90 transition-all hover:-translate-y-1 hover:border-primary ${
+                    className={`group surface surface-interactive flex w-full overflow-hidden ${
                       isLarge ? "flex-row max-[720px]:flex-col" : "flex-col"
                     }`}
                   >
@@ -55,6 +58,7 @@ export default function FeaturedProjects() {
                         src={project.image}
                         alt={`${project.name} screenshot`}
                         eager={isLarge}
+                        className="transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
                       />
                     </div>
 
@@ -94,9 +98,9 @@ export default function FeaturedProjects() {
 
                       <Link
                         to={`${ROUTE_PATH.PROJECTS}${project.slug}/`}
-                        className="mt-5 flex items-center gap-2 text-sm font-semibold text-secondary"
+                        className="btn mt-5 flex items-center gap-2 !text-sm text-secondary"
                       >
-                        View Case Study <span aria-hidden>→</span>
+                        View Case Study <span aria-hidden className="arrow">→</span>
                       </Link>
                     </div>
                   </article>

@@ -13,7 +13,7 @@ export default function ContactCta() {
     <section className="relative overflow-hidden pb-28 pt-4">
       <SectionBackground variant="contact" />
       <Container>
-        <Reveal className="rounded-[22px] border border-line bg-surface/85 px-8 py-14 text-center">
+        <Reveal className="surface px-8 py-16 text-center max-[720px]:px-6 max-[720px]:py-12">
           <h2 className="m-0 mb-4 font-display text-[46px] font-bold leading-[1.2] tracking-[-0.03em] max-[720px]:text-[32px]">
             Let&apos;s Build Something
             <br />
@@ -34,16 +34,16 @@ export default function ContactCta() {
           {ROUTE_PATH.CONTACT ? (
             <Link
               to={ROUTE_PATH.CONTACT}
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-8 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+              className="btn btn-primary"
             >
-              Get In Touch <span aria-hidden>→</span>
+              Get In Touch <span aria-hidden className="arrow">→</span>
             </Link>
           ) : (
             <a
               href={`mailto:${profile.email}`}
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-8 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+              className="btn btn-primary"
             >
-              Get In Touch <span aria-hidden>→</span>
+              Get In Touch <span aria-hidden className="arrow">→</span>
             </a>
           )}
         </Reveal>

@@ -102,6 +102,20 @@
   --rgb-secondary: 0 212 255;
   --rgb-accent: 168 85 247;
 
+  /*
+   * Glass surfaces. Deliberately translucent white rather than a solid
+   * token: a card has to pick up whatever glow sits behind it, which is what
+   * makes the depth read. Solid --surface flattens every card into the same
+   * slab regardless of the section it sits in.
+   *
+   * These are surface values, not text values — the AA-verified ramp above
+   * still governs anything readable.
+   */
+  --glass: rgb(255 255 255 / 0.03);
+  --glass-strong: rgb(255 255 255 / 0.05);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --glass-border-hover: rgb(140 100 255 / 0.35);
+
   --gradient-01: linear-gradient(135deg, #6c63ff, #00d4ff);
   --gradient-02: linear-gradient(135deg, #a855f7, #ff4fd8);
   --gradient-03: linear-gradient(135deg, #00d4ff, #0072ff);
@@ -127,6 +141,131 @@ body {
   outline: 2px solid var(--color-secondary);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Surface and control primitives.
+ *
+ * These exist because the same six-line class string was being repeated on
+ * every card, and repeated strings drift — one card ends up at radius 20 and
+ * its neighbour at 22, which is exactly the inconsistency the design brief
+ * calls out. Defining them once means a change to card treatment is one edit.
+ *
+ * backdrop-filter is expensive, so it is on cards and the header only — not
+ * on every bordered box.
+ * ------------------------------------------------------------------------ */
+.surface {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  /* A one-pixel top highlight is what stops a translucent panel reading as a
+     flat hole. Subtle enough to be felt rather than seen. */
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+}
+
+.surface-interactive {
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.surface-interactive:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+    0 18px 40px -20px rgb(var(--rgb-primary) / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface-interactive,
+  .surface-interactive:hover {
+    transform: none;
+    transition: border-color 0.25s ease;
+  }
+}
+
+/* Controls. Every state the brief asks for, defined once. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background-image: var(--gradient-04);
+  color: var(--color-fg);
+  box-shadow: var(--shadow-cta);
+  padding: 1rem 1.75rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: var(--glass);
+  border: 1px solid var(--color-line-raised);
+  color: var(--color-fg);
+  padding: 1rem 1.75rem;
+  backdrop-filter: blur(12px);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+}
+
+.btn-ghost:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* The arrow slides on hover — the brief's "small directional animation". */
+.btn .arrow {
+  transition: transform 0.2s ease;
+}
+.btn:hover:not(:disabled) .arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn:hover,
+  .btn .arrow,
+  .btn:hover .arrow {
+    transform: none;
+  }
+}
+
+/* Section eyebrow: the small tracked label above every section heading. */
+.eyebrow {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-dim);
 }
 
 ::-webkit-scrollbar {

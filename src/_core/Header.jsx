@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import Container from "../app/widgets/Container.jsx";
 import MobileNav from "./MobileNav.jsx";
@@ -8,8 +8,35 @@ import { NAV_ITEMS, isActivePath } from "../app/global/nav.js";
 export default function Header() {
   const { pathname } = useLocation();
 
+  /*
+   * Transparent over the hero, glass once scrolled.
+   *
+   * The header sat on a permanent blur before, which fought the hero art
+   * behind it and gave the page a hard band across the top before you had
+   * scrolled anywhere. Starting transparent lets the hero run full-bleed and
+   * makes the glass mean something: it appears when there is content to
+   * separate from.
+   *
+   * Passive listener — this runs on every scroll frame and must never be able
+   * to block it.
+   */
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll(); // a reload partway down the page starts in the right state
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line-header bg-bg/70 backdrop-blur-[18px]">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? "border-b border-line-header bg-bg/72 backdrop-blur-[18px]"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
       <Container className="flex h-header items-center justify-between gap-8">
         <Link
           to={ROUTE_PATH.HOME}
@@ -54,7 +81,7 @@ export default function Header() {
           {ROUTE_PATH.RESUME && (
             <Link
               to={ROUTE_PATH.RESUME}
-              className="hidden rounded-full bg-[image:var(--gradient-04)] px-5 py-2 text-[14px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5 min-[720px]:inline-flex"
+              className="btn btn-primary hidden !px-5 !py-2 !text-[14px] !rounded-full min-[720px]:inline-flex"
             >
               Resume
             </Link>

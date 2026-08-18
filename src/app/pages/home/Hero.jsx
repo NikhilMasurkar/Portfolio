@@ -73,9 +73,9 @@ export default function Hero() {
               {ROUTE_PATH.PROJECTS && (
                 <Link
                   to={ROUTE_PATH.PROJECTS}
-                  className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-4 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
+                  className="btn btn-primary"
                 >
-                  Explore My Work <span aria-hidden>→</span>
+                  Explore My Work <span aria-hidden className="arrow">→</span>
                 </Link>
               )}
               {/*
@@ -86,15 +86,15 @@ export default function Hero() {
               {ROUTE_PATH.RESUME && (
                 <Link
                   to={ROUTE_PATH.RESUME}
-                  className="inline-flex items-center gap-2.5 rounded-xl border border-line-raised bg-surface/70 px-7 py-4 text-[15px] font-semibold text-fg transition-colors hover:border-primary"
+                  className="btn btn-ghost"
                 >
-                  Download Resume <span aria-hidden>↓</span>
+                  Download Resume <span aria-hidden className="arrow">↓</span>
                 </Link>
               )}
             </div>
 
-            <p className="mb-4 text-[11.5px] font-semibold tracking-[0.18em] text-dim">
-              CONNECT WITH ME
+            <p className="eyebrow mb-4">
+              Connect with me
             </p>
             <ul className="flex gap-3">
               {profile.socials.map((social) => (
@@ -104,7 +104,7 @@ export default function Hero() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.name}
-                    className="flex h-11 w-11 items-center justify-center rounded-[11px] border border-line bg-surface/80 font-mono text-[13px] font-semibold text-muted transition-all hover:-translate-y-0.5 hover:border-primary hover:text-fg"
+                    className="surface surface-interactive flex h-11 w-11 items-center justify-center !rounded-[13px] text-muted hover:text-fg"
                   >
                     <SocialIcon name={social.name} mark={social.label} size={19} />
                   </a>
