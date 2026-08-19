@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Seo from "../../widgets/Seo.jsx";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
@@ -12,22 +14,24 @@ export default function About() {
   const profile = useProfile();
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <Box component="section" className="relative overflow-hidden py-24">
       <Seo path={ROUTE_PATH.ABOUT} description={profile.aboutSummary} />
       <SectionBackground variant="about" />
       <Container>
-        <p className="eyebrow mb-4">About</p>
+        <Typography className="eyebrow mb-4">About</Typography>
         <AboutHero />
 
-        <div className="mt-24">
+        <Box className="mt-24">
           <TechGrid />
-        </div>
+        </Box>
 
-        <div className="mt-24">
-          <h2 className="eyebrow mb-8">Experience</h2>
+        <Box className="mt-24">
+          <Typography variant="h2" className="eyebrow mb-8">
+            Experience
+          </Typography>
           <ExperienceTimeline />
-        </div>
+        </Box>
       </Container>
-    </section>
+    </Box>
   );
 }

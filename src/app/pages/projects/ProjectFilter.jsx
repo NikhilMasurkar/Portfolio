@@ -1,4 +1,8 @@
 import React, { useMemo, useState } from "react";
+import Box from "@mui/material/Box";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
 import Reveal from "../../widgets/Reveal.jsx";
 import ProjectCard from "../../widgets/ProjectCard.jsx";
 
@@ -31,50 +35,49 @@ export default function ProjectFilter({ projects }) {
   );
 
   return (
-    <div>
+    <Box>
       {filters.length > 2 && (
-        <div
-          role="group"
+        <ToggleButtonGroup
+          exclusive
+          value={filter}
+          onChange={(_, next) => next && setFilter(next)}
           aria-label="Filter projects by category"
           className="mb-12 flex flex-wrap gap-3"
         >
-          {filters.map((option) => {
-            const selected = option === filter;
-            return (
-              <button
-                key={option}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => setFilter(option)}
-                className={
-                  selected
-                    ? "rounded-full bg-[image:var(--gradient-04)] px-4 py-2 text-sm font-semibold text-fg shadow-cta"
-                    : "rounded-full border border-line px-4 py-2 text-sm font-semibold text-muted transition-colors hover:border-primary hover:text-fg"
-                }
-              >
-                {option}
-              </button>
-            );
-          })}
-        </div>
+          {filters.map((option) => (
+            <ToggleButton
+              key={option}
+              value={option}
+              className={
+                option === filter
+                  ? "rounded-full border-0 bg-[image:var(--gradient-04)] px-4 py-2 text-sm font-semibold normal-case text-fg shadow-cta"
+                  : "rounded-full border border-line px-4 py-2 text-sm font-semibold normal-case text-muted transition-colors hover:border-primary hover:text-fg"
+              }
+            >
+              {option}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
       )}
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-muted">No projects in this category yet.</p>
+        <Typography className="text-sm text-muted">
+          No projects in this category yet.
+        </Typography>
       ) : (
-        <ul className="grid grid-cols-3 gap-6 max-[1160px]:grid-cols-2 max-[720px]:grid-cols-1">
+        <Box
+          component="ul"
+          className="grid grid-cols-3 gap-6 max-[1160px]:grid-cols-2 max-[720px]:grid-cols-1"
+        >
           {filtered.map((project, index) => (
             <li key={project.slug} className="flex">
-              <Reveal
-                delay={Math.min(index * 0.06, MAX_DELAY)}
-                className="flex w-full"
-              >
+              <Reveal delay={Math.min(index * 0.06, MAX_DELAY)} className="flex w-full">
                 <ProjectCard project={project} />
               </Reveal>
             </li>
           ))}
-        </ul>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
