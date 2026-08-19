@@ -51,10 +51,8 @@ export const publicTheme = createTheme({
     },
     MuiPaper: {
       styleOverrides: {
-        root: {
-          backgroundImage: "none",
-          border: `1px solid ${TOKENS.line}`,
-        },
+
+        root: { backgroundImage: "none" },
       },
     },
     MuiLink: {

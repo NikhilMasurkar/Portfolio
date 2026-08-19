@@ -1,10 +1,11 @@
 import React from "react";
+import Box from "@mui/material/Box";
 
 /** Page gutter and max width, from the --container-page token. */
-export default function Container({ children, className = "" }) {
+export default function Container({ children, className = "", ...rest }) {
   return (
-    <div className={`mx-auto w-full max-w-page px-8 ${className}`}>
+    <Box className={`mx-auto w-full max-w-page px-8 ${className}`} {...rest}>
       {children}
-    </div>
+    </Box>
   );
 }

@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Container from "../app/widgets/Container.jsx";
 import SocialIcon from "../app/widgets/SocialIcon.jsx";
 import { NAV_ITEMS } from "../app/global/nav.js";
@@ -11,21 +14,21 @@ export default function Footer() {
   const profile = useProfile();
 
   return (
-    <footer className="relative z-10 border-t border-line-header bg-surface/60">
+    <Box component="footer" className="relative z-10 border-t border-line-header bg-surface/60">
       <Container className="flex flex-wrap items-center justify-between gap-8 py-8 max-[720px]:flex-col max-[720px]:items-start">
-        <div>
-          <div className="mb-1.5 font-display text-xl font-bold tracking-tight">
-            NM<span className="text-accent-text">.</span>
-          </div>
-          <p className="text-[12.5px] leading-relaxed text-dim">
+        <Box>
+          <Box className="mb-1.5 font-display text-xl font-bold tracking-tight">
+            NM<Box component="span" className="text-accent-text">.</Box>
+          </Box>
+          <Typography className="text-[12.5px] leading-relaxed text-dim">
             © {new Date().getFullYear()} {profile.name}.
             <br />
             All rights reserved.
-          </p>
-        </div>
+          </Typography>
+        </Box>
 
-        <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-6">
+        <Box component="nav" aria-label="Footer">
+          <Stack component="ul" direction="row" className="flex flex-wrap gap-x-6">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
                 <Link
@@ -36,10 +39,10 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
-          </ul>
-        </nav>
+          </Stack>
+        </Box>
 
-        <ul className="flex gap-2.5">
+        <Stack component="ul" direction="row" className="gap-2.5">
           {profile.socials.map((social) => (
             <li key={social.name}>
               <a
@@ -55,8 +58,8 @@ export default function Footer() {
               </a>
             </li>
           ))}
-        </ul>
+        </Stack>
       </Container>
-    </footer>
+    </Box>
   );
 }

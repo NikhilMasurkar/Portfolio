@@ -3,13 +3,13 @@ import { BrowserRouter } from "react-router";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import createCacheImport from "@emotion/cache";
 import { publicTheme } from "./app/global/muiTheme.js";
+import createEmotionCache from "./app/global/emotionCache.js";
 import { ContentProvider } from "./app/global/ContentContext.jsx";
 import { PageRoutes } from "./app/router/Routes";
 
-const createCache = createCacheImport.default ?? createCacheImport;
-const clientCache = createCache({ key: "nm", prepend: true });
+// One cache for the lifetime of the tab; the server makes one per request.
+const clientCache = createEmotionCache();
 
 export default function App({ content }) {
   return (

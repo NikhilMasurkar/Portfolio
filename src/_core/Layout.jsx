@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
@@ -19,21 +21,22 @@ export default function Layout({ children }) {
    * images loaded, sized and positioned correctly, and were covered.
    */
   return (
-    <div className="flex min-h-screen flex-col text-fg">
-      <a
+    <Box className="flex min-h-screen flex-col text-fg">
+      <Link
         href="#content"
+        underline="none"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-surface-raised focus:px-4 focus:py-2 focus:text-fg"
       >
         Skip to content
-      </a>
+      </Link>
 
       <Header />
 
-      <main id="content" className="flex-1 pt-header">
+      <Box component="main" id="content" className="flex-1 pt-header">
         {children}
-      </main>
+      </Box>
 
       <Footer />
-    </div>
+    </Box>
   );
 }

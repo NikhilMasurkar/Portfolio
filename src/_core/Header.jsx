@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Container from "../app/widgets/Container.jsx";
 import MobileNav from "./MobileNav.jsx";
 import { ROUTE_PATH } from "../app/global/RoutePath.js";
@@ -30,23 +34,31 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
-        scrolled
-          ? "border-b border-line-header bg-bg/72 backdrop-blur-[18px]"
-          : "border-b border-transparent bg-transparent"
-      }`}
+
+    <AppBar
+      component="header"
+      position="fixed"
+      color="transparent"
+      elevation={0}
+      className={`z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${scrolled
+        ? "border-b border-line-header bg-bg/72 backdrop-blur-[18px]"
+        : "border-b border-transparent bg-transparent"
+        }`}
     >
       <Container className="flex h-header items-center justify-between gap-8">
         <Link
           to={ROUTE_PATH.HOME}
           className="font-display text-2xl font-bold tracking-tight text-fg"
         >
-          NM<span className="text-accent-text">.</span>
+          NM<Box component="span" className="text-accent-text">.</Box>
         </Link>
 
-        <nav aria-label="Main" className="hidden min-[720px]:block">
-          <ul className="flex flex-wrap items-center gap-x-[34px] gap-y-3">
+        <Box component="nav" aria-label="Main" className="hidden min-[720px]:block">
+          <Stack
+            component="ul"
+            direction="row"
+            className="flex flex-wrap items-center gap-x-[34px] gap-y-3"
+          >
             {NAV_ITEMS.filter((item) => item.href !== ROUTE_PATH.RESUME).map((item) => {
               const active = isActivePath(pathname, item.href);
               return (
@@ -54,13 +66,13 @@ export default function Header() {
                   <Link
                     to={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative py-2.5 text-[14.5px] font-medium transition-colors hover:text-fg ${
-                      active ? "text-fg" : "text-muted"
-                    }`}
+                    className={`relative py-2.5 text-[14.5px] font-medium transition-colors hover:text-fg ${active ? "text-fg" : "text-muted"
+                      }`}
                   >
                     {item.label}
                     {active && (
-                      <span
+                      <Box
+                        component="span"
                         aria-hidden
                         className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[image:var(--gradient-01)]"
                       />
@@ -69,27 +81,24 @@ export default function Header() {
                 </li>
               );
             })}
-          </ul>
-        </nav>
+          </Stack>
+        </Box>
 
-        <div className="flex items-center gap-3">
-          {/*
-            Resume is a button rather than a nav item, per the design. It is
-            filtered out of the list above so it does not appear twice — but
-            only rendered at all once the page exists, like every other route.
-          */}
+        <Stack direction="row" alignItems="center" className="gap-3">
+
           {ROUTE_PATH.RESUME && (
-            <Link
+            <Button
+              component={Link}
               to={ROUTE_PATH.RESUME}
               className="btn btn-primary hidden !px-5 !py-2 !text-[14px] !rounded-full min-[720px]:inline-flex"
             >
               Resume
-            </Link>
+            </Button>
           )}
 
           <MobileNav />
-        </div>
+        </Stack>
       </Container>
-    </header>
+    </AppBar>
   );
 }

@@ -1,12 +1,12 @@
-import createCacheImport from "@emotion/cache";
 import createEmotionServerImport from "@emotion/server/create-instance";
 
-const createCache = createCacheImport.default ?? createCacheImport;
+export { default } from "../src/app/global/emotionCache.js";
 
-export default function createEmotionCache() {
-  return createCache({ key: "nm", prepend: true });
-}
-
+/**
+ * Same CommonJS unwrap @emotion/cache needs, and for the same reason: getting
+ * it wrong throws inside handleRender, where the catch turns it into a silent
+ * fallback to the empty SPA shell — perfect in a browser, blank to crawlers.
+ */
 const createEmotionServer =
   createEmotionServerImport.default ?? createEmotionServerImport;
 
