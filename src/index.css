@@ -1,12 +1,4 @@
-/*
- * Layer order, and it must stay the first line in the file.
- *
- * MUI/Emotion styles are wrapped in `mui` (see app/global/emotionCache.js).
- * Naming it first makes every Tailwind rule outrank every MUI default, so
- * the design in this file stays the design. Unlayered CSS would beat all of
- * these, which is why the MUI side must be layered at all.
- */
-@layer mui, theme, base, components, utilities;
+@layer theme, base, mui, components, utilities;
 
 @import "tailwindcss";
 

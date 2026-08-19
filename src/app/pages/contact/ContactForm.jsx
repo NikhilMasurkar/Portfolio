@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
 const EMPTY = { name: "", email: "", subject: "", message: "", website: "" };
 
 /**
- * The contact form.
+ * The contact form, on MUI TextFields.
  *
- * Deliberately plain inputs with real <label>s rather than placeholder-only
- * fields — the design reference used placeholders as labels, which vanish as
- * soon as someone starts typing and leave screen readers with nothing.
+ * TextField keeps a real <label> wired to the input — it floats rather than
+ * sitting above the box, but it is still a label, not a placeholder. The
+ * design reference used placeholders as labels, which vanish as soon as
+ * someone types and leave screen readers with nothing.
  */
 export default function ContactForm({ email }) {
   const [form, setForm] = useState(EMPTY);
@@ -49,73 +55,55 @@ export default function ContactForm({ email }) {
 
   const busy = state.status === "sending";
 
-  const field =
-    "w-full rounded-xl border border-line bg-bg px-4 py-3 text-[15px] text-fg placeholder:text-dim transition-colors focus:border-primary focus:outline-none disabled:opacity-60";
-  const labelClass = "mb-2 block text-[13px] font-medium text-fg-3";
-
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label className={labelClass} htmlFor="contact-name">
-            Name
-          </label>
-          <input
-            id="contact-name"
-            className={field}
-            value={form.name}
-            onChange={set("name")}
-            required
-            disabled={busy}
-            autoComplete="name"
-          />
-        </div>
-
-        <div>
-          <label className={labelClass} htmlFor="contact-email">
-            Email
-          </label>
-          <input
-            id="contact-email"
-            type="email"
-            className={field}
-            value={form.email}
-            onChange={set("email")}
-            required
-            disabled={busy}
-            autoComplete="email"
-          />
-        </div>
-      </div>
-
-      <div className="mt-5">
-        <label className={labelClass} htmlFor="contact-subject">
-          Subject
-        </label>
-        <input
-          id="contact-subject"
-          className={field}
-          value={form.subject}
-          onChange={set("subject")}
+    <Box component="form" onSubmit={handleSubmit} noValidate>
+      <Box className="grid gap-5 sm:grid-cols-2">
+        <TextField
+          id="contact-name"
+          label="Name"
+          fullWidth
           required
           disabled={busy}
+          autoComplete="name"
+          value={form.name}
+          onChange={set("name")}
         />
-      </div>
-
-      <div className="mt-5">
-        <label className={labelClass} htmlFor="contact-message">
-          Message
-        </label>
-        <textarea
-          id="contact-message"
-          rows={6}
-          className={field}
-          value={form.message}
-          onChange={set("message")}
+        <TextField
+          id="contact-email"
+          label="Email"
+          type="email"
+          fullWidth
           required
           disabled={busy}
+          autoComplete="email"
+          value={form.email}
+          onChange={set("email")}
         />
-      </div>
+      </Box>
+
+      <TextField
+        id="contact-subject"
+        label="Subject"
+        fullWidth
+        required
+        disabled={busy}
+        className="mt-5"
+        value={form.subject}
+        onChange={set("subject")}
+      />
+
+      <TextField
+        id="contact-message"
+        label="Message"
+        fullWidth
+        multiline
+        rows={6}
+        required
+        disabled={busy}
+        className="mt-5"
+        value={form.message}
+        onChange={set("message")}
+      />
 
       {/*
         Honeypot. Hidden from people and from assistive technology, but present
@@ -123,7 +111,7 @@ export default function ContactForm({ email }) {
         and tabIndex keep it out of the way of anyone using a screen reader or
         the keyboard; `display:none` alone is skipped by some bots.
       */}
-      <div className="absolute left-[-9999px]" aria-hidden="true">
+      <Box className="absolute left-[-9999px]" aria-hidden="true">
         <label htmlFor="contact-website">Leave this empty</label>
         <input
           id="contact-website"
@@ -132,22 +120,25 @@ export default function ContactForm({ email }) {
           value={form.website}
           onChange={set("website")}
         />
-      </div>
+      </Box>
 
-      <button
+      <Button
         type="submit"
         disabled={busy}
+        startIcon={busy ? <CircularProgress size={16} color="inherit" /> : null}
         className="mt-7 inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-3.5 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60"
       >
         {busy ? "Sending…" : "Send Message"} <span aria-hidden>→</span>
-      </button>
+      </Button>
 
       {/*
         role="status" so the result is announced rather than only shown. A
         sighted user sees the message appear; without this a screen-reader user
-        gets no feedback that anything happened at all.
+        gets no feedback that anything happened at all. It stays in the DOM
+        while empty — an aria-live region added at the same moment as its text
+        is not reliably announced.
       */}
-      <p
+      <Typography
         role="status"
         aria-live="polite"
         className={`mt-4 min-h-[1.25rem] text-sm ${
@@ -155,7 +146,7 @@ export default function ContactForm({ email }) {
         }`}
       >
         {state.message}
-      </p>
-    </form>
+      </Typography>
+    </Box>
   );
 }

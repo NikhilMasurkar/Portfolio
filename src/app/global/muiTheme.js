@@ -55,6 +55,33 @@ export const publicTheme = createTheme({
         root: { backgroundImage: "none" },
       },
     },
+    /*
+     * Inputs, styled here rather than per form. The site's fields sit on the
+     * page background with a hairline border, not on MUI's default filled
+     * grey, and the label has to clear AA against that background — hence
+     * `muted` for rest and the brighter `fg2` for focus.
+     */
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: TOKENS.bg,
+          borderRadius: 12,
+          "& .MuiOutlinedInput-notchedOutline": { borderColor: TOKENS.line },
+          "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: TOKENS.lineRaised },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: TOKENS.primaryText,
+            borderWidth: 1,
+          },
+        },
+        input: { color: TOKENS.fg, fontSize: 15 },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: { color: TOKENS.muted, "&.Mui-focused": { color: TOKENS.fg2 } },
+      },
+    },
+
     MuiLink: {
       defaultProps: { underline: "hover" },
       styleOverrides: { root: { color: TOKENS.secondary } },
