@@ -45,3 +45,5 @@ next-env.d.ts
 
 # Source resume, kept out of the deploy
 *.pdf
+
+# Source video lives in the resources folder, not the repo

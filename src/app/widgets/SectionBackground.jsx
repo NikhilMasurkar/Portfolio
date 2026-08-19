@@ -1,4 +1,5 @@
 import React from "react";
+import BackgroundVideo from "./BackgroundVideo.jsx";
 
 /**
  * The six background recipes from the design sheets, in CSS.
@@ -53,7 +54,20 @@ const PLATES = {
    * third. A single anchor would show the dark sky of one or the dead centre
    * of the other.
    */
-  about: { src: "/bg/about.jpg", position: "62% 45%" },
+  about: {
+    src: "/bg/about.jpg",
+    position: "62% 45%",
+    /*
+     * The animated version of the same nebula. A seamless 3s loop — the clip
+     * ends on the frame it starts on, so the repeat is invisible.
+     *
+     * The still stays underneath and is what most visitors see: the video is
+     * skipped on narrow screens, under prefers-reduced-motion and under
+     * Save-Data. Because both are the same artwork, nobody can tell they got
+     * the cheaper one.
+     */
+    video: { mp4: "/bg/about-loop.mp4", webm: "/bg/about-loop.webm" },
+  },
   contact: { src: "/bg/contact.jpg", position: "center 78%" },
   /*
    * The home plate does duty for the work pages too. Reusing it is deliberate
@@ -125,6 +139,19 @@ export default function SectionBackground({ variant }) {
             className="h-full w-full object-cover"
             style={{ opacity: PLATE_OPACITY, objectPosition: plate.position }}
           />
+
+          {/* Sits over the still and under the scrim, so it is knocked back by
+              exactly the same amount and cannot brighten past what the text
+              was checked against. */}
+          {plate.video && (
+            <BackgroundVideo
+              mp4={plate.video.mp4}
+              webm={plate.video.webm}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ opacity: PLATE_OPACITY, objectPosition: plate.position }}
+            />
+          )}
+
           {/* Darkest where headings sit, and fading to the page colour at the
               bottom so the band has no visible edge. */}
           <div className="absolute inset-0" style={{ background: SCRIM }} />
