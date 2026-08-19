@@ -49,12 +49,43 @@ derive from the index, not from entropy.
 modules with plain Node, which resolves neither. JSON imports need
 `with { type: "json" }` for the same reason.
 
-**MUI is admin-only.** The public site is Tailwind against the tokens in
-`src/index.css`. There is no Emotion SSR path — see the note in
-`server/index.js` before adding an MUI component to a server-rendered page.
+**MUI styles the whole site, Tailwind still owns the design.** Components
+come from MUI; the look comes from the Tailwind classes on them and the
+tokens in `src/index.css`. Both are needed — MUI supplies behaviour
+(`Drawer`'s focus trap, `TextField`'s label wiring), Tailwind supplies the
+audited palette and spacing.
+
+**CSS layer order is load-bearing, and it is decided in `index.html`.**
+Emotion's output is wrapped in `@layer mui` by
+`src/app/global/emotionCache.js`, and `index.html` declares
+`@layer theme, base, mui, components, utilities` before any stylesheet. Three
+things depend on that exact arrangement:
+  - Emotion's styles must be *layered at all*, because unlayered CSS beats
+    every layer no matter the order — otherwise MUI's defaults silently
+    outrank the Tailwind class beside them.
+  - `mui` must come *after* `base`, or Tailwind's Preflight `*{padding:0}`
+    strips MUI's own input padding and text fields collapse to a sliver.
+  - `mui` must come *before* `components`/`utilities`, so `.surface`, `.btn`
+    and every utility still win.
+A layer's position is fixed the first time the browser sees its name, so the
+declaration has to be parsed before any Emotion tag. That is also why the
+cache must not use `prepend: true`.
+
+**Emotion critical CSS is extracted per request** in `server/index.js`.
+Without it, server-rendered pages arrive unstyled to anything that does not
+run JS. `@emotion/server` and `@emotion/cache` are CommonJS and need the
+default unwrap in `server/createEmotionCache.js`; MUI is bundled rather than
+externalised (`ssr.noExternal` in `vite.config.server.js`) because node-mode
+interop otherwise hands back a module namespace where a component is
+expected. Every one of these failures is caught by the `try/catch` in
+`handleRender` and served as the empty SPA shell — fine in a browser, blank
+to crawlers. `npm run verify` is what catches it.
 
 **No raw hex in components.** Every colour is a token; the ramp is verified
-against WCAG AA on all three surfaces.
+against WCAG AA on all three surfaces. Two deliberate exceptions:
+`src/app/global/muiTheme.js`, because MUI needs concrete colours to derive
+hover and disabled shades and cannot do arithmetic on a CSS variable; and
+`ResumeSheet.jsx`, which is a print document with its own palette.
 
 **Verify before pushing:** `npm run build && npm run ssr`, then
 `npm run verify` in another shell. `verify` is what catches SSR silently
