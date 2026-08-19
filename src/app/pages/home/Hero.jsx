@@ -35,9 +35,9 @@ export default function Hero() {
           <img
             src="/hero/devices.jpg"
             alt=""
-            width={1500}
-            height={1000}
-            className="h-full w-full object-cover object-[68%_center]"
+            width={1600}
+            height={1066}
+            className="h-full w-full object-cover object-[78%_center]"
             loading="eager"
             fetchPriority="high"
             decoding="async"
@@ -56,7 +56,7 @@ export default function Hero() {
           protects nothing on the right and the paragraph runs over the bright
           part of the plate. The mobile one is vertical and even instead.
         */}
-        <div className="absolute inset-0 hidden bg-[linear-gradient(100deg,var(--color-bg)_0%,rgb(5_8_22/0.88)_30%,rgb(5_8_22/0.22)_56%,rgb(5_8_22/0.3)_100%)] min-[900px]:block" />
+        <div className="absolute inset-0 hidden bg-[linear-gradient(100deg,rgb(5_8_22/0.82)_0%,rgb(5_8_22/0.6)_32%,rgb(5_8_22/0.12)_58%,rgb(5_8_22/0.18)_100%)] min-[900px]:block" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(5_8_22/0.86)_0%,rgb(5_8_22/0.78)_55%,rgb(5_8_22/0.92)_100%)] min-[900px]:hidden" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_bottom,transparent,var(--color-bg))]" />
       </div>
