@@ -29,9 +29,27 @@
   # for SECRETS_SCAN_ENABLED=false; that would switch off that protection too.
   SECRETS_SCAN_OMIT_KEYS = "VITE_SITE_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_APP_ID,VITE_ADMIN_EMAIL,ADMIN_EMAIL,AWS_REGION_NEW,AWS_S3_BUCKET,S3_PUBLIC_BASE_URL"
 
-# Everything that is not a real file in build/ renders through Express.
-# force = false, so the CDN serves an existing static file first and the
-# function is only reached for routes. status 200 (not 301) keeps the URL.
+# "/" MUST be forced, and this rule must stay above the catch-all.
+#
+# build/index.html is a real file in the publish directory, so with force =
+# false the CDN serves it for "/" and the SSR function is never invoked — the
+# home page arrives as the empty SPA shell with no __CONTENT__, which renders
+# from FALLBACK_CONTENT: no projects, no posts. It looks fine in a browser,
+# which is exactly why it survived a deploy.
+#
+# Locally this cannot happen: express.static is configured with `index: false`
+# (server/index.js), so "/" falls through to the renderer. That difference is
+# the whole trap — the local server and the CDN disagree about one file.
+[[redirects]]
+  from = "/"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true
+
+# Everything else that is not a real file in build/ renders through Express.
+# force = false here, so the CDN still serves /assets/*, fonts and images
+# directly instead of paying for a function invocation. status 200 (not 301)
+# keeps the URL.
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/ssr"

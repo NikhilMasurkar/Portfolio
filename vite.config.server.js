@@ -23,7 +23,15 @@ export default defineConfig({
   },
   ssr: {
     target: "node",
-    noExternal: [/^@mui\//, /^@emotion\//],
+    noExternal: [
+      /^@mui\//,
+      /^@emotion\//,
+      "react-router",
+      "zod",
+      "jose",
+      "stylis",
+      "react-markdown",
+    ],
   },
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
 });

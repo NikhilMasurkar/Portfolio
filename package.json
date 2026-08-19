@@ -7,7 +7,7 @@
   "description": "Portfolio of Nikhil Masurkar — Frontend Engineer, React Native specialist",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:server",
+    "build": "vite build && npm run build:server && node scripts/check-ssr-externals.mjs",
     "build:server": "vite build --config vite.config.server.js",
     "preview": "vite preview",
     "ssr": "node --env-file-if-exists=.env server/listen.cjs",
