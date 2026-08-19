@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { EMAILJS_CONFIG } from "../../global/contactConfig.js";
@@ -24,6 +25,24 @@ const EMPTY = { name: "", email: "", subject: "", message: "", website: "" };
 export default function ContactForm({ email }) {
   const [form, setForm] = useState(EMPTY);
   const [state, setState] = useState({ status: "idle", message: "" });
+
+  /*
+   * Where the message goes when EmailJS will not take it.
+   *
+   * Sending can fail for reasons no visitor can act on and no deploy can fix —
+   * an expired Gmail authorisation on the EmailJS account returns 412 and
+   * rejects every submission until someone reconnects it in a dashboard. A
+   * sentence saying "email me instead" makes that the visitor's problem: they
+   * have to retype everything into their mail client, and most will not.
+   *
+   * This hands their own words back to them, already addressed and formatted,
+   * so a broken integration costs a click rather than the enquiry.
+   */
+  const mailtoFallback = `mailto:${email}?subject=${encodeURIComponent(
+    form.subject || "Portfolio enquiry"
+  )}&body=${encodeURIComponent(
+    `${form.message}\n\n— ${form.name}${form.email ? ` (${form.email})` : ""}`
+  )}`;
 
   const set = (key) => (event) => setForm({ ...form, [key]: event.target.value });
 
@@ -97,10 +116,7 @@ export default function ContactForm({ email }) {
       });
     } catch (error) {
       console.error("Contact form submission failed:", error);
-      setState({
-        status: "error",
-        message: `Could not send the message. Email ${email} directly.`,
-      });
+      setState({ status: "failed", message: "Could not send the message." });
     }
   }
 
@@ -193,10 +209,23 @@ export default function ContactForm({ email }) {
         role="status"
         aria-live="polite"
         className={`mt-4 min-h-[1.25rem] text-sm ${
-          state.status === "error" ? "text-pink" : "text-secondary"
+          state.status === "error" || state.status === "failed"
+            ? "text-pink"
+            : "text-secondary"
         }`}
       >
         {state.message}
+        {/* Only on a failed send. A validation error means the visitor should
+            fix the field, not abandon the form for their mail client. */}
+        {state.status === "failed" && (
+          <>
+            {" "}
+            <Link href={mailtoFallback} className="text-secondary underline">
+              Send it by email instead
+            </Link>{" "}
+            — your message is already filled in.
+          </>
+        )}
       </Typography>
     </Box>
   );
