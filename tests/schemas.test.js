@@ -155,3 +155,40 @@ test("posts require a body, so an empty draft cannot publish as a blank page", (
   assert.ok(!postSchema.safeParse({ ...base, body: "" }).success);
   assert.ok(postSchema.safeParse({ ...base, body: "# Heading" }).success);
 });
+
+test("the admin's draft key is stripped on save and never reaches Firestore", () => {
+  /*
+   * The editors tag each row with a `_key` so React has an identity that does
+   * not change while the row is being typed into — see src/app/admin/draftKey.js.
+   * It is a UI concern and must not be written to the document.
+   *
+   * The schemas are plain z.object, which drops unknown keys, so this already
+   * holds. It is asserted because the failure is silent: a leaked `_key` would
+   * be written to every document and only noticed much later.
+   */
+  const post = postSchema.safeParse({
+    slug: "offline-video-playback",
+    title: "Offline Video Playback in React Native",
+    summary: "How the download pipeline works.",
+    publishedAt: "2026-08-01",
+    body: "# Heading",
+    _key: "draft-7",
+  });
+
+  assert.ok(post.success);
+  assert.ok(!("_key" in post.data), "postSchema let the draft key through");
+
+  const project = projectSchema.safeParse({
+    slug: "mezorder-pos",
+    name: "MezOrder POS",
+    category: "Web",
+    summary: "Restaurant point of sale.",
+    image: "/projects/mezorder.jpg",
+    tech: ["React", "Node"],
+    year: 2025,
+    _key: "draft-3",
+  });
+
+  assert.ok(project.success);
+  assert.ok(!("_key" in project.data), "projectSchema let the draft key through");
+});

@@ -146,7 +146,7 @@ export default function ResumeInlineEditor() {
           borderColor: "divider",
         }}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
           <Button variant="contained" onClick={handleSave} disabled={saving || !dirty}>
             {saving ? "Saving…" : dirty ? "Save changes" : "Saved"}
           </Button>

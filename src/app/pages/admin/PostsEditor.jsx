@@ -22,6 +22,7 @@ import Markdown from "../blog/Markdown.jsx";
 import { useCollection } from "../../admin/useDoc.js";
 import { useSave } from "../../admin/useSave.js";
 import { postSchema } from "../../global/schemas.js";
+import { withDraftKey, DRAFT_KEY } from "../../admin/draftKey.js";
 
 /**
  * Blog posts.
@@ -100,7 +101,7 @@ export default function PostsEditor() {
   if (!loading && loadedFrom !== rows) {
     setLoadedFrom(rows);
     // The document id is the slug, matching how content.js reads it back.
-    setDrafts(rows.map((row) => ({ ...BLANK, ...row, slug: row.id })));
+    setDrafts(rows.map((row) => withDraftKey({ ...BLANK, ...row, slug: row.id })));
   }
 
   if (loading) return <Typography color="text.secondary">Loading…</Typography>;
@@ -163,9 +164,9 @@ export default function PostsEditor() {
       )}
 
       {drafts.map((row, index) => (
-        <Accordion key={row.slug || index}>
+        <Accordion key={row[DRAFT_KEY]}>
           <AccordionSummary>
-            <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", flexWrap: "wrap" }}>
               <Typography sx={{ fontWeight: 600 }}>
                 {row.title || "New post"}
               </Typography>
@@ -265,7 +266,9 @@ export default function PostsEditor() {
       ))}
 
       <Box>
-        <Button onClick={() => setDrafts([...drafts, { ...BLANK }])}>Add post</Button>
+        <Button onClick={() => setDrafts([...drafts, withDraftKey({ ...BLANK })])}>
+          Add post
+        </Button>
       </Box>
 
       <Paper sx={{ p: 2 }}>

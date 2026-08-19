@@ -58,7 +58,7 @@ export default function MobileNav() {
           },
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack direction="row" className="items-center justify-between">
           <Typography className="font-display text-lg font-bold text-fg">Menu</Typography>
           <IconButton
             aria-label="Close menu"

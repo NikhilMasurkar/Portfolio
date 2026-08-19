@@ -148,7 +148,7 @@ export default function ResumeEditor() {
               key={index}
               sx={{ border: 1, borderColor: "divider", borderRadius: 2, p: 2.5 }}
             >
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: "center", mb: 2 }}>
                 <TextField
                   label="Project name"
                   fullWidth

@@ -54,9 +54,11 @@ function Shell({ title, children }) {
         <Container maxWidth="lg" sx={{ pt: 4 }}>
           <Stack
             direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            flexWrap="wrap"
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+            }}
             gap={2}
           >
             <Box>

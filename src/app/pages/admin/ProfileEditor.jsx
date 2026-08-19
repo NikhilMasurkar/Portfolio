@@ -37,7 +37,7 @@ function RowList({ title, rows, columns, onChange, blank }) {
 
       <Stack spacing={1.5}>
         {rows.map((row, index) => (
-          <Stack key={index} direction="row" spacing={1.5} alignItems="center">
+          <Stack key={index} direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
             {columns.map((column) => (
               <TextField
                 key={column.key}

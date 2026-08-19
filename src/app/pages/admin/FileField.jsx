@@ -45,7 +45,7 @@ export default function FileField({
         {label}
       </Typography>
 
-      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+      <Stack direction="row" spacing={2} sx={{ alignItems: "center", flexWrap: "wrap" }}>
         <Button
           variant="outlined"
           size="small"

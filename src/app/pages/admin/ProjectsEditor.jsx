@@ -23,6 +23,7 @@ import { useCollection } from "../../admin/useDoc.js";
 import { useSave } from "../../admin/useSave.js";
 import { projectSchema, projectCategories } from "../../global/schemas.js";
 import { writeCaseStudies } from "../../admin/writeCaseStudies.js";
+import { withDraftKey, DRAFT_KEY } from "../../admin/draftKey.js";
 
 /**
  * Projects, including the case-study prose.
@@ -75,7 +76,7 @@ export default function ProjectsEditor() {
   if (!loading && loadedFrom !== rows) {
     setLoadedFrom(rows);
     // The document id is the slug — see content.js, which reads it back that way.
-    setDrafts(rows.map((row) => ({ ...BLANK, ...row, slug: row.id })));
+    setDrafts(rows.map((row) => withDraftKey({ ...BLANK, ...row, slug: row.id })));
   }
 
   if (loading) return <Typography color="text.secondary">Loading…</Typography>;
@@ -164,9 +165,9 @@ export default function ProjectsEditor() {
       </Alert>
 
       {drafts.map((row, index) => (
-        <Accordion key={row.slug || index}>
+        <Accordion key={row[DRAFT_KEY]}>
           <AccordionSummary>
-            <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", flexWrap: "wrap" }}>
               <Typography sx={{ fontWeight: 600 }}>
                 {row.name || "New project"}
               </Typography>
@@ -251,7 +252,7 @@ export default function ProjectsEditor() {
                 helperText="The real product screenshot. Resized to 1400px on upload, and shown inside a device frame on the case study."
               />
 
-              <Stack direction="row" spacing={3} flexWrap="wrap">
+              <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap" }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -315,7 +316,9 @@ export default function ProjectsEditor() {
       ))}
 
       <Box>
-        <Button onClick={() => setDrafts([...drafts, { ...BLANK, order: drafts.length }])}>
+        <Button
+          onClick={() => setDrafts([...drafts, withDraftKey({ ...BLANK, order: drafts.length })])}
+        >
           Add project
         </Button>
       </Box>

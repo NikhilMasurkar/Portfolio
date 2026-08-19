@@ -15,6 +15,7 @@ import {
 import { StringListField } from "./fields.jsx";
 import { useCollection } from "../../admin/useDoc.js";
 import { useSave } from "../../admin/useSave.js";
+import { withDraftKey, DRAFT_KEY } from "../../admin/draftKey.js";
 
 /**
  * CRUD for a small ordered collection — experience, education.
@@ -46,7 +47,7 @@ export default function CollectionEditor({
 
   if (!loading && loadedFrom !== rows) {
     setLoadedFrom(rows);
-    setDrafts(rows);
+    setDrafts(rows.map(withDraftKey));
   }
 
   if (loading) return <Typography color="text.secondary">Loading…</Typography>;
@@ -94,7 +95,7 @@ export default function CollectionEditor({
       {hint && <Alert severity="info">{hint}</Alert>}
 
       {drafts.map((row, index) => (
-        <Accordion key={row.id || index} defaultExpanded={drafts.length <= 2}>
+        <Accordion key={row[DRAFT_KEY]} defaultExpanded={drafts.length <= 2}>
           <AccordionSummary>
             <Typography sx={{ fontWeight: 600 }}>
               {titleOf(row) || "Untitled"}
@@ -149,7 +150,7 @@ export default function CollectionEditor({
       <Box>
         <Button
           onClick={() =>
-            setDrafts([...drafts, { ...blank, id: "", order: drafts.length }])
+            setDrafts([...drafts, withDraftKey({ ...blank, id: "", order: drafts.length })])
           }
         >
           Add entry

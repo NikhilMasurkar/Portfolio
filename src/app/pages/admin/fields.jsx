@@ -32,7 +32,7 @@ export function StringListField({ label, hint, rows, onChange, addLabel = "Add" 
 
       <Stack spacing={1.5}>
         {rows.map((row, index) => (
-          <Stack key={index} direction="row" spacing={1} alignItems="flex-start">
+          <Stack key={index} direction="row" spacing={1} sx={{ alignItems: "flex-start" }}>
             <TextField
               fullWidth
               multiline
@@ -96,7 +96,7 @@ export function GroupListField({ label, hint, groups, onChange, itemsLabel = "It
 
       <Stack spacing={2}>
         {groups.map((group, index) => (
-          <Stack key={index} direction="row" spacing={1} alignItems="flex-start">
+          <Stack key={index} direction="row" spacing={1} sx={{ alignItems: "flex-start" }}>
             <TextField
               label="Label"
               value={group.label ?? ""}

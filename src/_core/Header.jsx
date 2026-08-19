@@ -84,7 +84,7 @@ export default function Header() {
           </Stack>
         </Box>
 
-        <Stack direction="row" alignItems="center" className="gap-3">
+        <Stack direction="row" className="items-center gap-3">
 
           {ROUTE_PATH.RESUME && (
             <Button
