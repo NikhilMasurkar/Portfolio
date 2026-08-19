@@ -85,6 +85,27 @@ export async function presignUpload({ contentType, kind }) {
   }
 
   /*
+   * The two variables must describe the same bucket, and nothing else checks.
+   *
+   * The upload is signed for AWS_S3_BUCKET while the URL written to Firestore
+   * is built from S3_PUBLIC_BASE_URL. Point them at different buckets and
+   * every upload succeeds, every save succeeds, and every image 404s — with
+   * the broken URL already persisted. That happened in production: the bucket
+   * was nik-portfolio-new and the base URL said nikhil-portfolio.
+   *
+   * Refusing here costs one failed upload. The alternative is silent, and is
+   * only discovered later by a visitor looking at a missing image.
+   */
+  if (!base.includes(bucket)) {
+    throw new UploadError(
+      `S3 is misconfigured: AWS_S3_BUCKET is "${bucket}" but S3_PUBLIC_BASE_URL ` +
+        `is "${base}", which points somewhere else. Uploads would be stored in ` +
+        `one bucket and linked in another. Fix the pair and redeploy.`,
+      500
+    );
+  }
+
+  /*
    * The key is generated here and never taken from the client's filename. A
    * client-supplied key is both a path-traversal primitive and a way to
    * overwrite any existing object — including one already referenced by a

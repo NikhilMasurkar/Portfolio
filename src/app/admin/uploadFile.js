@@ -102,7 +102,29 @@ export async function uploadFile(file, kind) {
   for (const [name, value] of Object.entries(fields)) form.append(name, value);
   form.append("file", prepared);
 
-  const upload = await fetch(url, { method: "POST", body: form });
+  /*
+   * A cross-origin POST the browser refuses to make throws here rather than
+   * resolving — there is no response object and no status to inspect, so the
+   * !upload.ok branch below never sees it. Unhandled, it surfaced in the admin
+   * panel as the browser's own words: "Failed to fetch", which says nothing
+   * about the cause.
+   *
+   * In practice it means one thing: the bucket has no CORS rule permitting
+   * POST from this origin, so the preflight never succeeded. Say that, and say
+   * which origin needs allowing, because the fix is in the AWS console and
+   * nobody can guess it from "Failed to fetch".
+   */
+  let upload;
+  try {
+    upload = await fetch(url, { method: "POST", body: form });
+  } catch (cause) {
+    throw new Error(
+      `The browser could not reach S3 (${cause.message}). This is almost ` +
+        `always the bucket's CORS rules: ${new URL(url).host} has to allow ` +
+        `POST from ${window.location.origin}.`,
+      { cause }
+    );
+  }
 
   if (!upload.ok) {
     // S3 answers with XML; the <Message> is the only useful part.

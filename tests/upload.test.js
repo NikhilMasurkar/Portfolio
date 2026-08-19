@@ -167,3 +167,31 @@ describe("token verification", () => {
     );
   });
 });
+
+test("a bucket that does not match the public base URL is refused, not silently linked", async () => {
+  /*
+   * The signature is issued for AWS_S3_BUCKET; the URL stored in Firestore is
+   * built from S3_PUBLIC_BASE_URL. If they name different buckets, every
+   * upload and every save succeeds while the image 404s forever — and the bad
+   * URL is already persisted by the time anyone notices.
+   *
+   * This shipped: the bucket was nik-portfolio-new while the base URL said
+   * nikhil-portfolio.
+   */
+  const { presignUpload } = await load();
+
+  const previous = process.env.S3_PUBLIC_BASE_URL;
+  process.env.S3_PUBLIC_BASE_URL = "https://a-different-bucket.s3.ap-south-1.amazonaws.com";
+
+  await assert.rejects(
+    () => presignUpload({ contentType: "image/jpeg", kind: "avatar" }),
+    /misconfigured/i,
+    "a mismatched bucket pair was allowed through"
+  );
+
+  process.env.S3_PUBLIC_BASE_URL = previous;
+
+  // And the matching pair still works, so the guard is not simply refusing everything.
+  const ok = await presignUpload({ contentType: "image/jpeg", kind: "avatar" });
+  assert.ok(ok.publicUrl.includes(process.env.AWS_S3_BUCKET));
+});
