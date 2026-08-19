@@ -63,15 +63,19 @@ export default function FeaturedProjects() {
                   <Card
                     component="article"
                     elevation={0}
-                    className={`group surface surface-interactive flex w-full overflow-hidden ${
-                      isLarge ? "flex-row max-[720px]:flex-col" : "flex-col"
-                    }`}
+                    className="group surface surface-interactive flex w-full flex-col overflow-hidden"
                   >
+                    {/*
+                      Image on top for every card, the featured one included.
+                      Side-by-side gave the first card a 170px-wide strip of a
+                      landscape screenshot — object-cover cropped it to a
+                      vertical sliver that showed almost none of the product,
+                      and it read as a different component from its neighbours.
+                      Taller here, so the featured card still leads the row.
+                    */}
                     <Box
-                      className={`shrink-0 overflow-hidden ${
-                        isLarge
-                          ? "w-[170px] self-stretch max-[720px]:h-[180px] max-[720px]:w-full"
-                          : "h-[132px] w-full"
+                      className={`w-full shrink-0 overflow-hidden ${
+                        isLarge ? "h-[210px]" : "h-[132px]"
                       }`}
                     >
                       <ProjectShot
