@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Seo from "../../widgets/Seo.jsx";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
@@ -21,7 +23,8 @@ export default function Resume() {
   const { resume, experience, education } = useContent();
 
   return (
-    <section
+    <Box
+      component="section"
       className="relative overflow-hidden py-16 max-[720px]:py-8"
       data-print="page"
     >
@@ -33,15 +36,15 @@ export default function Resume() {
       <Container>
         {/* Excluded from the PDF — a printed resume should not carry its own
             download button. */}
-        <div
+        <Box
           data-print="hide"
           className="mx-auto mb-6 flex max-w-[820px] flex-wrap items-center justify-between gap-4"
         >
-          <p className="text-sm text-muted">
+          <Typography className="text-sm text-muted">
             Generated from this page — always matches the site.
-          </p>
+          </Typography>
           <DownloadResume name={profile.name} />
-        </div>
+        </Box>
 
         <ResumeSheet
           profile={profile}
@@ -50,6 +53,6 @@ export default function Resume() {
           education={education}
         />
       </Container>
-    </section>
+    </Box>
   );
 }

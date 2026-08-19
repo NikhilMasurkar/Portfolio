@@ -12,20 +12,6 @@ import PostsEditor from "./app/pages/admin/PostsEditor.jsx";
 import { ExperienceEditor, EducationEditor } from "./app/pages/admin/sections.jsx";
 import ResumeInlineEditor from "./app/pages/admin/ResumeInlineEditor.jsx";
 
-/**
- * The admin panel's own root, separate from the public App.
- *
- * Kept apart deliberately:
- *
- *  - It is never server-rendered, so it is mounted with createRoot rather than
- *    hydrated. Sharing a tree with the public site would mean matching the
- *    server's markup for a page the server does not render.
- *  - Everything it imports — the Firebase SDK, MUI, Emotion — stays in a chunk
- *    that only loads at /admin. The public bundle never carries it.
- *
- * This is also the only place MUI's ThemeProvider and CssBaseline appear.
- * On the public side Tailwind does that job; see the note in src/App.jsx.
- */
 export default function AdminApp() {
   return (
     <ThemeProvider theme={adminTheme}>

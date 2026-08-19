@@ -1,4 +1,5 @@
 import React from "react";
+import Box from "@mui/material/Box";
 import ProjectShot from "./ProjectShot.jsx";
 
 /**
@@ -16,45 +17,49 @@ import ProjectShot from "./ProjectShot.jsx";
 
 export function LaptopFrame({ src, alt, eager = false, className = "" }) {
   return (
-    <div className={`relative ${className}`}>
+    <Box className={`relative ${className}`}>
       {/* Lid */}
-      <div className="rounded-t-[14px] border border-line-emphasis bg-surface-raised p-2.5 pb-0 shadow-card max-[720px]:rounded-t-[10px] max-[720px]:p-1.5">
-        <div className="overflow-hidden rounded-t-[6px] border border-line bg-bg">
-          <div className="aspect-[16/10] w-full">
+      <Box className="rounded-t-[14px] border border-line-emphasis bg-surface-raised p-2.5 pb-0 shadow-card max-[720px]:rounded-t-[10px] max-[720px]:p-1.5">
+        <Box className="overflow-hidden rounded-t-[6px] border border-line bg-bg">
+          <Box className="aspect-[16/10] w-full">
             <ProjectShot src={src} alt={alt} eager={eager} width={1400} height={875} />
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
       {/* Base. The notch is the trackpad cut-out — it is what reads as a
           laptop rather than a floating rectangle. */}
-      <div
+      <Box
         aria-hidden
         className="relative h-3 rounded-b-[10px] border border-t-0 border-line-emphasis bg-[linear-gradient(180deg,var(--color-surface-raised),var(--color-surface))] max-[720px]:h-2"
       >
-        <span className="absolute left-1/2 top-0 h-1 w-16 -translate-x-1/2 rounded-b-full bg-line" />
-      </div>
-    </div>
+        <Box
+          component="span"
+          className="absolute left-1/2 top-0 h-1 w-16 -translate-x-1/2 rounded-b-full bg-line"
+        />
+      </Box>
+    </Box>
   );
 }
 
 export function PhoneFrame({ src, alt, eager = false, className = "" }) {
   return (
-    <div
+    <Box
       className={`relative rounded-[30px] border border-line-emphasis bg-surface-raised p-2 shadow-card ${className}`}
     >
-      <div className="relative overflow-hidden rounded-[24px] border border-line bg-bg">
+      <Box className="relative overflow-hidden rounded-[24px] border border-line bg-bg">
         {/* Pill notch, drawn over the screenshot so the capture itself is
             untouched. */}
-        <span
+        <Box
+          component="span"
           aria-hidden
           className="absolute left-1/2 top-2 z-10 h-1.5 w-14 -translate-x-1/2 rounded-full bg-black/60"
         />
-        <div className="aspect-[691/1536] w-full">
+        <Box className="aspect-[691/1536] w-full">
           <ProjectShot src={src} alt={alt} eager={eager} width={691} height={1536} />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

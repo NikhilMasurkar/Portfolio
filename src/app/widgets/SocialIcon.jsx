@@ -1,4 +1,5 @@
 import React from "react";
+import SvgIcon from "@mui/material/SvgIcon";
 
 /**
  * Brand glyphs for the social links.
@@ -34,15 +35,15 @@ export default function SocialIcon({ name, mark, size = 18 }) {
   }
 
   return (
-    <svg
+    // fontSize drives an SvgIcon's box, so the caller's `size` goes there —
+    // width/height props would be overridden by the component's own styles.
+    <SvgIcon
       viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      fill="currentColor"
       aria-hidden="true"
       focusable="false"
+      sx={{ fontSize: size, fill: "currentColor" }}
     >
       <path d={path} />
-    </svg>
+    </SvgIcon>
   );
 }

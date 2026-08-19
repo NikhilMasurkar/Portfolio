@@ -1,4 +1,5 @@
 import React from "react";
+import Box from "@mui/material/Box";
 import BackgroundVideo from "./BackgroundVideo.jsx";
 
 /**
@@ -114,7 +115,7 @@ export default function SectionBackground({ variant }) {
   const plate = PLATES[variant];
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <Box aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       {plate && (
         /*
          * A band at the top, not a full-page cover.
@@ -126,7 +127,7 @@ export default function SectionBackground({ variant }) {
          * showed nothing. Bounding the height keeps the composition intact and
          * lets the plate fade out before the content gets dense.
          */
-        <div className="absolute inset-x-0 top-0 h-[820px]">
+        <Box className="absolute inset-x-0 top-0 h-[820px]">
           {/* Decorative: empty alt, inside an aria-hidden container. Lazy
               because the heading above it is the largest contentful paint. */}
           <img
@@ -154,11 +155,11 @@ export default function SectionBackground({ variant }) {
 
           {/* Darkest where headings sit, and fading to the page colour at the
               bottom so the band has no visible edge. */}
-          <div className="absolute inset-0" style={{ background: SCRIM }} />
-        </div>
+          <Box className="absolute inset-0" style={{ background: SCRIM }} />
+        </Box>
       )}
 
-      <div
+      <Box
         className="absolute inset-0"
         style={{
           backgroundImage: layers.join(","),
@@ -166,6 +167,6 @@ export default function SectionBackground({ variant }) {
           WebkitMaskImage: mask,
         }}
       />
-    </div>
+    </Box>
   );
 }

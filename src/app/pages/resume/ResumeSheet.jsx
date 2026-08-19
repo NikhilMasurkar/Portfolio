@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 /**
  * The resume document itself — one layout, used twice.
@@ -29,29 +31,30 @@ const PlainText = ({ value }) => <>{value}</>;
  */
 function Bullets({ items, onItemChange, Text }) {
   return (
-    <ul className="space-y-1">
+    <Box component="ul" className="space-y-1">
       {items.map((item, index) => (
         <li key={index} className="flex gap-2.5 text-[13.5px] leading-[1.45]">
-          <span aria-hidden className="shrink-0">
+          <Box component="span" aria-hidden className="shrink-0">
             •
-          </span>
-          <span className="flex-1">
+          </Box>
+          <Box component="span" className="flex-1">
             <Text value={item} onChange={onItemChange(index)} />
-          </span>
+          </Box>
         </li>
       ))}
-    </ul>
+    </Box>
   );
 }
 
 function SectionHeading({ children }) {
   return (
-    <h2
+    <Typography
+      variant="h2"
       className="mb-2 mt-6 border-b pb-1 text-[15px] font-bold uppercase tracking-[0.02em]"
       style={{ color: ACCENT, borderColor: ACCENT }}
     >
       {children}
-    </h2>
+    </Typography>
   );
 }
 
@@ -77,23 +80,31 @@ export default function ResumeSheet({
   };
 
   return (
-    <article
+    <Box
+      component="article"
       data-print="sheet"
       className="mx-auto max-w-[820px] bg-white px-14 py-12 shadow-card max-[720px]:px-6 max-[720px]:py-8"
       style={{ color: INK, fontFamily: "Arial, Helvetica, sans-serif" }}
+      /*
+       * Typography inside this sheet inherits the document's face instead of
+       * the site's. This is a printed resume, not a page of the site — MUI's
+       * variants would quietly swap Arial for Inter and change every line
+       * break in the PDF a recruiter receives.
+       */
+      sx={{ "& .MuiTypography-root": { fontFamily: "inherit" } }}
     >
-      <header className="text-center">
-        <h1 className="m-0 text-[26px] font-bold uppercase tracking-[0.02em]">
+      <Box component="header" className="text-center">
+        <Typography variant="h1" className="m-0 text-[26px] font-bold uppercase tracking-[0.02em]">
           {profile.fullName || profile.name}
-        </h1>
+        </Typography>
 
         {resume?.headline !== undefined && (
-          <p className="mt-1 text-[14px]" style={{ color: ACCENT }}>
+          <Typography className="mt-1 text-[14px]" style={{ color: ACCENT }}>
             <Text value={resume.headline} onChange={setResume("headline")} />
-          </p>
+          </Typography>
         )}
 
-        <p className="mt-1 text-[13px]">
+        <Typography className="mt-1 text-[13px]">
           {profile.phone && <span>{profile.phone}&nbsp; | &nbsp;</span>}
           <a href={`mailto:${profile.email}`} style={{ color: INK }}>
             {profile.email}
@@ -112,21 +123,21 @@ export default function ResumeSheet({
               </a>
             </>
           )}
-        </p>
+        </Typography>
 
         {profile.location && (
-          <p className="mt-0.5 text-[13px]" style={{ color: MUTED }}>
+          <Typography className="mt-0.5 text-[13px]" style={{ color: MUTED }}>
             {profile.location}
-          </p>
+          </Typography>
         )}
-      </header>
+      </Box>
 
       {resume?.summary !== undefined && (
         <>
           <SectionHeading>Professional Summary</SectionHeading>
-          <p className="text-[13.5px] leading-[1.45]">
+          <Typography className="text-[13.5px] leading-[1.45]">
             <Text value={resume.summary} onChange={setResume("summary")} multiline />
-          </p>
+          </Typography>
         </>
       )}
 
@@ -145,9 +156,9 @@ export default function ResumeSheet({
         <>
           <SectionHeading>Technical Skills</SectionHeading>
           {/* Two columns filling top to bottom, as the PDF does. */}
-          <div className="gap-x-8 min-[720px]:columns-2">
+          <Box className="gap-x-8 min-[720px]:columns-2">
             {resume.skillGroups.map((group, index) => (
-              <p
+              <Typography
                 key={index}
                 className="mb-1.5 break-inside-avoid text-[13.5px] leading-[1.45]"
               >
@@ -163,9 +174,9 @@ export default function ResumeSheet({
                     onChangeResume({ ...resume, skillGroups: next });
                   }}
                 />
-              </p>
+              </Typography>
             ))}
-          </div>
+          </Box>
         </>
       )}
 
@@ -173,17 +184,19 @@ export default function ResumeSheet({
         <>
           <SectionHeading>Professional Experience</SectionHeading>
           {experience.map((entry, entryIndex) => (
-            <div key={entry.id} data-print="entry" className="mb-4 last:mb-0">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                <h3 className="m-0 text-[14.5px] font-bold">{entry.role}</h3>
-                <p className="text-[13px] font-bold" style={{ color: ACCENT }}>
+            <Box key={entry.id} data-print="entry" className="mb-4 last:mb-0">
+              <Box className="flex flex-wrap items-baseline justify-between gap-x-4">
+                <Typography variant="h3" className="m-0 text-[14.5px] font-bold">
+                  {entry.role}
+                </Typography>
+                <Typography className="text-[13px] font-bold" style={{ color: ACCENT }}>
                   {entry.period}
-                </p>
-              </div>
-              <p className="mb-1.5 text-[13.5px] font-semibold italic">
+                </Typography>
+              </Box>
+              <Typography className="mb-1.5 text-[13.5px] font-semibold italic">
                 {entry.company}
                 {entry.location ? `, ${entry.location}` : ""}
-              </p>
+              </Typography>
               {entry.bullets.length > 0 ? (
                 <Bullets
                   Text={Text}
@@ -195,9 +208,11 @@ export default function ResumeSheet({
                   }}
                 />
               ) : (
-                <p className="text-[13.5px] leading-[1.45]">{entry.summary}</p>
+                <Typography className="text-[13.5px] leading-[1.45]">
+                  {entry.summary}
+                </Typography>
               )}
-            </div>
+            </Box>
           ))}
         </>
       )}
@@ -206,8 +221,10 @@ export default function ResumeSheet({
         <>
           <SectionHeading>Key Projects &amp; Accomplishments</SectionHeading>
           {resume.keyProjects.map((project, projectIndex) => (
-            <div key={projectIndex} data-print="entry" className="mb-3 last:mb-0">
-              <h3 className="m-0 mb-1 text-[13.5px] font-bold">{project.name}</h3>
+            <Box key={projectIndex} data-print="entry" className="mb-3 last:mb-0">
+              <Typography variant="h3" className="m-0 mb-1 text-[13.5px] font-bold">
+                {project.name}
+              </Typography>
               <Bullets
                 Text={Text}
                 items={project.bullets}
@@ -219,7 +236,7 @@ export default function ResumeSheet({
                   onChangeResume({ ...resume, keyProjects: next });
                 }}
               />
-            </div>
+            </Box>
           ))}
         </>
       )}
@@ -228,25 +245,25 @@ export default function ResumeSheet({
         <>
           <SectionHeading>Education</SectionHeading>
           {education.map((entry, entryIndex) => (
-            <div key={entry.id} data-print="entry" className="mb-2.5 last:mb-0">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                <h3 className="m-0 text-[13.5px] font-bold">
+            <Box key={entry.id} data-print="entry" className="mb-2.5 last:mb-0">
+              <Box className="flex flex-wrap items-baseline justify-between gap-x-4">
+                <Typography variant="h3" className="m-0 text-[13.5px] font-bold">
                   <Text
                     value={entry.qualification}
                     onChange={(value) =>
                       onChangeEducation(entryIndex, { ...entry, qualification: value })
                     }
                   />
-                </h3>
-                <p className="text-[13px]" style={{ color: ACCENT }}>
+                </Typography>
+                <Typography className="text-[13px]" style={{ color: ACCENT }}>
                   {entry.period}
-                </p>
-              </div>
-              <p className="text-[13px] italic" style={{ color: MUTED }}>
+                </Typography>
+              </Box>
+              <Typography className="text-[13px] italic" style={{ color: MUTED }}>
                 {entry.institution}
                 {entry.grade ? `  |  Grade: ${entry.grade}` : ""}
-              </p>
-            </div>
+              </Typography>
+            </Box>
           ))}
         </>
       )}
@@ -261,6 +278,6 @@ export default function ResumeSheet({
           />
         </>
       )}
-    </article>
+    </Box>
   );
 }

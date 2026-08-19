@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "@mui/material/Button";
 
 /**
  * Produces the resume PDF from the page itself.
@@ -37,12 +38,11 @@ export default function DownloadResume({ name }) {
   }
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={handleDownload}
       className="inline-flex items-center gap-2.5 rounded-xl bg-[image:var(--gradient-04)] px-7 py-3.5 text-[15px] font-semibold text-fg shadow-cta transition-transform hover:-translate-y-0.5"
     >
       Download PDF <span aria-hidden>↓</span>
-    </button>
+    </Button>
   );
 }

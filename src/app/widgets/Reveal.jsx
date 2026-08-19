@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
 
 /**
  * Scroll reveal — failure-safe by construction.
@@ -49,7 +50,7 @@ export default function Reveal({ children, delay = 0, className }) {
   }, []);
 
   return (
-    <div
+    <Box
       className={className}
       data-reveal=""
       style={delay ? { "--reveal-delay": `${delay}s` } : undefined}
@@ -59,6 +60,6 @@ export default function Reveal({ children, delay = 0, className }) {
       }}
     >
       {children}
-    </div>
+    </Box>
   );
 }

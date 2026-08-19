@@ -1,5 +1,10 @@
 import React from "react";
 import { Link, useParams } from "react-router";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Seo from "../../widgets/Seo.jsx";
 import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
@@ -41,7 +46,7 @@ export default function BlogPost() {
   };
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <Box component="section" className="relative overflow-hidden py-24">
       <Seo
         path={`${ROUTE_PATH.BLOG}${post.slug}/`}
         title={post.title}
@@ -53,73 +58,89 @@ export default function BlogPost() {
       <SectionBackground variant="case-study" />
 
       <Container>
-        <Link
+        <Button
+          component={Link}
           to={ROUTE_PATH.BLOG}
           className="mb-8 inline-flex items-center gap-2 py-2 text-sm font-semibold text-muted transition-colors hover:text-fg"
         >
-          <span aria-hidden>←</span> All posts
-        </Link>
+          <Box component="span" aria-hidden>
+            ←
+          </Box>{" "}
+          All posts
+        </Button>
 
-        {/* 70ch is the readable measure; the rest of the page can be wider. */}
-        <article className="max-w-[70ch]">
-          <p className="flex flex-wrap items-center gap-x-2.5 text-[12.5px] text-meta">
+        <Box component="article" className="max-w-[70ch]">
+          <Typography className="flex flex-wrap items-center gap-x-2.5 text-[12.5px] text-meta">
             <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-            <span aria-hidden>·</span>
-            <span>{readingMinutes(post)} min read</span>
-          </p>
+            <Box component="span" aria-hidden>
+              ·
+            </Box>
+            <Box component="span">{readingMinutes(post)} min read</Box>
+          </Typography>
 
-          <h1 className="m-0 mb-5 mt-4 font-display text-[40px] font-bold leading-[1.15] tracking-[-0.02em] max-[720px]:text-[30px]">
+          <Typography
+            variant="h1"
+            className="m-0 mb-5 mt-4 font-display text-[40px] font-bold leading-[1.15] tracking-[-0.02em] max-[720px]:text-[30px]"
+          >
             {post.title}
-          </h1>
+          </Typography>
 
-          <p className="mb-8 text-[17px] leading-[1.7] text-fg-3">{post.summary}</p>
+          <Typography className="mb-8 text-[17px] leading-[1.7] text-fg-3">
+            {post.summary}
+          </Typography>
 
           {post.tags.length > 0 && (
-            <ul className="mb-10 flex flex-wrap gap-2">
+            <Stack component="ul" direction="row" className="mb-10 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <li
+                <Chip
                   key={tag}
-                  className="rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
-                >
-                  {tag}
-                </li>
+                  component="li"
+                  label={tag}
+                  className="h-auto rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
+                />
               ))}
-            </ul>
+            </Stack>
           )}
 
           {post.coverUrl && (
-            <div className="mb-10 overflow-hidden rounded-2xl border border-line">
-              <div className="aspect-video w-full">
+            <Box className="mb-10 overflow-hidden rounded-2xl border border-line">
+              <Box className="aspect-video w-full">
                 <ProjectShot src={post.coverUrl} alt="" eager />
-              </div>
-            </div>
+              </Box>
+            </Box>
           )}
 
           <Markdown>{post.body}</Markdown>
-        </article>
+        </Box>
 
         {next && (
-          <div className="mt-16 max-w-[70ch] border-t border-line pt-10">
+          <Box className="mt-16 max-w-[70ch] border-t border-line pt-10">
             <Link
               to={`${ROUTE_PATH.BLOG}${next.slug}/`}
               className="group flex items-center justify-between gap-4"
             >
-              <span>
-                <span className="eyebrow block">Next post</span>
-                <span className="mt-2 block font-display text-2xl font-semibold tracking-[-0.01em] transition-colors group-hover:text-secondary">
+              <Box component="span">
+                <Box component="span" className="eyebrow block">
+                  Next post
+                </Box>
+                <Box
+                  component="span"
+                  className="mt-2 block font-display text-2xl font-semibold tracking-[-0.01em] transition-colors group-hover:text-secondary"
+                >
                   {next.title}
-                </span>
-              </span>
-              <span
+                </Box>
+              </Box>
+              <Box
+                component="span"
                 aria-hidden
                 className="text-2xl text-muted transition-colors group-hover:text-secondary"
               >
                 →
-              </span>
+              </Box>
             </Link>
-          </div>
+          </Box>
         )}
       </Container>
-    </section>
+    </Box>
   );
 }

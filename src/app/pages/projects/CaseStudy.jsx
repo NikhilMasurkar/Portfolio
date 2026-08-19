@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Reveal from "../../widgets/Reveal.jsx";
 
 /**
@@ -40,12 +42,12 @@ function Prose({ text }) {
         .map((paragraph) => paragraph.trim())
         .filter(Boolean)
         .map((paragraph, index) => (
-          <p
+          <Typography
             key={index}
             className="mb-4 max-w-[70ch] text-[15.5px] leading-[1.8] text-muted last:mb-0"
           >
             {paragraph}
-          </p>
+          </Typography>
         ))}
     </>
   );
@@ -57,15 +59,17 @@ export default function CaseStudy({ caseStudy }) {
   if (filled.length === 0) return null;
 
   return (
-    <div className="mb-16 grid gap-12">
+    <Box className="mb-16 grid gap-12">
       {filled.map(([key, title], index) => (
         <Reveal key={key} delay={Math.min(index * 0.05, 0.2)}>
-          <section>
-            <h2 className="eyebrow mb-4">{title}</h2>
+          <Box component="section">
+            <Typography variant="h2" className="eyebrow mb-4">
+              {title}
+            </Typography>
             <Prose text={caseStudy[key]} />
-          </section>
+          </Box>
         </Reveal>
       ))}
-    </div>
+    </Box>
   );
 }

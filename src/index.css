@@ -2,20 +2,7 @@
 
 @import "tailwindcss";
 
-/*
- * Self-hosted fonts. The Google Fonts CDN <link> is deliberately not used: it
- * costs a third-party connection on first paint and the design spec forbids it.
- *
- * These are VARIABLE fonts, latin subset only — one file covers every weight,
- * so the whole type system is three requests and ~92KB rather than five files.
- * The weight range in each rule is what makes that work; narrowing it to a
- * single value would make the browser render every other weight at the
- * nearest declared one instead of interpolating.
- *
- * `font-display: swap` paints text in the fallback immediately and re-renders
- * when the woff2 arrives, so a failed font request degrades to a system face
- * rather than to invisible text.
- */
+
 @font-face {
   font-family: "Space Grotesk";
   src: url("/fonts/space-grotesk-var.woff2") format("woff2-variations");
