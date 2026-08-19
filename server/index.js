@@ -30,7 +30,6 @@ import { getDb } from "./db.js";
 import { SITE } from "../src/app/global/siteConfig.js";
 import { verifyIdToken, isAdminClaims } from "./auth.js";
 import { presignUpload } from "./upload.js";
-import { validateSubmission, sendMail, rateLimit } from "./contact.js";
 
 import shellHtml from "../build/index.html?raw";
 
@@ -153,34 +152,6 @@ app.get("/robots.txt", (_req, res) => {
   );
 });
 
-
-app.post("/api/contact", express.json({ limit: "16kb" }), async (req, res) => {
-
-  const ip =
-    (req.get("x-nf-client-connection-ip") ||
-      req.get("x-forwarded-for") ||
-      req.ip ||
-      "unknown")
-      .split(",")[0]
-      .trim();
-
-  const limit = rateLimit(ip);
-  if (!limit.allowed) {
-    return res.status(429).json({
-      error: `Too many messages. Try again in ${Math.ceil(limit.retryAfterMs / 60000)} minutes.`,
-    });
-  }
-
-  try {
-    const message = validateSubmission(req.body);
-    await sendMail({ to: process.env.ADMIN_EMAIL, message });
-    res.json({ ok: true });
-  } catch (err) {
-    const status = err.status ?? 500;
-    if (status >= 500 && status !== 503) console.error("[contact] failed:", err);
-    res.status(status).json({ error: err.message });
-  }
-});
 
 app.post("/api/upload-url", express.json({ limit: "4kb" }), async (req, res) => {
   const header = req.get("authorization") || "";

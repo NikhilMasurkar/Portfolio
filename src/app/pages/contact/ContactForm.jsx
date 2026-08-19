@@ -4,11 +4,17 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { EMAILJS_CONFIG } from "../../global/contactConfig.js";
 
 const EMPTY = { name: "", email: "", subject: "", message: "", website: "" };
 
 /**
- * The contact form, on MUI TextFields.
+ * The contact form, sending through EmailJS.
+ *
+ * Posted straight to EmailJS's REST endpoint rather than through
+ * @emailjs/browser. The SDK is a wrapper around exactly this one request, and
+ * a dependency in the bundle every visitor downloads has to earn more than
+ * that.
  *
  * TextField keeps a real <label> wired to the input — it floats rather than
  * sitting above the box, but it is still a label, not a placeholder. The
@@ -21,21 +27,67 @@ export default function ContactForm({ email }) {
 
   const set = (key) => (event) => setForm({ ...form, [key]: event.target.value });
 
+  /**
+   * Validated here because nothing else will. The old server route ran Zod
+   * over the submission; EmailJS accepts whatever it is handed and delivers a
+   * blank enquiry. `noValidate` on the form means the browser is not checking
+   * either — that is deliberate, so the messages are ours and are announced.
+   */
+  function firstProblem() {
+    if (!form.name.trim()) return "Please add your name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      return "That email address does not look right.";
+    if (!form.subject.trim()) return "Please add a subject.";
+    if (form.message.trim().length < 10)
+      return "Please write a little more in the message.";
+    return null;
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
+
+    const problem = firstProblem();
+    if (problem) {
+      setState({ status: "error", message: problem });
+      return;
+    }
+
+    /*
+     * Honeypot filled means a bot. Reported as success and dropped on the
+     * floor: telling a bot it was caught just teaches whoever wrote it to
+     * stop filling the field.
+     */
+    if (form.website) {
+      setForm(EMPTY);
+      setState({ status: "sent", message: "Message sent. I'll get back to you soon." });
+      return;
+    }
+
     setState({ status: "sending", message: "" });
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(EMAILJS_CONFIG.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          service_id: EMAILJS_CONFIG.serviceId,
+          template_id: EMAILJS_CONFIG.templateId,
+          user_id: EMAILJS_CONFIG.publicKey,
+          // Names fixed by the EmailJS template — see contactConfig.js.
+          template_params: {
+            from_name: form.name,
+            from_email: form.email,
+            subject: form.subject,
+            message: form.message,
+          },
+        }),
       });
-      const body = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setState({ status: "error", message: body.error || "Could not send the message." });
-        return;
+        // EmailJS answers in plain text, not JSON, and the body is the only
+        // thing that says which of the three ids was wrong.
+        const detail = await response.text().catch(() => "");
+        throw new Error(detail || `EmailJS returned ${response.status}`);
       }
 
       setForm(EMPTY);
@@ -43,12 +95,11 @@ export default function ContactForm({ email }) {
         status: "sent",
         message: "Message sent. I'll get back to you soon.",
       });
-    } catch {
-      // Network failure, offline, blocked request — distinct from a server
-      // rejection, and worth saying so rather than blaming the input.
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
       setState({
         status: "error",
-        message: `Could not reach the server. Email ${email} directly.`,
+        message: `Could not send the message. Email ${email} directly.`,
       });
     }
   }
