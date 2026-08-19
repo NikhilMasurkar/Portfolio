@@ -22,6 +22,7 @@ import { Hint } from "./fields.jsx";
 import { useCollection } from "../../admin/useDoc.js";
 import { useSave } from "../../admin/useSave.js";
 import { projectSchema, projectCategories } from "../../global/schemas.js";
+import { writeCaseStudies } from "../../admin/writeCaseStudies.js";
 
 /**
  * Projects, including the case-study prose.
@@ -69,6 +70,7 @@ export default function ProjectsEditor() {
   const [drafts, setDrafts] = useState(null);
   const [loadedFrom, setLoadedFrom] = useState(undefined);
   const [invalid, setInvalid] = useState({});
+  const [importing, setImporting] = useState(null);
 
   if (!loading && loadedFrom !== rows) {
     setLoadedFrom(rows);
@@ -117,8 +119,43 @@ export default function ProjectsEditor() {
     if (await remove("projects", row.slug)) setReload((n) => n + 1);
   }
 
+  async function importCaseStudies() {
+    setImporting("running");
+    try {
+      await writeCaseStudies();
+      setImporting("done");
+      setReload((n) => n + 1);
+    } catch (error) {
+      setImporting(`failed: ${error.message}`);
+    }
+  }
+
   return (
     <Stack spacing={3}>
+      <Alert
+        severity="success"
+        action={
+          <Button
+            color="inherit"
+            size="small"
+            onClick={importCaseStudies}
+            disabled={importing === "running"}
+          >
+            {importing === "running" ? "Writing…" : "Write case studies"}
+          </Button>
+        }
+      >
+        Case studies written from the actual project repositories are ready to
+        import. This only fills the case-study fields — everything else on each
+        project is left exactly as it is.
+        {importing && importing !== "running" && (
+          <>
+            <br />
+            {importing === "done" ? "Done — reload to see them." : importing}
+          </>
+        )}
+      </Alert>
+
       <Alert severity="info">
         Drives <strong>/projects</strong>, each case study, and the featured row
         on the home page. Unpublishing removes a project from the site and from
