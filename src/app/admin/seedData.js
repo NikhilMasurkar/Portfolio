@@ -29,13 +29,15 @@ export function yearsOfExperience(now = new Date()) {
 
 export const profile = {
   name: "Nikhil Masurkar",
+  fullName: "Nikhil Dilip Masurkar",
+  phone: "+91 7385208601",
   role: "Frontend Engineer",
   specialism: "React Native Specialist",
   tagline: "Building Production Software.",
   description:
     "Frontend Engineer and React Native specialist building high-performance web and mobile applications.",
   email: "nikhildmasurkar@gmail.com",
-  location: "India",
+  location: "Hinganghat, Wardha, Maharashtra 442301, India",
   socials: [
     { name: "GitHub", label: "GH", href: "https://github.com/NikhilMasurkar" },
     {

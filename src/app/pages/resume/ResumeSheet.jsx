@@ -59,17 +59,24 @@ function SectionHeading({ children }) {
 }
 
 export default function ResumeSheet({
-  profile,
-  resume,
-  experience,
-  education,
+  profile = {},
+  resume = {},
+  experience = [],
+  education = [],
   Text = PlainText,
   // Only edit mode supplies these; read-only never calls them.
   onChangeResume = () => {},
   onChangeExperience = () => {},
   onChangeEducation = () => {},
 }) {
-  const linkedin = profile.socials?.find((s) => /linkedin/i.test(s.name));
+  const p = profile || {};
+  const fullName = p.fullName || (p.name && p.name !== "Nikhil Masurkar" ? p.name : "Nikhil Dilip Masurkar");
+  const phone = p.phone || "+91 7385208601";
+  const email = p.email || "nikhildmasurkar@gmail.com";
+  const location = (!p.location || p.location === "India") ? "Hinganghat, Wardha, Maharashtra 442301, India" : p.location;
+  const linkedin = p.socials?.find((s) => /linkedin/i.test(s.name));
+  const linkedinHref = linkedin?.href || "https://www.linkedin.com/in/nikhil-masurkar";
+  const headline = resume?.headline ?? "React Developer  |  React Native  |  Mobile Application Development";
 
   const setResume = (key) => (value) => onChangeResume({ ...resume, [key]: value });
 
@@ -93,41 +100,39 @@ export default function ResumeSheet({
        */
       sx={{ "& .MuiTypography-root": { fontFamily: "inherit" } }}
     >
-      <Box component="header" className="text-center">
+      <Box data-print="resume-header" className="text-center">
         <Typography variant="h1" className="m-0 text-[26px] font-bold uppercase tracking-[0.02em]">
-          {profile.fullName || profile.name}
+          {fullName}
         </Typography>
 
-        {resume?.headline !== undefined && (
-          <Typography className="mt-1 text-[14px]" style={{ color: ACCENT }}>
-            <Text value={resume.headline} onChange={setResume("headline")} />
-          </Typography>
-        )}
+        <Typography className="mt-1 text-[14px]" style={{ color: ACCENT }}>
+          <Text value={headline} onChange={setResume("headline")} />
+        </Typography>
 
         <Typography className="mt-1 text-[13px]">
-          {profile.phone && <span>{profile.phone}&nbsp; | &nbsp;</span>}
-          <a href={`mailto:${profile.email}`} style={{ color: INK }}>
-            {profile.email}
+          {phone && <span>{phone}&nbsp; | &nbsp;</span>}
+          <a href={`mailto:${email}`} style={{ color: INK }}>
+            {email}
           </a>
-          {linkedin && (
+          {linkedinHref && (
             <>
               <span>&nbsp; | &nbsp;</span>
               <a
-                href={linkedin.href}
+                href={linkedinHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
                 style={{ color: ACCENT }}
               >
-                {linkedin.href.replace(/^https?:\/\/(www\.)?/, "")}
+                {linkedinHref.replace(/^https?:\/\/(www\.)?/, "")}
               </a>
             </>
           )}
         </Typography>
 
-        {profile.location && (
+        {location && (
           <Typography className="mt-0.5 text-[13px]" style={{ color: MUTED }}>
-            {profile.location}
+            {location}
           </Typography>
         )}
       </Box>
@@ -155,8 +160,8 @@ export default function ResumeSheet({
       {resume?.skillGroups?.length > 0 && (
         <>
           <SectionHeading>Technical Skills</SectionHeading>
-          {/* Two columns filling top to bottom, as the PDF does. */}
-          <Box className="gap-x-8 min-[720px]:columns-2">
+          {/* Two equal columns (6-6 grid), always side by side in the PDF. */}
+          <Box className="grid grid-cols-2 gap-x-8">
             {resume.skillGroups.map((group, index) => (
               <Typography
                 key={index}

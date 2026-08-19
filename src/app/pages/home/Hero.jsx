@@ -11,6 +11,26 @@ import SocialIcon from "../../widgets/SocialIcon.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
 import { useProfile } from "../../global/ContentContext.jsx";
 
+/*
+ * The tech marks that float over the hero art.
+ *
+ * Positions, durations and delays are constants, not generated. Anything
+ * derived from Math.random() here would differ between the server render and
+ * hydration, and React would throw the whole server-rendered hero away.
+ *
+ * They sit in the grid's second column, which the layout already leaves open
+ * for the artwork — so they overlay the art without a stacking context of
+ * their own and without displacing the copy on the left.
+ */
+const TECH_MARKS = [
+  { src: "/tech/react.png", alt: "React", size: 62, top: "10%", left: "4%", duration: "3.6s", delay: "0s" },
+  { src: "/tech/mui.png", alt: "Material UI", size: 52, top: "6%", left: "40%", duration: "4.6s", delay: "1.1s" },
+  { src: "/tech/react-native.png", alt: "React Native", size: 58, top: "34%", left: "18%", duration: "4.1s", delay: "0.5s" },
+  { src: "/tech/app-store.png", alt: "App Store", size: 50, top: "40%", left: "56%", duration: "5s", delay: "0.3s" },
+  { src: "/tech/firebase.png", alt: "Firebase", size: 54, top: "64%", left: "6%", duration: "4.8s", delay: "0.8s" },
+  { src: "/tech/play-store.png", alt: "Google Play", size: 50, top: "74%", left: "42%", duration: "4.3s", delay: "1.6s" },
+];
+
 export default function Hero() {
   const profile = useProfile();
 
@@ -23,11 +43,11 @@ export default function Hero() {
         <picture>
           <source media="(max-width: 900px)" srcSet="/bg/home-mobile.jpg" />
           <img
-            src="/hero/devices.jpg"
+            src="/hero/devices.png"
             alt=""
             width={1600}
             height={1066}
-            className="h-full w-full object-cover object-[78%_center]"
+            className="h-full w-full object-cover object-right"
             loading="eager"
             fetchPriority="high"
             decoding="async"
@@ -120,6 +140,42 @@ export default function Hero() {
                 </li>
               ))}
             </Stack>
+          </Box>
+
+          {/*
+            Hidden below 900px, where the grid collapses to one column: there
+            is no art column left to float over, and the badges would push the
+            CTAs down the page instead of decorating it.
+          */}
+          <Box
+            component="ul"
+            aria-label="Core technologies"
+            className="relative h-[440px] w-full max-[900px]:hidden"
+          >
+            {TECH_MARKS.map((mark) => (
+              <Box
+                component="li"
+                key={mark.src}
+                className="tech-bob absolute"
+                style={{
+                  top: mark.top,
+                  left: mark.left,
+                  "--bob-duration": mark.duration,
+                  "--bob-delay": mark.delay,
+                }}
+              >
+                <img
+                  src={mark.src}
+                  alt={mark.alt}
+                  width={mark.size}
+                  height={mark.size}
+                  loading="lazy"
+                  decoding="async"
+                  className="drop-shadow-[0_6px_18px_rgb(0_0_0/0.55)]"
+                  style={{ width: mark.size, height: mark.size }}
+                />
+              </Box>
+            ))}
           </Box>
         </Box>
       </Container>

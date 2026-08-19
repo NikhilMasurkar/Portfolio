@@ -12,15 +12,19 @@
  * A visitor hitting this sees a real page with no projects. Loud in the logs,
  * survivable for a visitor, and impossible to mistake for working.
  */
+import { resume as fallbackResume, experience as fallbackExperience, education as fallbackEducation } from "../admin/resumeSeedData.js";
+
 export const FALLBACK_PROFILE = {
   name: "Nikhil Masurkar",
+  fullName: "Nikhil Dilip Masurkar",
+  phone: "+91 7385208601",
   role: "Frontend Engineer",
   specialism: "React Native Specialist",
   tagline: "Building Production Software.",
   description:
     "Frontend Engineer and React Native specialist building high-performance web and mobile applications.",
   email: "nikhildmasurkar@gmail.com",
-  location: "India",
+  location: "Hinganghat, Wardha, Maharashtra 442301, India",
   socials: [
     { name: "GitHub", label: "GH", href: "https://github.com/NikhilMasurkar" },
     {
@@ -43,11 +47,11 @@ export const FALLBACK_PROFILE = {
 
 export const FALLBACK_CONTENT = {
   profile: FALLBACK_PROFILE,
-  resume: null,
+  resume: fallbackResume,
   projects: [],
   posts: [],
-  experience: [],
-  education: [],
+  experience: fallbackExperience,
+  education: fallbackEducation,
   skills: [],
   degraded: true,
 };

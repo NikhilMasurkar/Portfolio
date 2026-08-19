@@ -336,10 +336,30 @@ body {
   animation: hero-art-float-c 11s ease-in-out infinite;
 }
 
+/* The tech marks floating over the hero art.
+   One keyframe for all six; each badge sets its own duration and delay through
+   custom properties, so they drift out of step without six near-identical
+   animations. Values come from a constant in Hero.jsx, never from Math.random
+   — a random delay would differ between the server render and hydration. */
+@keyframes tech-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+.tech-bob {
+  animation: tech-bob var(--bob-duration, 4s) ease-in-out var(--bob-delay, 0s)
+    infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-art-float-a,
   .hero-art-float-b,
-  .hero-art-float-c {
+  .hero-art-float-c,
+  .tech-bob {
     animation: none;
   }
 }
@@ -391,7 +411,8 @@ body {
  * ------------------------------------------------------------------------ */
 @media print {
   @page {
-    margin: 12mm 0;
+    size: portrait;
+    margin: 0mm !important;
   }
 
   html,
@@ -400,7 +421,8 @@ body {
   }
 
   /* Site furniture has no place in a resume. */
-  header,
+  header.MuiAppBar-root,
+  footer.MuiBox-root,
   footer,
   [data-print="hide"] {
     display: none !important;
@@ -423,7 +445,7 @@ body {
   [data-print="sheet"] {
     max-width: none !important;
     margin: 0 !important;
-    padding: 0 14mm !important;
+    padding: 12mm 14mm !important;
     box-shadow: none !important;
     /* Without this, browsers may drop the blue headings and their rules,
        since those are treated as decorative colour. */
