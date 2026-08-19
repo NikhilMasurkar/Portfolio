@@ -1,5 +1,9 @@
 import React, { Suspense } from "react";
 import { StaticRouter, Routes, Route, Navigate } from "react-router";
+import { CacheProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { publicTheme } from "../src/app/global/muiTheme.js";
 import Layout from "../src/_core/Layout";
 import { ContentProvider } from "../src/app/global/ContentContext.jsx";
 import {
@@ -59,13 +63,17 @@ function ServerPageRoutes() {
   );
 }
 
-/** No Emotion CacheProvider — see the note in server/index.js. */
-export default function ServerRoutes({ location, content }) {
+export default function ServerRoutes({ location, content, cache }) {
   return (
-    <ContentProvider content={content}>
-      <StaticRouter location={location}>
-        <ServerPageRoutes />
-      </StaticRouter>
-    </ContentProvider>
+    <CacheProvider value={cache}>
+      <ThemeProvider theme={publicTheme}>
+        <CssBaseline />
+        <ContentProvider content={content}>
+          <StaticRouter location={location}>
+            <ServerPageRoutes />
+          </StaticRouter>
+        </ContentProvider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }

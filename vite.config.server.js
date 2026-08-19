@@ -21,6 +21,9 @@ export default defineConfig({
       output: { entryFileNames: "index.cjs", format: "cjs" },
     },
   },
-  ssr: { target: "node" },
+  ssr: {
+    target: "node",
+    noExternal: [/^@mui\//, /^@emotion\//],
+  },
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
 });

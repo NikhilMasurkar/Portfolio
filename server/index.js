@@ -19,6 +19,7 @@ import compression from "compression";
 import path from "path";
 import { createElement } from "react";
 import ReactDOMServer from "react-dom/server";
+import createEmotionCache, { emotionServer } from "./createEmotionCache.js";
 
 import hoistHeadTags from "./hoistHeadTags";
 import ServerRoutes from "./ServerRoutes";
@@ -89,12 +90,13 @@ function serialiseContent(content) {
   return JSON.stringify(content ?? null).replace(/</g, "\\u003c");
 }
 
-function renderDocument({ head, pageHead, appHtml, state, bodyEnd }) {
+function renderDocument({ head, pageHead, styleTags, appHtml, state, bodyEnd }) {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
     ${head}
     ${pageHead}
+    ${styleTags}
   </head>
   <body>
     <div id="root">${appHtml}</div>
@@ -106,22 +108,15 @@ function renderDocument({ head, pageHead, appHtml, state, bodyEnd }) {
 
 async function handleRender(req, res) {
   try {
-    /*
-     * No Emotion critical-CSS extraction here, unlike the boilerplate.
-     *
-     * That step exists to inline MUI's runtime styles into server-rendered
-     * HTML. This site styles its public pages with Tailwind, whose CSS is a
-     * static file already linked from shell.head, and confines MUI to the
-     * client-rendered admin panel — so extraction would run on every request
-     * to collect nothing. Do not add it back without first putting an MUI
-     * component on a server-rendered page.
-     */
-    // Fetched once per render and shared with knownPaths() below via the
-    // content cache, so this is not two round trips.
+ 
+    const cache = createEmotionCache();
+    const { extractCriticalToChunks, constructStyleTagsFromChunks } =
+      emotionServer(cache);
+
     const content = await getContent({ db: getDb() });
 
     const rendered = ReactDOMServer.renderToString(
-      createElement(ServerRoutes, { location: req.originalUrl, content })
+      createElement(ServerRoutes, { location: req.originalUrl, content, cache })
     );
 
     const { head: pageHead, body: appHtml } = hoistHeadTags(rendered);
@@ -133,6 +128,7 @@ async function handleRender(req, res) {
         head: SHELL.head,
         pageHead,
         appHtml,
+        styleTags: constructStyleTagsFromChunks(extractCriticalToChunks(rendered)),
         state: serialiseContent(content),
         bodyEnd: SHELL.bodyExtras,
       })
