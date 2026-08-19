@@ -9,6 +9,26 @@
 [build.environment]
   NODE_VERSION = "22"
 
+  # Netlify fails the build if the VALUE of any environment variable appears in
+  # the repo or the build output. Most of what this site sets as env vars is not
+  # secret and is *supposed* to be readable:
+  #
+  #   VITE_SITE_URL / S3_PUBLIC_BASE_URL  public URLs, printed in the README
+  #   VITE_FIREBASE_*                     public by design — the web config
+  #                                       identifies the project, firestore.rules
+  #                                       decides access, and it ships in the
+  #                                       client bundle either way
+  #   ADMIN_EMAIL / VITE_ADMIN_EMAIL      hardcoded in firestore.rules, which is
+  #                                       the actual enforcement point
+  #   AWS_REGION_NEW / AWS_S3_BUCKET      a region and a bucket name, both
+  #                                       already visible in S3_PUBLIC_BASE_URL
+  #
+  # AWS_ACCESS_KEY_ID_NEW and AWS_SECRET_ACCESS_KEY_NEW are deliberately NOT
+  # listed. They are the only real secrets here, so the scanner keeps watching
+  # for them — which is the one thing it is genuinely useful for. Do not reach
+  # for SECRETS_SCAN_ENABLED=false; that would switch off that protection too.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SITE_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_APP_ID,VITE_ADMIN_EMAIL,ADMIN_EMAIL,AWS_REGION_NEW,AWS_S3_BUCKET,S3_PUBLIC_BASE_URL"
+
 # Everything that is not a real file in build/ renders through Express.
 # force = false, so the CDN serves an existing static file first and the
 # function is only reached for routes. status 200 (not 301) keeps the URL.
