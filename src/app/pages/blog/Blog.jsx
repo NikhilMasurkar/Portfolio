@@ -30,7 +30,13 @@ export function formatDate(iso) {
  */
 export function readingMinutes(post) {
   if (post.readingMinutes) return post.readingMinutes;
-  const words = String(post.body ?? "").trim().split(/\s+/).filter(Boolean).length;
+  // Tags stripped first: bodies are HTML now, and counting "<p>" and
+  // "</blockquote>" as words inflated every estimate.
+  const words = String(post.body ?? "")
+    .replace(/<[^>]*>/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }
 

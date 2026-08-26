@@ -1,5 +1,6 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { POST_REHYPE_PLUGINS } from "./postHtml.js";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -8,19 +9,24 @@ import Typography from "@mui/material/Typography";
 /**
  * Post bodies, rendered.
  *
- * react-markdown rather than a Markdown-to-HTML library because it builds
- * React elements instead of an HTML string — so there is no
- * dangerouslySetInnerHTML and no separate sanitiser to keep configured. Raw
- * HTML in a post is escaped rather than executed, which matters even for a
- * single-author blog: the body is stored in a database, and anything that can
- * write there could otherwise write script into a page.
+ * Bodies are HTML now, because the admin editor is TinyMCE. Markdown still
+ * parses, so anything written before the switch keeps working — react-markdown
+ * passes HTML through rehype-raw and renders both.
  *
- * This is the one place in the codebase a Markdown dependency earns its keep.
- * Case-study prose splits on blank lines instead, which is all it needs.
+ * SANITISING HAPPENS HERE, ON READ, AND THAT IS THE POINT. TinyMCE's own
+ * allowlist already refuses to emit a script tag, but that only governs what
+ * the editor writes. This governs what the site renders, whatever ends up in
+ * the database and however it got there — which is the only guarantee worth
+ * having for content that is stored and replayed to every visitor.
+ *
+ * rehype-sanitize runs on the syntax tree rather than a string, in Node and in
+ * the browser alike, so the server render and the client render strip exactly
+ * the same things. A DOM-based sanitiser would need jsdom on the server.
  *
  * Element styling is supplied here rather than through a typography plugin —
  * the palette is token-driven and a plugin would bring its own colours.
  */
+
 const COMPONENTS = {
   h2: (props) => (
     <Typography
@@ -95,5 +101,14 @@ const COMPONENTS = {
 };
 
 export default function Markdown({ children }) {
-  return <ReactMarkdown components={COMPONENTS}>{children}</ReactMarkdown>;
+  return (
+    <ReactMarkdown
+      // The allowlist and the plugin order live in postHtml.js, next to the
+      // tests that prove them. This file only styles what survives.
+      rehypePlugins={POST_REHYPE_PLUGINS}
+      components={COMPONENTS}
+    >
+      {children}
+    </ReactMarkdown>
+  );
 }

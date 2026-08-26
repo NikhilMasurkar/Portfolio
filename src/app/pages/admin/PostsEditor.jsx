@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -18,6 +18,17 @@ import {
   Typography,
 } from "@mui/material";
 import FileField from "./FileField.jsx";
+/*
+ * Lazy, and not only to make the admin panel start faster.
+ *
+ * TinyMCE is ~1.1MB. Imported statically it is large enough to change how the
+ * bundler groups shared vendor code, and that reshuffle pulled the Firebase
+ * SDK into the chunk the public entry loads — every visitor to the home page
+ * paying 130KB gzipped for an editor only the admin opens. Behind a dynamic
+ * import it is unambiguously its own chunk, fetched when the posts editor is
+ * opened and never before. scripts/check-entry-weight.mjs guards the result.
+ */
+const RichTextField = lazy(() => import("./RichTextField.jsx"));
 import Markdown from "../blog/Markdown.jsx";
 import { useCollection } from "../../admin/useDoc.js";
 import { useSave } from "../../admin/useSave.js";
@@ -47,27 +58,36 @@ const BLANK = {
   published: false,
 };
 
+/**
+ * The body editor, with a preview that renders through the same component the
+ * public post uses — so the preview cannot show something the site would not.
+ * That matters more now than it did with Markdown: the preview is what shows
+ * the effect of the read-side sanitiser.
+ */
 function BodyField({ value, onChange }) {
   const [tab, setTab] = useState(0);
 
   return (
     <Box>
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 1.5 }}>
-        <Tab label="Markdown" />
+        <Tab label="Editor" />
         <Tab label="Preview" />
       </Tabs>
 
-      {tab === 0 ? (
-        <TextField
-          fullWidth
-          multiline
-          minRows={16}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={"## A heading\n\nA paragraph.\n\n- a list item\n\n`inline code`"}
-          slotProps={{ input: { sx: { fontFamily: "monospace", fontSize: 13.5 } } }}
-        />
-      ) : (
+      {/*
+        Kept mounted and hidden rather than unmounted. Switching to Preview and
+        back would otherwise tear TinyMCE down and rebuild it, losing the undo
+        history and the cursor position each time.
+      */}
+      <Box sx={{ display: tab === 0 ? "block" : "none" }}>
+        <Suspense
+          fallback={<Typography color="text.secondary">Loading the editor…</Typography>}
+        >
+          <RichTextField value={value} onChange={onChange} />
+        </Suspense>
+      </Box>
+
+      {tab === 1 && (
         <Box
           sx={{
             minHeight: 320,
@@ -78,7 +98,7 @@ function BodyField({ value, onChange }) {
             bgcolor: "background.default",
           }}
         >
-          {value.trim() ? (
+          {value?.trim() ? (
             <Markdown>{value}</Markdown>
           ) : (
             <Typography color="text.disabled">Nothing to preview yet.</Typography>
