@@ -10,6 +10,8 @@ import Container from "../../widgets/Container.jsx";
 import SectionBackground from "../../widgets/SectionBackground.jsx";
 import ProjectShot from "../../widgets/ProjectShot.jsx";
 import Markdown from "./Markdown.jsx";
+import RelatedPosts from "./RelatedPosts.jsx";
+import { relatedPosts } from "./related.js";
 import NotFound from "../error/NotFound.jsx";
 import { formatDate, readingMinutes } from "./Blog.jsx";
 import { ROUTE_PATH } from "../../global/RoutePath.js";
@@ -32,6 +34,7 @@ export default function BlogPost() {
   const post = posts[index];
   // Newest first, so the "next" post is the one published before this.
   const next = posts[index + 1];
+  const related = relatedPosts(posts, post);
 
   /** Article schema, so a search result can show the date and author. */
   const jsonLd = {
@@ -69,48 +72,58 @@ export default function BlogPost() {
           All posts
         </Button>
 
-        <Box component="article" className="max-w-[70ch]">
-          <Typography className="flex flex-wrap items-center gap-x-2.5 text-[12.5px] text-meta">
-            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-            <Box component="span" aria-hidden>
-              ·
-            </Box>
-            <Box component="span">{readingMinutes(post)} min read</Box>
-          </Typography>
-
-          <Typography
-            variant="h1"
-            className="m-0 mb-5 mt-4 font-display text-[40px] font-bold leading-[1.15] tracking-[-0.02em] max-[720px]:text-[30px]"
-          >
-            {post.title}
-          </Typography>
-
-          <Typography className="mb-8 text-[17px] leading-[1.7] text-fg-3">
-            {post.summary}
-          </Typography>
-
-          {post.tags.length > 0 && (
-            <Stack component="ul" direction="row" className="mb-10 flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  component="li"
-                  label={tag}
-                  className="h-auto rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
-                />
-              ))}
-            </Stack>
-          )}
-
-          {post.coverUrl && (
-            <Box className="mb-10 overflow-hidden rounded-2xl border border-line">
-              <Box className="aspect-video w-full">
-                <ProjectShot src={post.coverUrl} alt="" eager />
+        {/*
+          The article keeps its own reading measure; the sidebar is a second
+          column rather than something squeezed out of the same 70ch. Below
+          1100px there is no room for both, so the grid collapses and the
+          related posts fall underneath.
+        */}
+        <Box className="grid items-start gap-12 min-[1100px]:grid-cols-[minmax(0,70ch)_300px]">
+          <Box component="article" className="max-w-[70ch]">
+            <Typography className="flex flex-wrap items-center gap-x-2.5 text-[12.5px] text-meta">
+              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+              <Box component="span" aria-hidden>
+                ·
               </Box>
-            </Box>
-          )}
+              <Box component="span">{readingMinutes(post)} min read</Box>
+            </Typography>
 
-          <Markdown>{post.body}</Markdown>
+            <Typography
+              variant="h1"
+              className="m-0 mb-5 mt-4 font-display text-[40px] font-bold leading-[1.15] tracking-[-0.02em] max-[720px]:text-[30px]"
+            >
+              {post.title}
+            </Typography>
+
+            <Typography className="mb-8 text-[17px] leading-[1.7] text-fg-3">
+              {post.summary}
+            </Typography>
+
+            {post.tags.length > 0 && (
+              <Stack component="ul" direction="row" className="mb-10 flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    component="li"
+                    label={tag}
+                    className="h-auto rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
+                  />
+                ))}
+              </Stack>
+            )}
+
+            {post.coverUrl && (
+              <Box className="mb-10 overflow-hidden rounded-2xl border border-line">
+                <Box className="aspect-video w-full">
+                  <ProjectShot src={post.coverUrl} alt="" eager />
+                </Box>
+              </Box>
+            )}
+
+            <Markdown>{post.body}</Markdown>
+          </Box>
+
+          <RelatedPosts posts={related} />
         </Box>
 
         {next && (
