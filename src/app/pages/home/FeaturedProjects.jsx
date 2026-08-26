@@ -48,7 +48,20 @@ export default function FeaturedProjects() {
 
         <Box
           component="ul"
-          className="grid grid-cols-[1.15fr_.9fr_.9fr] gap-[22px] max-[1160px]:grid-cols-2 max-[720px]:grid-cols-1"
+          /*
+           * minmax(0, …) ON EVERY TRACK, not decoration.
+           *
+           * A bare `fr` track is min-width:auto, so it refuses to shrink below
+           * its widest unbreakable child. One project arrived with its whole
+           * stack pasted into a single 139-character "technology", and that one
+           * chip dragged its column to ~950px while the two beside it were
+           * crushed to ~190px, wrapping their copy one word per line. The row
+           * looked broken because of a value someone typed into a form.
+           *
+           * Tailwind's grid-cols-2/3 already expand to minmax(0,1fr); only this
+           * arbitrary ratio had to say so itself.
+           */
+          className="grid grid-cols-[minmax(0,1.15fr)_minmax(0,.9fr)_minmax(0,.9fr)] gap-[22px] max-[1160px]:grid-cols-2 max-[720px]:grid-cols-1"
         >
           {featured.map((project, index) => {
             // The first card is the hero of this row: wider, horizontal, and
@@ -73,15 +86,25 @@ export default function FeaturedProjects() {
                       and it read as a different component from its neighbours.
                       Taller here, so the featured card still leads the row.
                     */}
+                    {/*
+                      A fixed height plus object-cover cropped every shot to the
+                      same letterbox, and the screenshots are not the same shape:
+                      the mobile captures are portrait (691x1536) and the web
+                      ones landscape. The phone shots lost everything but a band
+                      through the middle.
+
+                      An aspect box with `contain` shows each one whole and keeps
+                      the cards aligned. The backdrop makes the space around a
+                      portrait shot read as a frame rather than a gap.
+                    */}
                     <Box
-                      className={`w-full shrink-0 overflow-hidden ${
-                        isLarge ? "h-[210px]" : "h-[132px]"
-                      }`}
+                      className="aspect-[16/10] w-full shrink-0 overflow-hidden bg-bg/40"
                     >
                       <ProjectShot
                         src={project.image}
                         alt={`${project.name} screenshot`}
                         eager={isLarge}
+                        fit="contain"
                         className="transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
                       />
                     </Box>
@@ -118,7 +141,7 @@ export default function FeaturedProjects() {
                             key={tech}
                             component="li"
                             label={tech}
-                            className="h-auto rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
+                            className="h-auto max-w-full rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4 [&_.MuiChip-label]:whitespace-normal [&_.MuiChip-label]:break-words"
                           />
                         ))}
                       </Stack>

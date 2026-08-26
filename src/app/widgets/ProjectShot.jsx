@@ -19,6 +19,7 @@ export default function ProjectShot({
   alt,
   className = "",
   eager = false,
+  fit = "cover",
   width = 1400,
   height = 875,
 }) {
@@ -32,7 +33,19 @@ export default function ProjectShot({
       // Above-the-fold images should not queue behind lazy ones.
       fetchPriority={eager ? "high" : undefined}
       decoding="async"
-      className={`h-full w-full object-cover ${className}`}
+      /*
+       * `fit` is a prop rather than something the caller passes in className,
+       * because object-cover and object-contain are the same CSS property:
+       * both classes exist, so which one wins depends on their order in the
+       * stylesheet, not on the order they are written in the attribute. A
+       * caller "overriding" it that way would work or not work by accident.
+       *
+       * cover fills the frame and crops; contain shows the whole image and
+       * letterboxes. The project screenshots are not one shape — the mobile
+       * captures are portrait and the web ones landscape — so anywhere they
+       * share a frame, contain is the only way to show all of them intact.
+       */
+      className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
     />
   );
 }

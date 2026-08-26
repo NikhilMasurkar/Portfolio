@@ -19,10 +19,13 @@ export default function ProjectCard({ project }) {
     >
       {/* Zoom lives on the image, not the card, so the card's own border and
           radius stay put while the artwork moves under them. */}
-      <Box className="h-[190px] w-full shrink-0 overflow-hidden">
+      {/* Whole screenshot, not a crop — see the note in FeaturedProjects.jsx.
+          These shots are a mix of portrait and landscape. */}
+      <Box className="aspect-[16/10] w-full shrink-0 overflow-hidden bg-bg/40">
         <ProjectShot
           src={project.image}
           alt={`${project.name} screenshot`}
+          fit="contain"
           className="transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
         />
       </Box>
@@ -50,7 +53,7 @@ export default function ProjectCard({ project }) {
               key={tech}
               component="li"
               label={tech}
-              className="h-auto rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4"
+              className="h-auto max-w-full rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-[11.5px] text-fg-4 [&_.MuiChip-label]:whitespace-normal [&_.MuiChip-label]:break-words"
             />
           ))}
         </Stack>
